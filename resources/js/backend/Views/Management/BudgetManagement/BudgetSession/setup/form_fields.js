@@ -1,0 +1,92 @@
+/**
+ * Form Fields Configuration
+ * Auto-generated — edit data_list / class / is_visible as needed.
+ */
+
+export default [
+	{
+		name: "division_id",
+		label: "Select Division",
+		type: "select",
+		multiple: false,
+		data_list: [],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "fiscal_year",
+		label: "Enter Fiscal Year",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "total_income_budget",
+		label: "Enter Total Income Budget",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "total_expense_budget",
+		label: "Enter Total Expense Budget",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "finance_dept_allocated_budget",
+		label: "Enter Finance Dept Allocated Budget",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "session_status",
+		label: "Select Session Status",
+		type: "select",
+		label: "Select Session Status",
+		multiple: false,
+		data_list: [
+			{ label: "Draft", value: "draft" },
+			{ label: "Pending", value: "pending" },
+			{ label: "Approved", value: "approved" },
+			{ label: "Rejected", value: "rejected" },
+			{ label: "Active", value: "active" },
+		],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "approved_by_cp",
+		label: "Enter Approved By Cp",
+		type: "number",
+		step: "1",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "reviewed_at",
+		label: "Enter Reviewed At",
+		type: "datetime-local",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "review_comment",
+		label: "Enter Review Comment",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+];

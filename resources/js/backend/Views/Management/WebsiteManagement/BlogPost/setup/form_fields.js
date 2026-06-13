@@ -1,0 +1,93 @@
+/**
+ * Form Fields Configuration
+ * Auto-generated — edit data_list / class / is_visible as needed.
+ */
+
+export default [
+	{
+		name: "title",
+		label: "Enter Title",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "slug",
+		label: "Enter Slug",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "thumbnail",
+		label: "Upload Thumbnail",
+		type: "file",
+		multiple: false,
+		accept: "image/*",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "excerpt",
+		label: "Enter Excerpt",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "body",
+		label: "Enter Body",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "author_id",
+		label: "Select Author",
+		type: "select",
+		multiple: false,
+		data_list: [],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "product_id",
+		label: "Select Product",
+		type: "select",
+		multiple: false,
+		data_list: [],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "status",
+		label: "Select Status",
+		type: "select",
+		label: "Select Status",
+		multiple: false,
+		data_list: [
+			{ label: "Draft", value: "draft" },
+			{ label: "Published", value: "published" },
+		],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "published_at",
+		label: "Enter Published At",
+		type: "datetime-local",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+];

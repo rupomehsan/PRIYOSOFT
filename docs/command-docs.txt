@@ -1,0 +1,465 @@
+
+# ============================================================
+# PRIYOSOFT ARTISAN COMMAND DOCUMENTATION
+# AI Training Reference — Full Field Types & Test Cases
+# ============================================================
+
+
+# ============================================================
+# COMMAND 1 — make:module (Full CRUD + Vue Frontend)
+# ============================================================
+
+SYNTAX:
+  php artisan make:module {ModuleGroup/ModuleName} [field_list] --vue
+
+WHAT IT GENERATES:
+  Backend  → Actions/, Controller/, Validations/, Routes/,
+             Database/Migrations/, Database/Models/, Database/Seeders/,
+             Others/ (Api.http, Doc.txt, ImportJob.php, COMMAND_GUIDE.md)
+  Frontend → Vue pages/, setup/form_fields.js, setup/index.ts,
+             setup/routes.js, store/index.ts
+  System   → Appends route to ApiRoutes.php
+           → Appends import + route to Vue routes.js
+           → Appends menu item to Sidebar/Index.vue
+           → Injects permissions block into PermissionSeeder.php
+           → Runs migration + seeder automatically
+
+OPTIONS:
+  --vue    Also generate Vue frontend files (omit for backend-only)
+
+NOTE: Without --vue, only backend files are generated.
+
+
+# ============================================================
+# COMMAND 2 — make:table (Migration + Model only)
+# ============================================================
+
+SYNTAX:
+  php artisan make:table {ModuleGroup/ModuleName/TableName} [field_list] --model
+
+WHAT IT GENERATES:
+  Database/Migrations/create_{table_name}_table.php
+  Database/Models/{ModuleName}Model.php  (only when --model is passed)
+
+OPTIONS:
+  --model    Also generate the Eloquent model file
+
+USE CASE:
+  For adding extra tables to an existing module (pivot tables, comment
+  tables, log tables) without generating a full CRUD scaffold.
+
+
+# ============================================================
+# COMMAND 3 — delete:module (Reverse / Cleanup)
+# ============================================================
+
+SYNTAX:
+  php artisan delete:module {ModuleGroup/ModuleName} --vue
+
+WHAT IT REMOVES:
+  Backend  → Entire Modules/Management/{ModuleGroup/ModuleName}/ directory
+  Database → Drops the table + removes migration record from DB
+  System   → Removes route include from ApiRoutes.php
+           → Removes permissions block from PermissionSeeder.php
+           → Deletes permission records from DB
+  Frontend → (if --vue) Vue directory, route import, sidebar menu item
+
+OPTIONS:
+  --vue    Also remove Vue frontend files and registrations
+
+SAFETY: Prompts "Continue? [y/N]" before any destructive action.
+
+
+# ============================================================
+# FIELD TYPE REFERENCE — Complete List
+# ============================================================
+
+FORMAT:   field_name{FK?}:type-options
+
+LEGEND:
+  field_name        = snake_case column name
+  {ModulePath}      = optional FK relationship annotation
+  :type             = data type (see table below)
+  -options          = type-specific modifier (length, enum values, range)
+
+──────────────────────────────────────────────────────────────────────────────
+CATEGORY      TYPE SYNTAX                  FORM INPUT         DB COLUMN
+──────────────────────────────────────────────────────────────────────────────
+
+TEXT
+              string                       <input type="text">              varchar(255)
+              string-150                   <input type="text" maxlength=150> varchar(150)
+              string-50                    <input type="text" maxlength=50>  varchar(50)
+              text                         <textarea rows="4">              text
+              longtext                     <textarea rows="4">              longtext
+
+NUMERIC
+              integer                      <input type="number" step="1">   int
+              int                          <input type="number" step="1">   int
+              bigint                       <input type="number" step="1">   bigint
+              float                        <input type="number" step="0.01"> float
+              double                       <input type="number" step="0.01"> double
+              decimal                      <input type="number" step="0.01"> decimal(10,2)
+              year                         <input type="number" min="1900" max="2100"> year
+
+DATE / TIME
+              date                         <input type="date">              date
+              datetime                     <input type="datetime-local">    datetime
+              timestamp                    <input type="datetime-local">    timestamp
+              time                         <input type="time">              time
+              month                        <input type="month">             varchar(7)
+
+SPECIAL TEXT
+              email                        <input type="email">             varchar(255)
+              url                          <input type="url">               varchar(255)
+              tel                          <input type="tel">               varchar(50)
+              phone                        <input type="tel">               varchar(50)
+              password                     <input type="password">          varchar(255)
+              uuid                         <input type="text" readonly>     uuid / varchar(36)
+
+FILE UPLOAD
+              image                        <input type="file" accept="image/*" multiple=false>   varchar(255)
+              image-150                    <input type="file" accept="image/*" multiple=false>   varchar(150)
+              images                       <input type="file" accept="image/*" multiple=true>    text (JSON array)
+              file                         <input type="file" accept="image/*,pdf,doc,docx">     varchar(255)
+              stringfile                   <input type="file" accept="image/*,pdf,doc,docx">     varchar(255)
+              binary                       <input type="file" accept="image/*,pdf,doc,docx">     longblob
+
+SELECT / ENUM
+              boolean                      <select> Yes / No                tinyint(1)
+              boolean-yes.no               <select> Yes / No (custom labels) tinyint(1)
+              boolean-active.inactive      <select> Active / Inactive        tinyint(1)
+              tinyint                      <select> Yes / No                tinyint(1)
+              tinyint-opt1.opt2            <select> Opt1 / Opt2             tinyint(1)
+              enum-val1.val2.val3          <select> 3 options               enum(val1,val2,val3)
+              select                       <select> empty (fill data_list)  varchar(255)
+              multiselect                  <select multiple> empty           text (JSON array)
+
+RELATION (FK)
+              field_name{Group/Module}:bigint
+                                           <select> empty (load via API)    bigint unsigned FK
+
+RICH TEXT
+              editor                       Rich text editor (wysiwyg)       longtext
+              richtext                     Rich text editor (wysiwyg)       longtext
+              wysiwyg                      Rich text editor (wysiwyg)       longtext
+
+COLOR
+              color                        <input type="color">             varchar(7)
+              colour                       <input type="color">             varchar(7)
+
+RANGE SLIDER
+              range                        <input type="range" min=0 max=100 step=1>
+              range-0.200.5                <input type="range" min=0 max=200 step=5>
+              range-1.10.1                 <input type="range" min=1 max=10 step=1>
+
+JSON
+              json                         <textarea rows="6" placeholder="Enter valid JSON">  json / longtext
+
+──────────────────────────────────────────────────────────────────────────────
+
+
+# ============================================================
+# NAME-BASED AUTO-DETECTION (no explicit type needed)
+# ============================================================
+
+If the field name matches a pattern below, the correct input type
+is chosen automatically even if you write :string or :integer.
+
+  PATTERN                         AUTO TYPE
+  ─────────────────────────────────────────
+  *_id  (e.g. user_id)           → relation select (FK)
+  *_image, thumbnail, avatar,    → single image file upload
+    banner, icon, cover, logo,
+    photo, *_thumbnail
+  *_images, gallery, photos,     → multi-image file upload
+    pictures, *_gallery
+  is_*, has_*                    → boolean Yes/No select
+  email, *_email                 → email input
+  phone, mobile, *_phone,        → tel input
+    *_mobile, telephone
+  url, link, website, *_url,     → url input
+    *_link, *_website
+  color, colour, *_color,        → color picker
+    *_colour, bg_color, text_color
+  password, *_password           → password input
+  price, amount, cost, fee,      → decimal number (step 0.01)
+    salary, *_price, *_amount,
+    *_cost, *_fee, discount,
+    budget, total, subtotal, tax
+
+
+# ============================================================
+# FK RELATION SYNTAX
+# ============================================================
+
+To create a foreign key that links to another module's table:
+
+  field_name{ModuleGroup/ModuleName}:bigint
+
+RULES:
+  - field_name must end with _id (convention, not enforced)
+  - {ModuleGroup/ModuleName} is the path of the referenced module
+  - :bigint is the column type (always bigint for FK)
+
+WHAT IT GENERATES:
+  → DB migration: bigint column + foreign key constraint + index
+  → Model: belongsTo() relationship method
+  → Vue form: select input with empty data_list (fill from API)
+  → GetAllData: eager-loads the relation with select fields
+
+
+# ============================================================
+# TEST CASES
+# ============================================================
+
+──────────────────────────────────────────────────────────────
+TEST 1 — make:module with all common field types + Vue
+──────────────────────────────────────────────────────────────
+
+php artisan make:module BlogManagement/Blog [category_id{BlogManagement/BlogCategory}:bigint,title:string-150,slug:string-200,description:text,content:longtext,reading_time:integer,publish_date:datetime,writer_id{UserManagement/User}:bigint,thumbnail_image:image-150,images:images,blog_type:enum-news.tutorial.opinion,status_url:url,show_top:boolean-yes.no,contributors:json,video_link:string-50,is_featured:boolean,is_published:boolean] --vue
+
+EXPECTED GENERATED INPUTS:
+  category_id         → select (relation, empty data_list) "Select Category"
+  title               → text input (max 150)               "Enter Title"
+  slug                → text input (max 200)               "Enter Slug"
+  description         → textarea 4 rows                    "Enter Description"
+  content             → textarea 4 rows                    "Enter Content"
+  reading_time        → number (step 1)                    "Enter Reading Time"
+  publish_date        → datetime-local                     "Enter Publish Date"
+  writer_id           → select (relation, empty data_list) "Select Writer"
+  thumbnail_image     → file single image/*                "Upload Thumbnail Image"
+  images              → file multi image/*                 "Upload Images"
+  blog_type           → select 3 options (news/tutorial/opinion) "Select Blog Type"
+  status_url          → url input                          "Enter Status Url"
+  show_top            → select Yes/No                      "Select Show Top"
+  contributors        → textarea 6 rows (JSON)             "Enter Contributors"
+  video_link          → text input (max 50)                "Enter Video Link"
+  is_featured         → select Yes/No                      "Select Is Featured"
+  is_published        → select Yes/No                      "Select Is Published"
+
+
+──────────────────────────────────────────────────────────────
+TEST 2 — make:module backend only (no --vue)
+──────────────────────────────────────────────────────────────
+
+php artisan make:module ProductManagement/Product [category_id{ProductManagement/ProductCategory}:bigint,name:string-255,price:decimal,stock:integer,description:text,thumbnail:image,gallery:images,is_active:boolean]
+
+EXPECTED: Only backend files. No Vue files. No sidebar/routes changes.
+
+
+──────────────────────────────────────────────────────────────
+TEST 3 — make:module with enum + range + color + richtext
+──────────────────────────────────────────────────────────────
+
+php artisan make:module SettingManagement/ThemeSetting [name:string,primary_color:color,font_size:range-10.72.2,layout_type:enum-boxed.wide.fluid,description:richtext,priority:integer,is_default:boolean] --vue
+
+EXPECTED GENERATED INPUTS:
+  name          → text input                    "Enter Name"
+  primary_color → color picker                  "Enter Primary Color"
+  font_size     → range slider min=10 max=72 step=2 "Enter Font Size"
+  layout_type   → select 3 options (boxed/wide/fluid) "Select Layout Type"
+  description   → rich text editor             "Enter Description"
+  priority      → number (step 1)              "Enter Priority"
+  is_default    → select Yes/No                "Select Is Default"
+
+
+──────────────────────────────────────────────────────────────
+TEST 4 — make:module with date/time fields
+──────────────────────────────────────────────────────────────
+
+php artisan make:module EventManagement/Event [title:string,start_date:date,start_time:time,end_datetime:datetime,birth_month:month,established_year:year,website:url,contact_phone:tel,organizer_email:email] --vue
+
+EXPECTED GENERATED INPUTS:
+  title           → text input              "Enter Title"
+  start_date      → date input              "Enter Start Date"
+  start_time      → time input              "Enter Start Time"
+  end_datetime    → datetime-local input    "Enter End Datetime"
+  birth_month     → month input             "Enter Birth Month"
+  established_year→ number min=1900 max=2100 "Enter Established Year"
+  website         → url input               "Enter Website"
+  contact_phone   → tel input               "Enter Contact Phone"
+  organizer_email → email input             "Enter Organizer Email"
+
+
+──────────────────────────────────────────────────────────────
+TEST 5 — make:table (pivot/extra table, no full CRUD)
+──────────────────────────────────────────────────────────────
+
+php artisan make:table BlogManagement/BlogComment [blog_id{BlogManagement/Blog}:bigint,user_id{UserManagement/User}:bigint,comment:text,rating:integer,is_approved:boolean] --model
+
+EXPECTED:
+  → Database/Migrations/create_blog_comments_table.php  (migrated immediately)
+  → Database/Models/BlogCommentModel.php                (with --model flag)
+  No Actions, Controller, Vue, Routes, or Seeder files.
+
+
+──────────────────────────────────────────────────────────────
+TEST 6 — make:table migration only (no model)
+──────────────────────────────────────────────────────────────
+
+php artisan make:table CourseManagement/CourseEnrollment [course_id{CourseManagement/Course}:bigint,student_id{UserManagement/User}:bigint,enrolled_at:datetime,expires_at:datetime,status:enum-active.expired.pending]
+
+EXPECTED:
+  → Database/Migrations/create_course_enrollments_table.php only
+  No model file (--model flag omitted).
+
+
+──────────────────────────────────────────────────────────────
+TEST 7 — delete:module (backend only)
+──────────────────────────────────────────────────────────────
+
+php artisan delete:module BlogManagement/Blog
+
+EXPECTED CLEANUP:
+  → Prompts confirmation before proceeding
+  → Removes permissions from PermissionSeeder.php + DB
+  → Removes route include from ApiRoutes.php
+  → Drops 'blogs' table + removes migration record
+  → Deletes Modules/Management/BlogManagement/Blog/ directory
+  → Deletes empty BlogManagement/ parent if now empty
+  No Vue file removal (--vue not passed).
+
+
+──────────────────────────────────────────────────────────────
+TEST 8 — delete:module (with Vue frontend cleanup)
+──────────────────────────────────────────────────────────────
+
+php artisan delete:module BlogManagement/Blog --vue
+
+EXPECTED CLEANUP (everything from TEST 7 plus):
+  → Removes import from routes.js
+  → Removes BlogRoutes child from routes.js
+  → Removes sidebar menu item from Sidebar/Index.vue
+  → Deletes resources/js/backend/Views/Management/BlogManagement/Blog/
+  → Deletes empty BlogManagement/ Vue parent if now empty
+
+
+──────────────────────────────────────────────────────────────
+TEST 9 — name-based auto-detection (no explicit type on special fields)
+──────────────────────────────────────────────────────────────
+
+php artisan make:module UserManagement/UserProfile [user_id{UserManagement/User}:bigint,avatar:string,cover_image:string,gallery:string,is_verified:string,email:string,phone:string,website:string,profile_color:string,password:string,salary:string] --vue
+
+EXPECTED (auto-detected types override :string):
+  user_id       → relation select    (ends with _id)
+  avatar        → single image       (name = avatar)
+  cover_image   → single image       (ends with _image)
+  gallery       → multi image        (name = gallery)
+  is_verified   → boolean Yes/No     (starts with is_)
+  email         → email input        (name = email)
+  phone         → tel input          (name = phone)
+  website       → url input          (name = website)
+  profile_color → color picker       (ends with _color)
+  password      → password input     (name = password)
+  salary        → decimal number     (name = salary)
+
+
+# ============================================================
+# QUICK REFERENCE — Type Syntax Cheatsheet
+# ============================================================
+
+  string            → short text (varchar 255)
+  string-N          → short text with max length N
+  text              → medium text (textarea)
+  longtext          → long text (textarea)
+  integer / int     → whole number
+  bigint            → large whole number / foreign key
+  decimal           → money/price (step 0.01)
+  float / double    → floating point number
+  date              → date picker
+  datetime          → date + time picker
+  time              → time picker
+  month             → month picker
+  year              → year number (1900–2100)
+  boolean           → Yes/No select
+  boolean-a.b       → custom 2-option select
+  tinyint           → Yes/No select (0/1)
+  tinyint-a.b       → custom 2-option select
+  enum-a.b.c        → dropdown with named options
+  select            → empty select (fill manually)
+  multiselect       → empty multi-select
+  image             → single image upload
+  image-N           → single image (varchar N)
+  images            → multi-image upload
+  file              → generic file (pdf/doc/image)
+  stringfile        → same as file
+  binary            → binary file (blob)
+  email             → email input
+  url               → url input
+  tel / phone       → telephone input
+  password          → password input
+  uuid              → readonly auto-UUID text
+  color / colour    → color picker
+  range             → slider (0–100, step 1)
+  range-min.max.step→ slider with custom range
+  json              → JSON textarea
+  editor            → rich text wysiwyg
+  richtext          → rich text wysiwyg
+  wysiwyg           → rich text wysiwyg
+
+  FK syntax: field_name{Group/Module}:bigint
+  Example:   category_id{BlogManagement/BlogCategory}:bigint
+
+
+# ============================================================
+# GENERATED FILE STRUCTURE
+# ============================================================
+
+make:module BlogManagement/Blog [...] --vue
+│
+├── Modules/Management/BlogManagement/Blog/
+│   ├── Actions/
+│   │   ├── GetAllData.php
+│   │   ├── GetSingleData.php
+│   │   ├── StoreData.php
+│   │   ├── UpdateData.php
+│   │   ├── UpdateStatus.php
+│   │   ├── SoftDelete.php
+│   │   ├── DestroyData.php
+│   │   ├── RestoreData.php
+│   │   ├── ImportData.php
+│   │   └── BulkActions.php
+│   ├── Controller/
+│   │   └── Controller.php
+│   ├── Validations/
+│   │   ├── DataStoreValidation.php
+│   │   └── BulkActionsValidation.php
+│   ├── Routes/
+│   │   └── Route.php
+│   ├── Database/
+│   │   ├── Migrations/
+│   │   │   └── create_blogs_table.php
+│   │   ├── Models/
+│   │   │   └── Model.php
+│   │   └── Seeders/
+│   │       └── Seeder.php
+│   └── Others/
+│       ├── Api.http
+│       ├── Doc.txt
+│       ├── ImportJob.php
+│       └── COMMAND_GUIDE.md
+│
+└── resources/js/backend/Views/Management/BlogManagement/Blog/
+    ├── pages/          (copied from template)
+    ├── setup/
+    │   ├── form_fields.js
+    │   ├── index.ts
+    │   └── routes.js
+    └── store/
+        └── index.ts
+
+
+make:table BlogManagement/BlogComment [...] --model
+│
+└── Modules/Management/BlogManagement/
+    └── Database/
+        ├── Migrations/
+        │   └── create_blog_comments_table.php
+        └── Models/
+            └── BlogCommentModel.php
+
+
+# ============================================================
+# END OF DOCUMENTATION
+# ============================================================

@@ -1,0 +1,86 @@
+/**
+ * Form Fields Configuration
+ * Auto-generated — edit data_list / class / is_visible as needed.
+ */
+
+export default [
+	{
+		name: "title",
+		label: "Enter Title",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "message",
+		label: "Enter Message",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "type",
+		label: "Enter Type",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "target_type",
+		label: "Select Target Type",
+		type: "select",
+		label: "Select Target Type",
+		multiple: false,
+		data_list: [
+			{ label: "All", value: "all" },
+			{ label: "Role", value: "role" },
+			{ label: "User", value: "user" },
+		],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "target_role_id",
+		label: "Select Target Role",
+		type: "select",
+		multiple: false,
+		data_list: [],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "target_user_id",
+		label: "Select Target User",
+		type: "select",
+		multiple: false,
+		data_list: [],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "data",
+		label: "Enter Data",
+		type: "textarea",
+		rows: 6,
+		placeholder: "Enter valid JSON",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "creator",
+		label: "Enter Creator",
+		type: "number",
+		step: "1",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+];

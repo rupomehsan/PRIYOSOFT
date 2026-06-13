@@ -1,0 +1,57 @@
+/* ============================================================
+   PRIYOSOFT — Homepage Shared Styles
+   ============================================================ */
+
+/* ── Section utilities ───────────────────────────────────────── */
+.section-pad   { padding: 6rem 0; }
+.section-head  { margin-bottom: 3.5rem; }
+
+.section-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+  color: #667eea;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: .4rem 1.1rem;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+  border: 1px solid #c7d2fe;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: #1a1a3e;
+  margin-bottom: .75rem;
+  line-height: 1.2;
+}
+
+.section-sub {
+  font-size: 1.05rem;
+  color: #6b7280;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+/* ── Shared shimmer skeleton ─────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .section-pad   { padding: 4rem 0; }
+  .section-head  { margin-bottom: 2.5rem; }
+  .section-title { font-size: 1.75rem; }
+}
+
+@media (max-width: 576px) {
+  .section-pad   { padding: 3rem 0; }
+  .section-title { font-size: 1.5rem; }
+  .section-sub   { font-size: .95rem; }
+}

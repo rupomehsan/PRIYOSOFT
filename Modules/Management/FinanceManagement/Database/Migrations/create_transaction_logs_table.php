@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     php artisan migrate --path='/Modules/Management/FinanceManagement/Database/Migrations/create_transaction_logs_table.php' 
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('transaction_logs', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('account_id')->nullable();
+            $table->enum('type', ['income','expense','investment','withdrawal','transfer_in','transfer_out'])->nullable();
+            $table->enum('direction', ['credit','debit'])->nullable();
+            $table->decimal('amount')->nullable();
+            $table->decimal('balance_before')->nullable();
+            $table->decimal('balance_after')->nullable();
+            $table->string('reference_type', 100)->nullable();
+            $table->bigInteger('reference_id')->nullable();
+            $table->string('description', 400)->nullable();
+            $table->bigInteger('product_id')->nullable();
+            $table->bigInteger('investor_id')->nullable();
+            $table->date('transaction_date')->nullable();
+            $table->bigInteger('created_by')->nullable();
+                    $table->bigInteger('creator')->unsigned()->nullable();
+                    $table->string('slug', 50)->nullable();
+                    $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('transaction_logs');
+    }
+};

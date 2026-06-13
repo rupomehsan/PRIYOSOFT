@@ -1,0 +1,60 @@
+<?php
+
+namespace Modules\Management\FinanceManagement\Withdrawal\Database\Models;
+
+use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Model extends EloquentModel
+{
+    use HasFactory, SoftDeletes;
+
+    protected $table = "withdrawals";
+    protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::created(function ($data) {
+            $random_no = random_int(100, 999) . $data->id . random_int(100, 999);
+            $slug = $data->title ?? $data->name ?? 'item';
+            $slug = $slug . " " . $random_no;
+            $data->slug = Str::slug($slug);
+            if (strlen($data->slug) > 50) {
+                $data->slug = substr($data->slug, strlen($data->slug) - 50, strlen($data->slug));
+            }
+            if (auth()->check()) {
+                $data->creator = auth()->user()->id ?? null;
+            }
+            $data->save();
+        });
+    }
+
+    public function scopeActive($q)
+    {
+        return $q->where('status', 'active');
+    }
+
+    public function scopeInactive($q)
+    {
+        return $q->where('status', 'inactive');
+    }
+
+    public function userId()
+    {
+        return $this->belongsTo(\Modules\Management\UserManagement\User\Database\Models\Model::class, 'user_id');
+    }
+    public function investorId()
+    {
+        return $this->belongsTo(\Modules\Management\FinanceManagement\Investor\Database\Models\Model::class, 'investor_id');
+    }
+    public function accountId()
+    {
+        return $this->belongsTo(\Modules\Management\FinanceManagement\Account\Database\Models\Model::class, 'account_id');
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(\Modules\Management\UserManagement\User\Database\Models\Model::class, 'created_by');
+    }
+}

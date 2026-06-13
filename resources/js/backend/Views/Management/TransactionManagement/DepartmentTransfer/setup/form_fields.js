@@ -1,0 +1,97 @@
+/**
+ * Form Fields Configuration
+ * Auto-generated — edit data_list / class / is_visible as needed.
+ */
+
+export default [
+	{
+		name: "transfer_type",
+		label: "Select Transfer Type",
+		type: "select",
+		label: "Select Transfer Type",
+		multiple: false,
+		data_list: [
+			{ label: "Transfer_out", value: "transfer_out" },
+			{ label: "Transfer_in", value: "transfer_in" },
+		],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "department_id",
+		label: "Select Department",
+		type: "select",
+		multiple: false,
+		data_list: [],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "amount",
+		label: "Enter Amount",
+		type: "text",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "date",
+		label: "Enter Date",
+		type: "date",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "description",
+		label: "Enter Description",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "approval_status",
+		label: "Select Approval Status",
+		type: "select",
+		label: "Select Approval Status",
+		multiple: false,
+		data_list: [
+			{ label: "Pending", value: "pending" },
+			{ label: "Approved", value: "approved" },
+			{ label: "Rejected", value: "rejected" },
+		],
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "approved_by",
+		label: "Enter Approved By",
+		type: "number",
+		step: "1",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "approved_at",
+		label: "Enter Approved At",
+		type: "datetime-local",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
+		name: "rejection_reason",
+		label: "Enter Rejection Reason",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
+	},
+];

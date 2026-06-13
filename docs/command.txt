@@ -1,0 +1,175 @@
+
+# ============================================================
+# PRIYOSOFT — ARTISAN MODULE COMMANDS
+# Generated from: docs/database-design.md
+# Run commands TOP TO BOTTOM (parent tables first)
+# ============================================================
+
+
+# ============================================================
+# GROUP 1: PRODUCTS
+# ============================================================
+
+# 1. ProductGroup — no dependencies, run first
+php artisan make:module ProductManagement/ProductGroup [name:string-200,description:text,icon:string-200,sort_order:integer,is_active:boolean] --vue
+
+# 2. Product — depends on: ProductGroup
+#    features (json) and screenshots (images) are managed inline — no separate tables needed
+php artisan make:module ProductManagement/Product [product_group_id{ProductManagement/ProductGroup}:bigint,name:string-200,slug:string-200,description:text,status:enum-planning.development.active.paused,launch_date:date,monthly_target_revenue:decimal,features:json,screenshots:images] --vue
+
+
+# ============================================================
+# GROUP 2: FINANCE — ACCOUNTS & CATEGORIES
+# ============================================================
+
+# 3. Account — no dependencies
+php artisan make:module FinanceManagement/Account [name:string-150,type:enum-cash.bank.mobile_banking.crypto,account_number:string-100,opening_balance:decimal,current_balance:decimal,currency:string-3,is_active:boolean] --vue
+
+# 4. IncomeCategory — no dependencies
+php artisan make:module FinanceManagement/IncomeCategory [name:string-150,description:string-300] --vue
+
+# 5. ExpenseCategory — no dependencies
+php artisan make:module FinanceManagement/ExpenseCategory [name:string-150,description:string-300] --vue
+
+
+# ============================================================
+# GROUP 3: FINANCE — INVESTORS
+# ============================================================
+
+# 6. Investor — no dependencies
+php artisan make:module FinanceManagement/Investor [name:string-200,email:string-200,phone:string-50,address:text,nid_or_passport:string-100,type:enum-individual.company,equity_percentage:decimal,note:text,joined_at:date,status:enum-active.exited] --vue
+
+
+# ============================================================
+# GROUP 4: FINANCE — TRANSACTIONS
+# ============================================================
+
+# 7. Income — depends on: IncomeCategory, Product, Account
+php artisan make:module FinanceManagement/Income [title:string-300,income_category_id{FinanceManagement/IncomeCategory}:bigint,product_id{ProductManagement/Product}:bigint,account_id{FinanceManagement/Account}:bigint,amount:decimal,currency:string-3,source:string-200,received_at:date,invoice_no:string-100,note:text,attachment:file,created_by{UserManagement/User}:bigint] --vue
+
+# 8. Expense — depends on: ExpenseCategory, Product, Account
+php artisan make:module FinanceManagement/Expense [title:string-300,expense_category_id{FinanceManagement/ExpenseCategory}:bigint,product_id{ProductManagement/Product}:bigint,account_id{FinanceManagement/Account}:bigint,amount:decimal,currency:string-3,vendor:string-200,paid_at:date,invoice_no:string-100,note:text,attachment:file,created_by{UserManagement/User}:bigint] --vue
+
+# 9. Investment — depends on: Investor, Account
+php artisan make:module FinanceManagement/Investment [investor_id{FinanceManagement/Investor}:bigint,account_id{FinanceManagement/Account}:bigint,round:string-100,amount:decimal,currency:string-3,type:enum-equity.loan.grant,interest_rate:decimal,agreement_date:date,received_at:date,agreement_doc:file,note:text] --vue
+
+# 10. Withdrawal — depends on: Investor, Account
+php artisan make:module FinanceManagement/Withdrawal [withdrawn_by_type:enum-owner.investor,user_id{UserManagement/User}:bigint,investor_id{FinanceManagement/Investor}:bigint,account_id{FinanceManagement/Account}:bigint,amount:decimal,currency:string-3,reason:string-300,withdrawn_at:date,attachment:file,note:text,created_by{UserManagement/User}:bigint] --vue
+
+# 11. AccountTransfer — depends on: Account
+php artisan make:module FinanceManagement/AccountTransfer [from_account_id{FinanceManagement/Account}:bigint,to_account_id{FinanceManagement/Account}:bigint,amount:decimal,fee:decimal,transferred_at:date,note:text,created_by{UserManagement/User}:bigint] --vue
+
+
+# ============================================================
+# GROUP 5: FINANCE — PROFIT SHARING
+# ============================================================
+
+# 12. ProfitDistribution — no dependencies
+php artisan make:module FinanceManagement/ProfitDistribution [period:string-20,total_income:decimal,total_expense:decimal,net_profit:decimal,distributed_at:date,note:text] --vue
+
+# 13. ProfitDistributionItem — child of ProfitDistribution (make:table only, managed via parent page)
+#     depends on: ProfitDistribution, Investor, Withdrawal
+php artisan make:table FinanceManagement/ProfitDistributionItem [profit_distribution_id{FinanceManagement/ProfitDistribution}:bigint,recipient_type:enum-owner.investor,user_id{UserManagement/User}:bigint,investor_id{FinanceManagement/Investor}:bigint,percentage:decimal,amount:decimal,withdrawal_id{FinanceManagement/Withdrawal}:bigint] --model
+
+
+# ============================================================
+# GROUP 6: FINANCE — TRANSACTION LOG (auto-generated, no CRUD UI)
+# ============================================================
+
+# 14. TransactionLog — auto-populated by app events; migration + model only
+#     depends on: Account, Product, Investor
+php artisan make:table FinanceManagement/TransactionLog [account_id{FinanceManagement/Account}:bigint,type:enum-income.expense.investment.withdrawal.transfer_in.transfer_out,direction:enum-credit.debit,amount:decimal,balance_before:decimal,balance_after:decimal,reference_type:string-100,reference_id:bigint,description:string-400,product_id{ProductManagement/Product}:bigint,investor_id{FinanceManagement/Investor}:bigint,transaction_date:date,created_by{UserManagement/User}:bigint] --model
+
+
+# ============================================================
+# GROUP 7: WEBSITE CONTENT
+# ============================================================
+
+
+
+# 15. HeroSection — no dependencies
+php artisan make:module WebsiteManagement/HeroSection [badge_text:string-100,headline:string-300,subheadline:string-300,description:text,primary_button_text:string-100,primary_button_url:url,secondary_button_text:string-100,secondary_button_url:url,media_type:enum-image.video,background_image:image,hero_image:image,video_url:url,is_active:boolean] --vue
+
+# 15. SiteSection — no dependencies ( about, mission, vision, cta, footer)
+php artisan make:module WebsiteManagement/SiteSection [section:string-100,key:string-150,value:text,sort_order:integer] --vue
+
+# 16. TeamMember — no dependencies
+php artisan make:module WebsiteManagement/TeamMember [name:string-200,role:string-200,bio:text,photo:image,linkedin:string-500,github:string-500,sort_order:integer,is_visible:boolean] --vue
+
+# 17. Testimonial — depends on: Product
+php artisan make:module WebsiteManagement/Testimonial [client_name:string-200,client_company:string-200,media_type:enum-image.video,client_photo:image,video_url:url,product_id{ProductManagement/Product}:bigint,rating:integer,message:text,is_featured:boolean,is_visible:boolean] --vue
+
+# 18. BlogPost — depends on: Product
+php artisan make:module WebsiteManagement/BlogPost [title:string-500,slug:string-500,thumbnail:image,excerpt:text,body:longtext,author_id{UserManagement/User}:bigint,product_id{ProductManagement/Product}:bigint,status:enum-draft.published,published_at:datetime] --vue
+
+# 19. AboutUs — no dependencies
+php artisan make:module WebsiteManagement/AboutUs [section:enum-story.mission.vision.value.stat,title:string-300,description:text,icon:string-200,image:image,stat_value:string-100,stat_label:string-200,sort_order:integer,is_visible:boolean] --vue
+
+# 20. Faq — depends on: Product
+php artisan make:module WebsiteManagement/Faq [product_id{ProductManagement/Product}:bigint,question:string-500,answer:text,sort_order:integer,is_visible:boolean] --vue
+
+# 21. ContactLead — depends on: Product
+php artisan make:module WebsiteManagement/ContactLead [name:string-200,email:string-200,phone:string-50,subject:string-300,product_id{ProductManagement/Product}:bigint,message:text,status:enum-new.read.replied.closed,ip_address:string-50] --vue
+
+# 22. Subscriber — no dependencies
+php artisan make:module WebsiteManagement/Subscriber [email:string-200,name:string-200,is_active:boolean] --vue
+
+
+
+# ============================================================
+# GROUP 9: ORDER SYSTEM
+# ============================================================
+
+# 25. Order — depends on: Product, User (customers = users)
+php artisan make:module OrderManagement/Order [order_number:string-50,product_id{ProductManagement/Product}:bigint,customer_id{UserManagement/User}:bigint,plan_name:string-200,billing_cycle:enum-monthly.yearly.one_time,status:enum-pending_payment.payment_submitted.payment_verified.access_sent.cancelled.refunded,delivery_method:enum-email.manual_contact,subtotal:decimal,discount_amount:decimal,total_amount:decimal,coupon_code:string-100,customer_note:text,ordered_at:datetime,payment_verified_at:datetime,access_sent_at:datetime,cancelled_at:datetime,created_by{UserManagement/User}:bigint] --vue
+
+# 26. OrderPayment — depends on: Order
+#     (customer TxnID submission + admin verification)
+php artisan make:table OrderManagement/OrderPayment [order_id{OrderManagement/Order}:bigint,payment_method:enum-bkash.nagad.bank_transfer.card,sender_number:string-20,transaction_id:string-200,amount:decimal,status:enum-submitted.verified.rejected,submitted_at:datetime,verified_at:datetime,verified_by{UserManagement/User}:bigint,rejection_reason:string-300,screenshot:image,note:text] --model
+
+# 27. OrderDelivery — depends on: Order
+#     (email/manual delivery log)
+php artisan make:table OrderManagement/OrderDelivery [order_id{OrderManagement/Order}:bigint,method:enum-email.manual_contact,contact_via:string-100,recipient_email:string-200,subject:string-300,message:text,attachment:file,sent_by{UserManagement/User}:bigint,delivered_at:datetime] --model
+
+# 28. OrderStatusHistory — depends on: Order (audit trail, auto-generated)
+php artisan make:table OrderManagement/OrderStatusHistory [order_id{OrderManagement/Order}:bigint,from_status:string-100,to_status:string-100,note:text,changed_by{UserManagement/User}:bigint] --model
+
+
+# ============================================================
+# GROUP 10: PROJECT TODO
+# ============================================================
+
+# 29. TodoMilestone — no dependencies
+php artisan make:module TodoManagement/TodoMilestone [title:string-300,phase:string-100,target_date:date,achieved_date:date,status:enum-upcoming.achieved.missed,note:text,sort_order:integer] --vue
+
+# 30. TodoGroup — no dependencies
+php artisan make:module TodoManagement/TodoGroup [name:string-200,phase:string-100,sort_order:integer,status:enum-pending.in_progress.completed] --vue
+
+# 31. TodoList — depends on: TodoGroup
+php artisan make:module TodoManagement/TodoList [todo_group_id{TodoManagement/TodoGroup}:bigint,title:string-400,assigned_to:string-100,estimated_days:decimal,daily_rate:decimal,fixed_cost:decimal,item_cost:decimal,is_recurring:boolean,priority:enum-critical.high.medium.low,status:enum-pending.in_progress.completed.skipped,completed_at:date,note:text,sort_order:integer] --vue
+
+
+# ============================================================
+# SUMMARY
+# ============================================================
+#
+#  make:module --vue  (full CRUD + Vue frontend):
+#  ─────────────────────────────────────────────
+#  ProductManagement    → ProductGroup, Product
+#  FinanceManagement    → Account, IncomeCategory, ExpenseCategory,
+#                         Investor, Income, Expense, Investment,
+#                         Withdrawal, AccountTransfer, ProfitDistribution
+#  WebsiteManagement    → SiteSection, TeamMember, Testimonial, BlogPost,
+#                         AboutUs, Faq, ContactLead, Subscriber
+#  OrderManagement      → Order
+#  TodoManagement       → TodoMilestone, TodoGroup, TodoList
+#
+#  make:table --model  (migration + model only, no CRUD UI):
+#  ──────────────────────────────────────────────────────────
+#  FinanceManagement    → ProfitDistributionItem, TransactionLog
+#  ProductManagement    → ProductFeature, ProductScreenshot
+#  OrderManagement      → OrderPayment, OrderDelivery, OrderStatusHistory
+#
+#  Total: 22 make:module + 9 make:table = 31 tables
+#
+# ============================================================
