@@ -318,10 +318,6 @@ export default {
 <style scoped>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-:global(body), :global(html) {
-  overflow: hidden !important;
-  height: 100%;
-}
 
 .login-root {
   position: fixed;

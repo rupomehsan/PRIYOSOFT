@@ -17,3 +17,9 @@ export default {
 };
 </script>
 
+<style>
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+</style>

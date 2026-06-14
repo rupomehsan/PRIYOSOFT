@@ -9,11 +9,7 @@
             <p class="section-sub">Everything you need to know about working with us.</p>
           </div>
 
-          <div v-if="!items.length" class="faq-fallback">
-            <div v-for="i in 4" :key="i" class="faq-skeleton mb-3"></div>
-          </div>
-
-          <div v-else class="faq-list">
+          <div class="faq-list">
             <div v-for="(faq, i) in items" :key="faq.id || i" class="faq-item" :class="{ 'faq-item--open': openIndex === i }">
               <button class="faq-q" @click="toggle(i)">
                 <span class="faq-q__num">{{ String(i + 1).padStart(2, '0') }}</span>
@@ -37,12 +33,23 @@
 </template>
 
 <script>
+const FALLBACK = [
+  { id:1, question:'What technologies do you use?', answer:'We primarily build with Laravel (PHP), Vue.js, and React on the frontend. For mobile we use Flutter. Our infrastructure runs on AWS and DigitalOcean with Docker-based deployments.' },
+  { id:2, question:'How long does a typical project take?', answer:'A standard SaaS MVP takes 6–12 weeks depending on scope. Enterprise systems can take 3–6 months. We always provide a detailed timeline after the discovery phase.' },
+  { id:3, question:'Do you offer ongoing support after launch?', answer:'Yes — we offer maintenance packages covering bug fixes, security patches, and feature additions. Most clients stay with us for 12+ months post-launch.' },
+  { id:4, question:'Can you work with our existing codebase?', answer:'Absolutely. We regularly perform code audits, refactors, and feature additions on legacy codebases. We\'ll assess the code first and give honest recommendations.' },
+  { id:5, question:'How do we get started?', answer:'Send us a message via the contact form below or email hello@priyosoft.com. We\'ll schedule a free discovery call within 24 hours to understand your needs and propose a plan.' },
+];
+
 export default {
   name: 'FaqSection',
   props: { data: { type: Array, default: () => [] } },
   data: () => ({ openIndex: 0 }),
   computed: {
-    items() { return this.data.filter(f => f.is_visible !== false); },
+    items() {
+      const list = this.data.filter(f => f.is_visible !== false);
+      return list.length ? list : FALLBACK;
+    },
   },
   methods: {
     toggle(i) { this.openIndex = this.openIndex === i ? null : i; },

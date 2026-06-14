@@ -7,13 +7,7 @@
         <p class="section-sub">Talented individuals working together to build extraordinary things.</p>
       </div>
 
-      <div v-if="!items.length" class="row g-4 justify-content-center">
-        <div v-for="i in 4" :key="i" class="col-sm-6 col-md-4 col-lg-3">
-          <div class="team-skeleton"></div>
-        </div>
-      </div>
-
-      <div v-else class="row g-4 justify-content-center">
+      <div class="row g-4 justify-content-center">
         <div v-for="member in items" :key="member.id" class="col-sm-6 col-md-4 col-lg-3">
           <div class="team-card">
             <div class="team-card__photo-wrap">
@@ -43,11 +37,21 @@
 </template>
 
 <script>
+const FALLBACK = [
+  { id:1, name:'Ahsan Habib',     role:'CEO & Co-founder',       bio:'Leads vision and strategy. 10+ years building software products.' },
+  { id:2, name:'Nadia Rahman',    role:'CTO',                    bio:'Architect of our core platforms. Loves clean code and fast APIs.' },
+  { id:3, name:'Rifat Islam',     role:'Lead Designer',          bio:'Crafts interfaces that are beautiful and accessible.' },
+  { id:4, name:'Tanvir Ahmed',    role:'Senior Developer',       bio:'Full-stack engineer with a passion for performance.' },
+];
+
 export default {
   name: 'TeamSection',
   props: { data: { type: Array, default: () => [] } },
   computed: {
-    items() { return this.data.filter(m => m.is_visible !== false); },
+    items() {
+      const list = this.data.filter(m => m.is_visible !== false);
+      return list.length ? list : FALLBACK;
+    },
   },
   methods: {
     initials(name) {

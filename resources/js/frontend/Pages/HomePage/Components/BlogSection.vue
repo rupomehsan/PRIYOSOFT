@@ -7,11 +7,7 @@
         <p class="section-sub">Thoughts on software, technology, and building great products.</p>
       </div>
 
-      <div v-if="!items.length" class="row g-4">
-        <div v-for="i in 3" :key="i" class="col-md-4"><div class="blog-skeleton"></div></div>
-      </div>
-
-      <div v-else class="row g-4">
+      <div class="row g-4">
         <div v-for="post in items" :key="post.id" class="col-md-6 col-lg-4">
           <article class="blog-card">
             <div class="blog-card__thumb">
@@ -39,11 +35,29 @@
 </template>
 
 <script>
+const FALLBACK = [
+  {
+    id:1, title:'How We Build Scalable Laravel APIs',
+    excerpt:'A deep dive into our API architecture — rate limiting, versioning, and response caching strategies that power our SaaS products.',
+    slug:'how-we-build-scalable-laravel-apis', status:'published', published_at:'2025-05-10',
+  },
+  {
+    id:2, title:'Vue 3 Composition API: Lessons from Production',
+    excerpt:'After migrating three enterprise apps to Vue 3, here are the patterns we rely on and the pitfalls we learned the hard way.',
+    slug:'vue3-composition-api-lessons', status:'published', published_at:'2025-04-22',
+  },
+  {
+    id:3, title:'Designing for Non-English Users: Our UX Journey',
+    excerpt:'Building software for Bangladesh taught us that RTL support, local date formats, and font choices matter more than you think.',
+    slug:'designing-for-non-english-users', status:'published', published_at:'2025-03-18',
+  },
+];
+
 export default {
   name: 'BlogSection',
   props: { data: { type: Array, default: () => [] } },
   computed: {
-    items() { return this.data.slice(0, 3); },
+    items() { return this.data.length ? this.data.slice(0, 3) : FALLBACK; },
   },
   methods: {
     truncate(str, n) {

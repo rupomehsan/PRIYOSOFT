@@ -7,13 +7,7 @@
         <p class="section-sub">Innovative software products designed to solve real business challenges.</p>
       </div>
 
-      <div v-if="!items.length" class="row g-4">
-        <div v-for="i in 3" :key="i" class="col-md-4">
-          <div class="product-skeleton"></div>
-        </div>
-      </div>
-
-      <div v-else class="row g-4">
+      <div class="row g-4">
         <div v-for="product in items" :key="product.id" class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-card__thumb">
@@ -42,11 +36,20 @@
 </template>
 
 <script>
+const FALLBACK = [
+  { id:1, name:'PriyoERP', description:'Full-featured ERP system for SMEs — inventory, HR, accounting, and CRM in one platform.', status:'active',  features:'["Multi-branch","Real-time reports","Role-based access"]' },
+  { id:2, name:'PriyoPOS', description:'Modern point-of-sale solution with cloud sync, offline mode, and integrated payment gateways.', status:'active',  features:'["Offline mode","Cloud sync","Barcode scanner"]' },
+  { id:3, name:'PriyoHRM', description:'Human resource management system — payroll, leave, attendance, and employee self-service portal.', status:'active',  features:'["Payroll","Leave management","Attendance"]' },
+  { id:4, name:'PriyoShop', description:'Headless e-commerce platform built for speed — PWA storefront, multi-vendor, and smart inventory.', status:'development', features:'["Multi-vendor","PWA","Smart inventory"]' },
+  { id:5, name:'PriyoCMS', description:'Developer-first content management system with visual editor, REST & GraphQL APIs.', status:'development', features:'["Visual editor","REST API","GraphQL"]' },
+  { id:6, name:'PriyoAnalytics', description:'Business intelligence dashboard — real-time KPIs, custom reports, and data visualisation.', status:'planning', features:'["Real-time KPIs","Custom reports","Data viz"]' },
+];
+
 export default {
   name: 'ProductsSection',
   props: { data: { type: Array, default: () => [] } },
   computed: {
-    items() { return this.data.slice(0, 6); },
+    items() { return this.data.length ? this.data.slice(0, 6) : FALLBACK; },
   },
   methods: {
     truncate(str, n) {

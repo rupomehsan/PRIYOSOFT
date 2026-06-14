@@ -1,5 +1,5 @@
 <template>
-  <section id="contact" class="newsletter-section">
+  <section id="newsletter" class="newsletter-section">
     <div class="container">
       <div class="newsletter-card">
         <div class="row align-items-center g-4">

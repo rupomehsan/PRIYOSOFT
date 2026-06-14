@@ -22,10 +22,10 @@ export const actions = {
 
     async fetchHeroSection(this: any) {
         try {
-            const res = await api('public/hero-sections?get_all=1&status=active&limit=1');
+            const res = await api('public/hero-sections?get_all=1&status=active');
             const list = res?.data?.data ?? res?.data ?? [];
-            this.heroSection = Array.isArray(list) ? list[0] ?? null : list;
-        } catch { /* silent fail — fallback content shown */ }
+            this.heroSlides = Array.isArray(list) ? list : (list ? [list] : []);
+        } catch { /* silent fail — fallback slides shown */ }
     },
 
     async fetchSiteSections(this: any) {

@@ -7,13 +7,7 @@
         <p class="section-sub">Real words from real people who trusted us with their vision.</p>
       </div>
 
-      <div v-if="!items.length" class="row g-4">
-        <div v-for="i in 3" :key="i" class="col-md-4">
-          <div class="t-skeleton"></div>
-        </div>
-      </div>
-
-      <div v-else class="row g-4">
+      <div class="row g-4">
         <div v-for="t in items" :key="t.id" class="col-md-6 col-lg-4">
           <div class="t-card">
             <div class="t-card__quote"><i class="fas fa-quote-left"></i></div>
@@ -47,11 +41,20 @@
 </template>
 
 <script>
+const FALLBACK = [
+  { id:1, client_name:'Karim Uddin',    client_company:'RetailPro BD',   rating:5, message:'PriyoSoft delivered our ERP in record time. The system is rock-solid and the team was incredibly responsive throughout.' },
+  { id:2, client_name:'Sumaiya Haque',  client_company:'HealthLink Ltd',  rating:5, message:'We chose PriyoSoft for our hospital management system and could not be happier. Excellent code quality and great post-launch support.' },
+  { id:3, client_name:'Imran Chowdhury',client_company:'LogiFlow Inc',    rating:5, message:'Their supply-chain dashboard transformed how we track inventory. Clean UI, fast performance, and very reasonable pricing.' },
+];
+
 export default {
   name: 'TestimonialsSection',
   props: { data: { type: Array, default: () => [] } },
   computed: {
-    items() { return this.data.filter(t => t.is_visible !== false).slice(0, 6); },
+    items() {
+      const list = this.data.filter(t => t.is_visible !== false).slice(0, 6);
+      return list.length ? list : FALLBACK;
+    },
   },
   methods: {
     initial(name) { return name ? name[0].toUpperCase() : '?'; },

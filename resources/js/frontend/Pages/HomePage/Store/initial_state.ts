@@ -3,7 +3,7 @@ export const initialState = {
     error: null as null | string,
 
     // ── Portfolio data ────────────────────────────────────────────────
-    heroSection:   null  as null | Record<string, any>,
+    heroSlides:    []    as any[],
     siteSections:  []    as any[],
     products:      []    as any[],
     productGroups: []    as any[],
