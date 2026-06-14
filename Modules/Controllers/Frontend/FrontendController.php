@@ -57,4 +57,12 @@ class FrontendController extends Controller
             ]
         ]);
     }
+    public function TodoPage()
+    {
+        return Inertia::render('TodoList/Index', [
+            'event' => [
+                'title' => 'Todo List',
+            ]
+        ]);
+    }
 }

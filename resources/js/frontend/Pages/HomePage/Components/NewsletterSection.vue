@@ -1,46 +1,58 @@
 <template>
   <section id="newsletter" class="newsletter-section">
-    <div class="container">
-      <div class="newsletter-card">
-        <div class="row align-items-center g-4">
+    <div class="nl-bg-glow nl-bg-glow--1"></div>
+    <div class="nl-bg-glow nl-bg-glow--2"></div>
+    <div class="nl-bg-glow nl-bg-glow--3"></div>
 
-          <div class="col-lg-6">
-            <span class="section-tag" style="color:#fff;background:rgba(255,255,255,.2)">Stay Updated</span>
-            <h2 class="newsletter-title">Ready to Build Something Amazing?</h2>
-            <p class="newsletter-sub">
-              Subscribe for our latest insights, or drop us a message — we'd love to talk about your next project.
-            </p>
-            <div class="newsletter-perks">
-              <div v-for="perk in perks" :key="perk" class="newsletter-perk">
-                <i class="fas fa-check-circle me-2"></i>{{ perk }}
-              </div>
-            </div>
+    <div class="container position-relative">
+      <div class="nl-wrap">
+
+        <!-- Left -->
+        <div class="nl-left">
+          <span class="nl-tag">Let's Work Together</span>
+          <h2 class="nl-title">Ready to Build<br><span class="gradient-text">Something Amazing?</span></h2>
+          <p class="nl-sub">
+            Subscribe for our latest insights, or drop us a message — we'd love to discuss your next project.
+          </p>
+          <ul class="nl-perks">
+            <li v-for="perk in perks" :key="perk">
+              <span class="nl-perk-icon"><i class="fas fa-check"></i></span>
+              {{ perk }}
+            </li>
+          </ul>
+          <div class="nl-contact-info">
+            <a href="mailto:hello@priyosoft.com" class="nl-contact-link">
+              <i class="fas fa-envelope"></i>hello@priyosoft.com
+            </a>
           </div>
+        </div>
 
-          <div class="col-lg-6">
-            <div v-if="success" class="newsletter-success">
-              <i class="fas fa-check-circle fa-3x mb-3"></i>
+        <!-- Right: form -->
+        <div class="nl-right">
+          <div class="nl-card">
+            <div v-if="success" class="nl-success">
+              <div class="nl-success__icon"><i class="fas fa-check"></i></div>
               <h4>You're subscribed!</h4>
-              <p>Thanks for joining us. We'll be in touch soon.</p>
+              <p>Thanks for joining. We'll be in touch soon.</p>
             </div>
-            <form v-else class="newsletter-form" @submit.prevent="submit">
-              <div class="newsletter-form__field">
+            <form v-else @submit.prevent="submit">
+              <div class="nl-field">
                 <label>Your Name</label>
                 <input v-model="form.name" type="text" placeholder="John Doe" />
               </div>
-              <div class="newsletter-form__field">
+              <div class="nl-field">
                 <label>Email Address <span class="req">*</span></label>
                 <input v-model="form.email" type="email" placeholder="you@company.com" required />
               </div>
-              <p v-if="error" class="newsletter-error">{{ error }}</p>
-              <button type="submit" class="newsletter-btn" :disabled="loading">
-                <span v-if="loading"><i class="fas fa-spinner fa-spin me-2"></i>Subscribing…</span>
-                <span v-else><i class="fas fa-paper-plane me-2"></i>Subscribe &amp; Stay Updated</span>
+              <p v-if="error" class="nl-error">{{ error }}</p>
+              <button type="submit" class="nl-btn" :disabled="loading">
+                <span v-if="loading"><i class="fas fa-spinner fa-spin me-2"></i>Sending…</span>
+                <span v-else><i class="fas fa-paper-plane me-2"></i>Subscribe &amp; Get Updates</span>
               </button>
             </form>
           </div>
-
         </div>
+
       </div>
     </div>
   </section>
@@ -70,62 +82,146 @@ export default {
 
 <style scoped>
 .newsletter-section {
-  background: #f8f9ff;
-  padding: 5rem 0;
-}
-.newsletter-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 60%, #a855f7 100%);
-  border-radius: 28px;
-  padding: 4rem 3.5rem;
-  box-shadow: 0 30px 80px rgba(102,126,234,.35);
+  background: #050512;
+  padding: 7rem 0;
   position: relative;
   overflow: hidden;
+  border-top: 1px solid rgba(99,102,241,.12);
 }
-.newsletter-card::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-.newsletter-title { font-size: 2rem; font-weight: 800; color: #fff; margin: 1rem 0 .75rem; }
-.newsletter-sub   { color: rgba(255,255,255,.85); font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; }
-.newsletter-perks { display: flex; flex-direction: column; gap: .5rem; }
-.newsletter-perk  { color: rgba(255,255,255,.9); font-size: .9rem; display: flex; align-items: center; }
-.newsletter-perk i { color: #86efac; }
 
-.newsletter-form { background: rgba(255,255,255,.12); border-radius: 20px; padding: 2rem; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.2); }
-.newsletter-form__field { margin-bottom: 1.25rem; }
-.newsletter-form__field label { display: block; color: rgba(255,255,255,.85); font-size: .85rem; font-weight: 600; margin-bottom: .4rem; }
-.newsletter-form__field input {
-  width: 100%; padding: .875rem 1.25rem;
-  border-radius: 12px; border: 1.5px solid rgba(255,255,255,.25);
-  background: rgba(255,255,255,.1); color: #fff; font-size: .95rem;
-  outline: none; transition: border-color .25s;
+/* Ambient glows */
+.nl-bg-glow {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); pointer-events: none;
 }
-.newsletter-form__field input::placeholder { color: rgba(255,255,255,.5); }
-.newsletter-form__field input:focus { border-color: rgba(255,255,255,.7); background: rgba(255,255,255,.15); }
-.req { color: #fca5a5; }
+.nl-bg-glow--1 { width:600px;height:600px;background:rgba(99,102,241,.12);top:-200px;left:-150px; }
+.nl-bg-glow--2 { width:500px;height:500px;background:rgba(168,85,247,.1);bottom:-150px;right:-150px; }
+.nl-bg-glow--3 { width:300px;height:300px;background:rgba(6,182,212,.07);top:40%;left:45%; }
 
-.newsletter-btn {
-  width: 100%; padding: 1rem;
-  background: #fff; color: #667eea;
-  border: none; border-radius: 12px;
+/* Wrapper */
+.nl-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+/* Left */
+.nl-tag {
+  display: inline-block;
+  background: rgba(99,102,241,.12);
+  color: #a5b4fc;
+  font-size: .7rem; font-weight: 800;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  padding: .45rem 1.2rem; border-radius: 50px;
+  border: 1px solid rgba(99,102,241,.25);
+  margin-bottom: 1.25rem;
+}
+
+.nl-title {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 900;
+  color: #f1f5f9;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+  margin-bottom: 1.25rem;
+}
+
+.nl-sub {
+  font-size: 1rem; color: #64748b;
+  line-height: 1.8; margin-bottom: 2rem;
+}
+
+/* Perks */
+.nl-perks {
+  list-style: none; padding: 0; margin: 0 0 2rem;
+  display: flex; flex-direction: column; gap: .65rem;
+}
+.nl-perks li {
+  display: flex; align-items: center; gap: .75rem;
+  color: #94a3b8; font-size: .9rem;
+}
+.nl-perk-icon {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(16,185,129,.15);
+  border: 1px solid rgba(16,185,129,.25);
+  display: flex; align-items: center; justify-content: center;
+  color: #10b981; font-size: .65rem; flex-shrink: 0;
+}
+
+/* Contact link */
+.nl-contact-link {
+  display: inline-flex; align-items: center; gap: .6rem;
+  color: #6366f1; font-weight: 600; font-size: .9rem;
+  text-decoration: none; transition: color .2s;
+}
+.nl-contact-link:hover { color: #a5b4fc; }
+
+/* Card */
+.nl-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 24px;
+  padding: 2.5rem;
+  backdrop-filter: blur(16px);
+}
+
+/* Form fields */
+.nl-field { margin-bottom: 1.25rem; }
+.nl-field label {
+  display: block; font-size: .82rem; font-weight: 700;
+  color: #94a3b8; margin-bottom: .5rem; letter-spacing: .3px;
+}
+.nl-field input {
+  width: 100%; padding: .9rem 1.25rem;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px; color: #e2e8f0;
+  font-size: .95rem; outline: none;
+  transition: border-color .25s, background .25s;
+}
+.nl-field input::placeholder { color: #475569; }
+.nl-field input:focus {
+  border-color: rgba(99,102,241,.5);
+  background: rgba(99,102,241,.06);
+}
+.req { color: #f87171; }
+.nl-error { font-size: .82rem; color: #f87171; margin-bottom: .75rem; }
+
+/* Submit */
+.nl-btn {
+  width: 100%; padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; border: none; border-radius: 12px;
   font-weight: 800; font-size: 1rem; cursor: pointer;
-  transition: all .3s;
+  transition: opacity .3s, transform .3s, box-shadow .3s;
+  box-shadow: 0 8px 24px rgba(99,102,241,.35);
 }
-.newsletter-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
-.newsletter-btn:disabled { opacity: .7; cursor: not-allowed; }
-
-.newsletter-error { color: #fca5a5; font-size: .85rem; margin-bottom: .75rem; }
-
-.newsletter-success {
-  text-align: center; color: #fff; padding: 2.5rem 1rem;
+.nl-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(99,102,241,.5);
 }
-.newsletter-success i { color: #86efac; }
-.newsletter-success h4 { font-weight: 800; font-size: 1.5rem; margin-bottom: .5rem; }
-.newsletter-success p  { color: rgba(255,255,255,.8); }
+.nl-btn:disabled { opacity: .6; cursor: not-allowed; }
 
-@media (max-width: 768px) {
-  .newsletter-card { padding: 2.5rem 1.5rem; }
-  .newsletter-title { font-size: 1.6rem; }
+/* Success */
+.nl-success { text-align: center; padding: 1.5rem 0; }
+.nl-success__icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; color: #fff;
+  margin: 0 auto 1.25rem;
+  box-shadow: 0 8px 24px rgba(16,185,129,.35);
+}
+.nl-success h4 { font-weight: 800; font-size: 1.35rem; color: #f1f5f9; margin-bottom: .5rem; }
+.nl-success p  { color: #64748b; font-size: .9rem; }
+
+/* Responsive */
+@media (max-width: 991px) {
+  .nl-wrap { grid-template-columns: 1fr; gap: 3rem; }
+}
+@media (max-width: 576px) {
+  .nl-card { padding: 1.75rem; }
+  .nl-title { font-size: 2rem; }
 }
 </style>

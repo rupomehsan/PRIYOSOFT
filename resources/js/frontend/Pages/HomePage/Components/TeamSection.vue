@@ -3,32 +3,35 @@
     <div class="container">
       <div class="section-head text-center">
         <span class="section-tag">The People Behind</span>
-        <h2 class="section-title">Meet Our Team</h2>
-        <p class="section-sub">Talented individuals working together to build extraordinary things.</p>
+        <h2 class="section-title">Meet Our <span class="gradient-text">Team</span></h2>
+        <p class="section-sub">Talented individuals who turn complex problems into elegant, working software.</p>
       </div>
 
-      <div class="row g-4 justify-content-center">
-        <div v-for="member in items" :key="member.id" class="col-sm-6 col-md-4 col-lg-3">
-          <div class="team-card">
+      <div class="team-grid">
+        <div v-for="member in items" :key="member.id" class="team-card">
+          <div class="team-card__photo-ring">
             <div class="team-card__photo-wrap">
               <img v-if="member.photo" :src="member.photo" :alt="member.name" class="team-card__photo" />
               <div v-else class="team-card__initial">{{ initials(member.name) }}</div>
-              <div class="team-card__overlay">
-                <div class="team-card__socials">
-                  <a v-if="member.linkedin" :href="member.linkedin" target="_blank" class="social-btn">
-                    <i class="fab fa-linkedin-in"></i>
-                  </a>
-                  <a v-if="member.github" :href="member.github" target="_blank" class="social-btn">
-                    <i class="fab fa-github"></i>
-                  </a>
-                </div>
-              </div>
             </div>
-            <div class="team-card__body">
-              <h5 class="team-card__name">{{ member.name }}</h5>
-              <p class="team-card__role">{{ member.role }}</p>
-              <p v-if="member.bio" class="team-card__bio">{{ truncate(member.bio, 80) }}</p>
-            </div>
+          </div>
+
+          <div class="team-card__body">
+            <h5 class="team-card__name">{{ member.name }}</h5>
+            <p class="team-card__role">{{ member.role }}</p>
+            <p v-if="member.bio" class="team-card__bio">{{ truncate(member.bio, 90) }}</p>
+          </div>
+
+          <div class="team-card__socials">
+            <a v-if="member.linkedin" :href="member.linkedin" target="_blank" class="social-btn" aria-label="LinkedIn">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a v-if="member.github" :href="member.github" target="_blank" class="social-btn" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <span v-if="!member.linkedin && !member.github" class="social-btn" style="opacity:.25;cursor:default">
+              <i class="fas fa-user"></i>
+            </span>
           </div>
         </div>
       </div>
@@ -38,10 +41,10 @@
 
 <script>
 const FALLBACK = [
-  { id:1, name:'Ahsan Habib',     role:'CEO & Co-founder',       bio:'Leads vision and strategy. 10+ years building software products.' },
-  { id:2, name:'Nadia Rahman',    role:'CTO',                    bio:'Architect of our core platforms. Loves clean code and fast APIs.' },
-  { id:3, name:'Rifat Islam',     role:'Lead Designer',          bio:'Crafts interfaces that are beautiful and accessible.' },
-  { id:4, name:'Tanvir Ahmed',    role:'Senior Developer',       bio:'Full-stack engineer with a passion for performance.' },
+  { id:1, name:'Ahsan Habib',      role:'CEO & Co-founder',  bio:'Leads vision and strategy. 10+ years building software products from the ground up.' },
+  { id:2, name:'Nadia Rahman',     role:'CTO',               bio:'Architect of our core platforms. Loves clean code, fast APIs, and zero technical debt.' },
+  { id:3, name:'Rifat Islam',      role:'Lead Designer',     bio:'Crafts interfaces that feel intuitive, beautiful, and pixel-perfect across all devices.' },
+  { id:4, name:'Tanvir Ahmed',     role:'Senior Developer',  bio:'Full-stack engineer with a passion for performance and developer experience.' },
 ];
 
 export default {
@@ -67,61 +70,90 @@ export default {
 </script>
 
 <style scoped>
-.team-section { background: #f8f9ff; }
+.team-section { background: #fff; }
 
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+/* Card */
 .team-card {
-  background: #fff;
-  border-radius: 20px;
-  overflow: hidden;
+  background: #fafbff;
+  border: 1px solid #e8eeff;
+  border-radius: 24px;
+  padding: 2rem 1.5rem 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(102,126,234,.08);
-  border: 1px solid rgba(102,126,234,.1);
-  transition: all .35s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .3s, box-shadow .3s, border-color .3s;
 }
-.team-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(102,126,234,.2); }
+.team-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(99,102,241,.14);
+  border-color: #c7d2fe;
+}
 
-.team-card__photo-wrap {
-  position: relative;
-  height: 200px;
-  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
-  overflow: hidden;
+/* Photo ring */
+.team-card__photo-ring {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #a855f7, #06b6d4);
+  padding: 3px;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
 }
-.team-card__photo { width: 100%; height: 100%; object-fit: cover; }
+.team-card__photo-wrap {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.team-card__photo { width:100%;height:100%;object-fit:cover; }
 .team-card__initial {
   width: 100%; height: 100%;
+  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 3rem; font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-size: 1.85rem; font-weight: 900;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: #fff;
 }
-.team-card__overlay {
-  position: absolute; inset: 0;
-  background: rgba(102,126,234,.85);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity .3s;
+
+/* Body */
+.team-card__body { flex: 1; }
+.team-card__name { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .2rem; }
+.team-card__role {
+  font-size: .75rem; font-weight: 700;
+  color: #6366f1; text-transform: uppercase;
+  letter-spacing: .8px; margin-bottom: .65rem;
 }
-.team-card:hover .team-card__overlay { opacity: 1; }
-.team-card__socials { display: flex; gap: 1rem; }
+.team-card__bio { font-size: .82rem; color: #64748b; line-height: 1.6; margin: 0; }
+
+/* Socials */
+.team-card__socials {
+  display: flex;
+  gap: .5rem;
+  margin-top: 1.25rem;
+}
 .social-btn {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(255,255,255,.2); color: #fff;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; text-decoration: none;
-  border: 2px solid rgba(255,255,255,.4);
+  color: #64748b; font-size: .85rem;
+  text-decoration: none;
   transition: all .25s;
 }
-.social-btn:hover { background: #fff; color: #667eea; }
-
-.team-card__body { padding: 1.25rem 1rem; }
-.team-card__name { font-weight: 700; font-size: 1rem; color: #1a1a3e; margin-bottom: .25rem; }
-.team-card__role { font-size: .8rem; color: #667eea; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: .5rem; }
-.team-card__bio  { font-size: .82rem; color: #9ca3af; line-height: 1.5; margin: 0; }
-
-.team-skeleton {
-  height: 300px; border-radius: 20px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.social-btn:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-2px);
 }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+@media (max-width: 991px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .team-grid { grid-template-columns: 1fr 1fr; gap: 1rem; } }
 </style>

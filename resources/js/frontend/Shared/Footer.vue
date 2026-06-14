@@ -99,7 +99,7 @@ export default {
 <style scoped>
 /* ── Shell ──────────────────────────────────────── */
 .ps-footer {
-  background: linear-gradient(180deg, #0d0d24 0%, #0f0f23 100%);
+  background: linear-gradient(180deg, #050512 0%, #07071a 100%);
   color: #9ca3af;
   padding-top: 4.5rem;
   padding-bottom: 0;

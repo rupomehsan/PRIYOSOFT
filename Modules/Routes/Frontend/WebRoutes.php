@@ -13,3 +13,4 @@ use Modules\Controllers\Frontend\FrontendController;
 Route::get('/', [FrontendController::class, 'HomePage'])->name('HomePage');
 Route::get('/login', [AuthController::class, 'LoginPage'])->name('LoginPage');
 Route::get('/forgot-password', [AuthController::class, 'ForgotPassword'])->name('ForgotPassword');
+Route::get('/todo', [FrontendController::class, 'TodoPage'])->name('TodoPage');

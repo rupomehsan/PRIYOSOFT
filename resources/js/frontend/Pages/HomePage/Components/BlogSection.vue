@@ -3,54 +3,65 @@
     <div class="container">
       <div class="section-head text-center">
         <span class="section-tag">Latest Insights</span>
-        <h2 class="section-title">From Our Blog</h2>
+        <h2 class="section-title">From Our <span class="gradient-text">Blog</span></h2>
         <p class="section-sub">Thoughts on software, technology, and building great products.</p>
       </div>
 
-      <div class="row g-4">
-        <div v-for="post in items" :key="post.id" class="col-md-6 col-lg-4">
-          <article class="blog-card">
-            <div class="blog-card__thumb">
+      <div class="blog-grid">
+        <!-- Featured post (first) -->
+        <article v-if="items[0]" class="blog-card blog-card--featured">
+          <div class="blog-card__thumb">
+            <img v-if="items[0].thumbnail" :src="items[0].thumbnail" :alt="items[0].title" class="blog-card__img" />
+            <div v-else class="blog-card__no-img blog-card__no-img--lg">
+              <i class="fas fa-newspaper"></i>
+            </div>
+            <span class="blog-cat">{{ items[0].status === 'published' ? 'Published' : (items[0].status || 'Article') }}</span>
+          </div>
+          <div class="blog-card__body">
+            <div class="blog-meta">
+              <span><i class="fas fa-calendar me-1"></i>{{ formatDate(items[0].published_at || items[0].created_at) }}</span>
+            </div>
+            <h3 class="blog-title blog-title--lg">{{ items[0].title }}</h3>
+            <p class="blog-excerpt">{{ truncate(items[0].excerpt || items[0].body, 180) }}</p>
+            <a v-if="items[0].slug" :href="'/blog/' + items[0].slug" class="blog-read-more">
+              Read Article <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Side posts -->
+        <div class="blog-side">
+          <article v-for="post in items.slice(1)" :key="post.id" class="blog-card blog-card--sm">
+            <div class="blog-card__thumb blog-card__thumb--sm">
               <img v-if="post.thumbnail" :src="post.thumbnail" :alt="post.title" class="blog-card__img" />
-              <div v-else class="blog-card__no-img"><i class="fas fa-newspaper"></i></div>
-              <span class="blog-card__cat">{{ post.status === 'published' ? 'Published' : post.status }}</span>
+              <div v-else class="blog-card__no-img">
+                <i class="fas fa-newspaper"></i>
+              </div>
+              <span class="blog-cat">{{ post.status === 'published' ? 'Published' : (post.status || 'Article') }}</span>
             </div>
             <div class="blog-card__body">
-              <div class="blog-card__meta">
+              <div class="blog-meta">
                 <span><i class="fas fa-calendar me-1"></i>{{ formatDate(post.published_at || post.created_at) }}</span>
               </div>
-              <h4 class="blog-card__title">{{ post.title }}</h4>
-              <p class="blog-card__excerpt">{{ truncate(post.excerpt || post.body, 120) }}</p>
-              <div class="blog-card__footer">
-                <a v-if="post.slug" :href="'/blog/' + post.slug" class="blog-read-more">
-                  Read More <i class="fas fa-arrow-right ms-1"></i>
-                </a>
-              </div>
+              <h4 class="blog-title">{{ post.title }}</h4>
+              <p class="blog-excerpt">{{ truncate(post.excerpt || post.body, 100) }}</p>
+              <a v-if="post.slug" :href="'/blog/' + post.slug" class="blog-read-more">
+                Read more <i class="fas fa-arrow-right ms-1"></i>
+              </a>
             </div>
           </article>
         </div>
       </div>
+
     </div>
   </section>
 </template>
 
 <script>
 const FALLBACK = [
-  {
-    id:1, title:'How We Build Scalable Laravel APIs',
-    excerpt:'A deep dive into our API architecture — rate limiting, versioning, and response caching strategies that power our SaaS products.',
-    slug:'how-we-build-scalable-laravel-apis', status:'published', published_at:'2025-05-10',
-  },
-  {
-    id:2, title:'Vue 3 Composition API: Lessons from Production',
-    excerpt:'After migrating three enterprise apps to Vue 3, here are the patterns we rely on and the pitfalls we learned the hard way.',
-    slug:'vue3-composition-api-lessons', status:'published', published_at:'2025-04-22',
-  },
-  {
-    id:3, title:'Designing for Non-English Users: Our UX Journey',
-    excerpt:'Building software for Bangladesh taught us that RTL support, local date formats, and font choices matter more than you think.',
-    slug:'designing-for-non-english-users', status:'published', published_at:'2025-03-18',
-  },
+  { id:1, title:'How We Build Scalable Laravel APIs', excerpt:'A deep dive into our API architecture — rate limiting, versioning, and response caching strategies that power our SaaS products.', slug:'how-we-build-scalable-laravel-apis', status:'published', published_at:'2025-05-10' },
+  { id:2, title:'Vue 3 Composition API: Lessons from Production', excerpt:'After migrating three enterprise apps to Vue 3, here are the patterns we rely on and the pitfalls we learned the hard way.', slug:'vue3-composition-api-lessons', status:'published', published_at:'2025-04-22' },
+  { id:3, title:'Designing for Non-English Users: Our UX Journey', excerpt:'Building software for Bangladesh taught us that local date formats, RTL considerations, and font choices matter more than you think.', slug:'designing-for-non-english-users', status:'published', published_at:'2025-03-18' },
 ];
 
 export default {
@@ -75,52 +86,115 @@ export default {
 </script>
 
 <style scoped>
-.blog-section { background: #f8f9ff; }
+.blog-section { background: #fafbff; }
 
+/* Layout grid */
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+/* Side column */
+.blog-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Base card */
 .blog-card {
   background: #fff;
+  border: 1px solid #e8eeff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(102,126,234,.08);
-  border: 1px solid rgba(102,126,234,.1);
-  transition: all .35s;
-  height: 100%;
-  display: flex; flex-direction: column;
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+  display: flex;
+  flex-direction: column;
 }
-.blog-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(102,126,234,.2); border-color: #667eea; }
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(99,102,241,.12);
+  border-color: #c7d2fe;
+}
 
+/* Featured card */
+.blog-card--featured { height: 100%; }
+.blog-card--featured .blog-card__thumb { height: 280px; }
+
+/* Small side card */
+.blog-card--sm { flex-direction: row; border-radius: 16px; }
+.blog-card--sm .blog-card__thumb--sm {
+  width: 130px;
+  min-width: 130px;
+  height: auto;
+}
+.blog-card--sm .blog-card__body { padding: 1.25rem; }
+
+/* Thumb */
 .blog-card__thumb {
-  position: relative; height: 200px;
+  position: relative;
   background: linear-gradient(135deg, #eef2ff, #f5f3ff);
   overflow: hidden;
+  flex-shrink: 0;
 }
-.blog-card__img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
-.blog-card:hover .blog-card__img { transform: scale(1.05); }
-.blog-card__no-img { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #c7d2fe; }
-.blog-card__cat {
+.blog-card__img { width:100%;height:100%;object-fit:cover;transition:transform .4s; }
+.blog-card:hover .blog-card__img { transform: scale(1.04); }
+.blog-card__no-img {
+  width:100%; height: 100%; min-height: 120px;
+  display:flex; align-items:center; justify-content:center;
+  font-size: 3rem; color: #c7d2fe;
+}
+.blog-card__no-img--lg { min-height: 280px; font-size: 5rem; }
+
+/* Category tag */
+.blog-cat {
   position: absolute; top: 1rem; left: 1rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff; font-size: .7rem; font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; font-size: .68rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1px;
   padding: .3rem .9rem; border-radius: 50px;
 }
-.blog-card__body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
-.blog-card__meta { font-size: .8rem; color: #9ca3af; margin-bottom: .75rem; }
-.blog-card__title { font-weight: 700; font-size: 1rem; color: #1a1a3e; margin-bottom: .6rem; line-height: 1.5; }
-.blog-card__excerpt { font-size: .875rem; color: #6b7280; line-height: 1.7; flex: 1; margin-bottom: 1rem; }
-.blog-card__footer { margin-top: auto; }
-.blog-read-more {
-  color: #667eea; font-weight: 700; font-size: .875rem;
-  text-decoration: none; display: inline-flex; align-items: center;
-  transition: gap .25s;
-}
-.blog-read-more:hover { color: #764ba2; gap: .5rem; }
 
-.blog-skeleton {
-  height: 360px; border-radius: 20px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+/* Body */
+.blog-card__body {
+  padding: 1.75rem;
+  display: flex; flex-direction: column; flex: 1;
 }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+.blog-meta {
+  font-size: .78rem; color: #94a3b8;
+  margin-bottom: .65rem;
+  display: flex; gap: 1rem;
+}
+
+.blog-title {
+  font-weight: 800; font-size: 1.05rem;
+  color: #0f172a; margin-bottom: .65rem;
+  line-height: 1.45;
+}
+.blog-title--lg { font-size: 1.35rem; }
+
+.blog-excerpt {
+  font-size: .875rem; color: #64748b;
+  line-height: 1.75; flex: 1;
+  margin-bottom: 1.25rem;
+}
+
+.blog-read-more {
+  color: #6366f1; font-weight: 700; font-size: .85rem;
+  text-decoration: none; display: inline-flex; align-items: center;
+  transition: color .2s, gap .2s; gap: .3rem; margin-top: auto;
+}
+.blog-read-more:hover { color: #8b5cf6; gap: .6rem; }
+
+@media (max-width: 991px) {
+  .blog-grid { grid-template-columns: 1fr; }
+  .blog-card--featured .blog-card__thumb { height: 220px; }
+}
+@media (max-width: 576px) {
+  .blog-card--sm { flex-direction: column; }
+  .blog-card--sm .blog-card__thumb--sm { width: 100%; height: 160px; }
+}
 </style>
