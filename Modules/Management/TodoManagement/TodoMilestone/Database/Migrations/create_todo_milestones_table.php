@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('phase', 100)->nullable();
             $table->date('target_date')->nullable();
             $table->date('achieved_date')->nullable();
-            $table->enum('status', ['upcoming','achieved','missed'])->nullable();
+            $table->enum('current_status', ['upcoming','achieved','missed'])->nullable();
             $table->text('note')->nullable();
             $table->integer('sort_order')->nullable();
+            $table->integer('cost')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active')->nullable();
                     $table->bigInteger('creator')->unsigned()->nullable();
                     $table->string('slug', 50)->nullable();
             $table->timestamps();

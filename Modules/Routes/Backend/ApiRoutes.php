@@ -62,3 +62,4 @@ include_once base_path("Modules/Management/OrderManagement/Order/Routes/Route.ph
 include_once base_path("Modules/Management/TodoManagement/TodoMilestone/Routes/Route.php");
 include_once base_path("Modules/Management/TodoManagement/TodoGroup/Routes/Route.php");
 include_once base_path("Modules/Management/TodoManagement/TodoList/Routes/Route.php");
+include_once base_path("Modules/Management/WebsiteManagement/WhoWeAre/Routes/Route.php");

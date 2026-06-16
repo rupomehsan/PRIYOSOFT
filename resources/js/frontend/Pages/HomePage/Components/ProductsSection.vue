@@ -32,7 +32,9 @@
             </div>
           </div>
           <div class="product-card__footer">
-            <span class="product-card__more">Learn more <i class="fas fa-arrow-right ms-1"></i></span>
+            <a :href="'/products/' + product.slug" class="product-card__more">
+              Learn more <i class="fas fa-arrow-right ms-1"></i>
+            </a>
           </div>
         </div>
       </div>

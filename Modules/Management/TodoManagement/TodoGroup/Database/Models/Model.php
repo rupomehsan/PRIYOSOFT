@@ -33,12 +33,19 @@ class Model extends EloquentModel
 
     public function scopeActive($q)
     {
-        return $q->where('status', 'active');
+        return $q->whereIn('status', ['pending', 'in_progress']);
     }
 
     public function scopeInactive($q)
     {
-        return $q->where('status', 'inactive');
+        return $q->where('status', 'completed');
     }
 
+    public function todoMilestoneId()
+    {
+        return $this->belongsTo(
+            \Modules\Management\TodoManagement\TodoMilestone\Database\Models\Model::class,
+            'todo_milestone_id'
+        );
+    }
 }

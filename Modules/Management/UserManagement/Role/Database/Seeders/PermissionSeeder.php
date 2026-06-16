@@ -46,6 +46,18 @@ class PermissionSeeder extends Seeder
 
 
 
+
+            // [MODULE:Website Management:START]
+            // Website Management
+            'Website Management' => [
+                ['name' => 'View Who We Are', 'slug' => 'who-we-are-view', 'route' => '/admin#/who-we-are/all'],
+                ['name' => 'View Who We Are Details', 'slug' => 'who-we-are-details', 'route' => '/admin#/who-we-are/details'],
+                ['name' => 'Create Who We Are', 'slug' => 'who-we-are-create', 'route' => '/admin#/who-we-are/create'],
+                ['name' => 'Edit Who We Are', 'slug' => 'who-we-are-edit', 'route' => '/admin#/who-we-are/edit'],
+                ['name' => 'Delete Who We Are', 'slug' => 'who-we-are-delete', 'route' => '/api/v1/who-we-ares/destroy'],
+                ['name' => 'Import Who We Are', 'slug' => 'who-we-are-import', 'route' => '/api/v1/who-we-ares/import'],
+            ],
+            // [MODULE:Website Management:END]
         ];
 
         // Insert permissions

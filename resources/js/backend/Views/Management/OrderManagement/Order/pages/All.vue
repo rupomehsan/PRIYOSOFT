@@ -204,6 +204,10 @@ export default {
       "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
   }),
   created: async function () {
+    const statusFromQuery = this.$route.query?.status;
+    if (statusFromQuery) {
+      this.set_status(statusFromQuery);
+    }
     await this.get_all();
   },
   methods: {
@@ -423,6 +427,10 @@ export default {
         this.is_trashed_data = newValue;
       },
       immediate: true,
+    },
+    '$route.query.status': async function (newStatus) {
+      this.set_status(newStatus || 'all');
+      await this.get_all();
     },
   },
 };

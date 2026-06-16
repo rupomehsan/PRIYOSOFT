@@ -16,6 +16,7 @@ use Modules\Management\WebsiteManagement\Faq\Controller\Controller as FaqControl
 use Modules\Management\WebsiteManagement\Subscriber\Controller\Controller as SubscriberController;
 use Modules\Management\ProductManagement\Product\Controller\Controller as ProductController;
 use Modules\Management\ProductManagement\ProductGroup\Controller\Controller as ProductGroupController;
+use Modules\Management\WebsiteManagement\WhoWeAre\Controller\Controller as WhoWeAreController;
 
 Route::prefix('public')->group(function () {
     Route::get('hero-sections',    [HeroSectionController::class, 'index']);
@@ -26,8 +27,10 @@ Route::prefix('public')->group(function () {
     Route::get('about-us',         [AboutUsController::class,     'index']);
     Route::get('faqs',             [FaqController::class,         'index']);
     Route::get('products',         [ProductController::class,     'index']);
+    Route::get('products/{slug}',  [ProductController::class,     'show']);
     Route::get('product-groups',   [ProductGroupController::class,'index']);
     Route::post('subscribe',       [SubscriberController::class,  'store']);
+    Route::get('who-we-are',       [WhoWeAreController::class,    'index']);
 });
 
 Route::get('get-all-projects', [ProjectController::class,'index']);

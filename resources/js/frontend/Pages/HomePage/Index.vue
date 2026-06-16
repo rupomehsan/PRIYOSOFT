@@ -3,7 +3,7 @@
     <HeroSection :slides="heroSlides" />
     <StatsSection :data="aboutSections" />
     <ProductsSection :data="products" />
-    <AboutSection :data="aboutSections" />
+    <AboutSection :data="aboutSections" :whoWeAre="whoWeAre" />
     <TeamSection :data="teamMembers" />
     <TestimonialsSection :data="testimonials" />
     <BlogSection :data="blogPosts" />
@@ -55,6 +55,7 @@ export default {
       "blogPosts",
       "faqs",
       "aboutSections",
+      "whoWeAre",
       "newsletterLoading",
       "newsletterSuccess",
       "newsletterError",

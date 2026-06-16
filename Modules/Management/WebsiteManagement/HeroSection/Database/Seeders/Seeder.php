@@ -2,7 +2,6 @@
 namespace Modules\Management\WebsiteManagement\HeroSection\Database\Seeders;
 
 use Illuminate\Database\Seeder as SeederClass;
-use Faker\Factory as Faker;
 
 class Seeder extends SeederClass
 {
@@ -14,27 +13,61 @@ class Seeder extends SeederClass
 
     public function run(): void
     {
-        $faker = Faker::create();
         self::$model::truncate();
 
-        for ($i = 1; $i <= 100; $i++) {
-            self::$model::create([                'badge_text' => $faker->text(100),
-                'headline' => $faker->text(300),
-                'subheadline' => $faker->text(300),
-                'description' => $faker->paragraph,
-                'primary_button_text' => $faker->text(100),
-                'primary_button_url' => $faker->word,
-                'secondary_button_text' => $faker->text(100),
-                'secondary_button_url' => $faker->word,
-                'media_type' => $faker->randomElement(array (
-  0 => 'image',
-  1 => 'video',
-)),
-                'background_image' => $faker->word,
-                'hero_image' => $faker->word,
-                'video_url' => $faker->word,
-                'is_active' => $faker->boolean,
-            ]);
+        $slides = [
+            [
+                'badge_text'             => '🛒 Ecommerce Solutions',
+                'headline'               => 'Launch Your Online Store & Sell More — Faster',
+                'subheadline'            => 'Single-page ecommerce platforms built for conversion',
+                'description'            => 'From multi-product marketplaces to high-converting single-product landing pages — we build blazing-fast, mobile-first ecommerce solutions that turn visitors into buyers. No page reloads. No friction. Just sales.',
+                'primary_button_text'    => 'Explore Ecommerce Products',
+                'primary_button_url'     => '#products',
+                'secondary_button_text'  => 'Book a Free Demo',
+                'secondary_button_url'   => '#newsletter',
+                'media_type'             => 'image',
+                'background_image'       => null,
+                'hero_image'             => null,
+                'video_url'              => null,
+                'is_active'              => 1,
+                'status'                 => 'active',
+            ],
+            [
+                'badge_text'             => '📦 Inventory & Warehouse Management',
+                'headline'               => 'Take Full Control of Your Stock, Anywhere',
+                'subheadline'            => 'Smart inventory systems for modern warehouses',
+                'description'            => 'Real-time stock tracking, barcode scanning, multi-warehouse support, AI demand forecasting, and automated reorder alerts — all in one powerful platform. Built for manufacturers, distributors, and retailers who mean business.',
+                'primary_button_text'    => 'View Inventory Suite',
+                'primary_button_url'     => '#products',
+                'secondary_button_text'  => 'Schedule a Demo',
+                'secondary_button_url'   => '#newsletter',
+                'media_type'             => 'image',
+                'background_image'       => null,
+                'hero_image'             => null,
+                'video_url'              => null,
+                'is_active'              => 1,
+                'status'                 => 'active',
+            ],
+            [
+                'badge_text'             => '🏢 Business Profile & Portfolio',
+                'headline'               => 'Build a Brand Presence That Wins Clients',
+                'subheadline'            => 'Professional websites, portfolios & brand tools',
+                'description'            => 'From company websites and freelancer portfolios to agency showcases and digital brand identity managers — we craft stunning online presences that establish credibility, attract leads, and grow your business.',
+                'primary_button_text'    => 'Explore Portfolio Products',
+                'primary_button_url'     => '#products',
+                'secondary_button_text'  => 'Get Started Today',
+                'secondary_button_url'   => '#newsletter',
+                'media_type'             => 'image',
+                'background_image'       => null,
+                'hero_image'             => null,
+                'video_url'              => null,
+                'is_active'              => 1,
+                'status'                 => 'active',
+            ],
+        ];
+
+        foreach ($slides as $slide) {
+            self::$model::create($slide);
         }
     }
 }

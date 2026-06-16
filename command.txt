@@ -101,6 +101,9 @@ php artisan make:module WebsiteManagement/BlogPost "[title:string-500,slug:strin
 # 20. AboutUs — no dependencies
 php artisan make:module WebsiteManagement/AboutUs "[section:enum-story.mission.vision.value.stat,title:string-300,description:text,icon:string-200,image:image,stat_value:string-100,stat_label:string-200,sort_order:integer,is_visible:boolean]" --vue
 
+# 20b. WhoWeAre — no dependencies (Who We Are section: main content, feature cards, stat badges)
+php artisan make:module WebsiteManagement/WhoWeAre "[type:enum-section.feature.stat,badge_label:string-100,title:string-300,description:text,icon:string-200,image:image,stat_value:string-100,stat_label:string-200,sort_order:integer,is_visible:boolean]" --vue
+
 # 21. Faq — depends on: Product
 php artisan make:module WebsiteManagement/Faq "[product_id{ProductManagement/Product}:bigint,question:string-500,answer:text,sort_order:integer,is_visible:boolean]" --vue
 

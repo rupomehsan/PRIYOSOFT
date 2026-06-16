@@ -27,7 +27,7 @@ class Seeder extends SeederClass
   1 => 'yearly',
   2 => 'one_time',
 )),
-                'status' => $faker->randomElement(array (
+                'order_status' => $faker->randomElement(array (
   0 => 'pending_payment',
   1 => 'payment_submitted',
   2 => 'payment_verified',

@@ -39,7 +39,7 @@ export default {
     stats() { return this.data.filter(s => s.section === 'stat'); },
     visibleStats() {
       if (!this.stats.length) return FALLBACK;
-      return this.stats.map((s, i) => ({ ...s, icon: ICONS[i % ICONS.length], color: COLORS[i % COLORS.length] }));
+      return this.stats.map((s, i) => ({ ...s, icon: s.icon || ICONS[i % ICONS.length], color: COLORS[i % COLORS.length] }));
     },
   },
 };

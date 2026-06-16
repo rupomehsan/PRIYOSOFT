@@ -8,6 +8,7 @@ import SettingsRoutes from "../Management/Settings/setup/routes.js";
 import UserRoutes from "../Management/UserManagement/User/setup/routes.js";
 import UserRoleRoutes from "../Management/UserManagement/Role/setup/routes.js";
 //routes
+import WhoWeAreRoutes from '../Management/WebsiteManagement/WhoWeAre/setup/routes.js';
 import TodoListRoutes from '../Management/TodoManagement/TodoList/setup/routes.js';
 import TodoGroupRoutes from '../Management/TodoManagement/TodoGroup/setup/routes.js';
 import TodoMilestoneRoutes from '../Management/TodoManagement/TodoMilestone/setup/routes.js';
@@ -45,6 +46,7 @@ const routes = {
       name: "adminDashboard",
     },
     //management routes
+        WhoWeAreRoutes,
         TodoListRoutes,
         TodoGroupRoutes,
         TodoMilestoneRoutes,

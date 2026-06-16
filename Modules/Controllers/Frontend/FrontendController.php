@@ -65,4 +65,11 @@ class FrontendController extends Controller
             ]
         ]);
     }
+
+    public function ProductDetailsPage($slug)
+    {
+        return Inertia::render('ProductDetails/Index', [
+            'slug' => $slug,
+        ]);
+    }
 }

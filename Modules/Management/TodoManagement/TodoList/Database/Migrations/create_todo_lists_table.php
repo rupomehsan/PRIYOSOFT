@@ -23,10 +23,11 @@ return new class extends Migration
             $table->decimal('item_cost')->nullable();
             $table->tinyInteger('is_recurring')->default(0);
             $table->enum('priority', ['critical','high','medium','low'])->nullable();
-            $table->enum('status', ['pending','in_progress','completed','skipped'])->nullable();
+            $table->enum('current_status', ['pending','in_progress','completed','skipped'])->nullable();
             $table->date('completed_at')->nullable();
             $table->text('note')->nullable();
             $table->integer('sort_order')->nullable();
+             $table->enum('status', ['active', 'inactive'])->default('active');
                     $table->bigInteger('creator')->unsigned()->nullable();
                     $table->string('slug', 50)->nullable();
             $table->timestamps();

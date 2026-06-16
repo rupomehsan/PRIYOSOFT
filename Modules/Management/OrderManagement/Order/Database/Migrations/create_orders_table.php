@@ -19,11 +19,11 @@ return new class extends Migration
             $table->bigInteger('customer_id')->nullable();
             $table->string('plan_name', 200)->nullable();
             $table->enum('billing_cycle', ['monthly','yearly','one_time'])->nullable();
-            $table->enum('status', ['pending_payment','payment_submitted','payment_verified','access_sent','cancelled','refunded'])->nullable();
+            $table->enum('order_status', ['pending_payment','payment_submitted','payment_verified','access_sent','cancelled','refunded'])->nullable();
             $table->enum('delivery_method', ['email','manual_contact'])->nullable();
-            $table->decimal('subtotal')->nullable();
-            $table->decimal('discount_amount')->nullable();
-            $table->decimal('total_amount')->nullable();
+            $table->decimal('subtotal', 15, 2)->nullable();
+            $table->decimal('discount_amount', 15, 2)->nullable();
+            $table->decimal('total_amount', 15, 2)->nullable();
             $table->string('coupon_code', 100)->nullable();
             $table->text('customer_note')->nullable();
             $table->datetime('ordered_at')->nullable();
@@ -31,8 +31,9 @@ return new class extends Migration
             $table->datetime('access_sent_at')->nullable();
             $table->datetime('cancelled_at')->nullable();
             $table->bigInteger('created_by')->nullable();
-                    $table->bigInteger('creator')->unsigned()->nullable();
-                    $table->string('slug', 50)->nullable();
+            $table->enum('status', ['active','inactive'])->nullable();
+            $table->bigInteger('creator')->unsigned()->nullable();
+            $table->string('slug', 50)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

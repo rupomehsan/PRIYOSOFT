@@ -14,6 +14,7 @@ export const actions = {
                 this.fetchBlogPosts(),
                 this.fetchFaqs(),
                 this.fetchAboutUs(),
+                this.fetchWhoWeAre(),
             ]);
         } finally {
             this.loading = false;
@@ -70,9 +71,17 @@ export const actions = {
         } catch { }
     },
 
+    async fetchWhoWeAre(this: any) {
+        try {
+            const res = await api('public/who-we-are?get_all=1&status=active&limit=1');
+            const list = res?.data?.data ?? res?.data ?? [];
+            this.whoWeAre = Array.isArray(list) ? (list[0] ?? null) : (list || null);
+        } catch { }
+    },
+
     async fetchAboutUs(this: any) {
         try {
-            const res = await api('public/about-us?get_all=1&status=active');
+            const res = await api('public/about-us?get_all=1&status=active&limit=100&sort_by_col=sort_order&sort_type=asc');
             this.aboutSections = res?.data?.data ?? res?.data ?? [];
         } catch { }
     },

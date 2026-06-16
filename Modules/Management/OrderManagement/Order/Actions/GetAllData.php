@@ -13,7 +13,8 @@ class GetAllData
             $pageLimit = request()->input('limit') ?? 10;
             $orderByColumn = request()->input('sort_by_col') ?? 'id';
             $orderByType = request()->input('sort_type') ?? 'desc';
-            $status = request()->input('status') ?? 'active';
+            $status = request()->input('status') ?? 'all';
+            $validOrderStatuses = ['pending_payment', 'payment_submitted', 'payment_verified', 'access_sent', 'cancelled', 'refunded'];
             $fields = request()->input('fields') ?? '*';
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
@@ -81,7 +82,7 @@ class GetAllData
                     ->with($with)
                     ->select($fields)
                     ->where($condition)
-                    ->where('status', $status)
+                    ->when(in_array($status, $validOrderStatuses), fn($q) => $q->where('status', $status))
                     ->limit($pageLimit)
                     ->orderBy($orderByColumn, $orderByType)
                     ->get();
@@ -98,7 +99,7 @@ class GetAllData
                     ->with($with)
                     ->select($fields)
                     ->where($condition)
-                    ->where('status', $status)
+                    ->when(in_array($status, $validOrderStatuses), fn($q) => $q->where('status', $status))
                     ->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             }

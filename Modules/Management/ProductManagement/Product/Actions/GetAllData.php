@@ -13,7 +13,7 @@ class GetAllData
             $pageLimit = request()->input('limit') ?? 10;
             $orderByColumn = request()->input('sort_by_col') ?? 'id';
             $orderByType = request()->input('sort_type') ?? 'desc';
-            $status = request()->input('status') ?? 'active';
+            $status = request()->input('status') ?? 'all';
             $fields = request()->input('fields') ?? '*';
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
@@ -60,16 +60,15 @@ class GetAllData
                 $data = $data->onlyTrashed();
             }
 
+            $validStatuses = ['planning', 'development', 'active', 'paused'];
+
             if (request()->has('get_all') && (int)request()->input('get_all') === 1) {
-                $data = $data
-                    ->with($with)
-                    ->select($fields)
-                    ->where($condition)
-                    ->where('status', $status)
-                    ->limit($pageLimit)
-                    ->orderBy($orderByColumn, $orderByType)
-                    ->get();
-                     return entityResponse($data);
+                $query = $data->with($with)->select($fields)->where($condition);
+                if (in_array($status, $validStatuses)) {
+                    $query->where('status', $status);
+                }
+                $data = $query->limit($pageLimit)->orderBy($orderByColumn, $orderByType)->get();
+                return entityResponse($data);
             } else if ($status == 'trashed') {
                 $data = $data
                     ->with($with)
@@ -78,13 +77,11 @@ class GetAllData
                     ->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             } else {
-                $data = $data
-                    ->with($with)
-                    ->select($fields)
-                    ->where($condition)
-                    ->where('status', $status)
-                    ->orderBy($orderByColumn, $orderByType)
-                    ->paginate($pageLimit);
+                $query = $data->with($with)->select($fields)->where($condition);
+                if (in_array($status, $validStatuses)) {
+                    $query->where('status', $status);
+                }
+                $data = $query->orderBy($orderByColumn, $orderByType)->paginate($pageLimit);
             }
 
             return entityResponse([

@@ -51,6 +51,8 @@ class DataStoreValidation extends FormRequest
             'monthly_target_revenue' => 'required | sometimes',
             'features' => 'required | sometimes',
             'screenshots' => 'required | sometimes',
+            'regular_price' => 'sometimes|nullable|numeric|min:0',
+            'sales_price' => 'sometimes|nullable|numeric|min:0',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

@@ -2,8 +2,15 @@
   <!--Start sidebar-wrapper-->
   <div id="sidebar-wrapper">
     <div class="brand-logo">
-      <router-link :to="{ name: `adminDashboard` }" class="d-flex align-items-center">
-        <img :src="`${get_setting_value('image') ?? 'avatar.png'} `" class="logo-icon" alt="logo icon" />
+      <router-link
+        :to="{ name: `adminDashboard` }"
+        class="d-flex align-items-center"
+      >
+        <img
+          :src="`${get_setting_value('image') ?? 'avatar.png'} `"
+          class="logo-icon"
+          alt="logo icon"
+        />
         <h5 class="logo-text">Super Admin Panel</h5>
       </router-link>
       <div class="close-btn">
@@ -12,7 +19,13 @@
     </div>
 
     <div class="text-center mt-3">
-      <img class="rounded-circle p-1" height="70" width="70" :src="`${auth_info.image ?? 'avatar.png'}`" alt="" />
+      <img
+        class="rounded-circle p-1"
+        height="70"
+        width="70"
+        :src="`${auth_info.image ?? 'avatar.png'}`"
+        alt=""
+      />
       <p class="mt-2">Mr. {{ auth_info.name }}</p>
     </div>
     <hr />
@@ -58,8 +71,123 @@
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
-/>
-<side-bar-drop-down-menus
+      />
+
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`WebsiteManagement`"
+        :menus="[
+          {
+            route_name: `AllHeroSection`,
+            title: `HeroSection`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+
+          {
+            route_name: `AllTeamMember`,
+            title: `TeamMember`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllTestimonial`,
+            title: `Testimonial`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllBlogPost`,
+            title: `BlogPost`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllAboutUs`,
+            title: `AboutUs`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllFaq`,
+            title: `Faq`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllContactLead`,
+            title: `ContactLead`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllSubscriber`,
+            title: `Subscriber`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllWhoWeAre`,
+            title: `WhoWeAre`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
+      <side-bar-drop-down-menus
+        :icon="`fa fa-shopping-cart`"
+        :menu_title="`OrderManagement`"
+        :menus="[
+          {
+            route: { name: 'AllOrder' },
+            title: 'All Orders',
+            icon: 'zmdi zmdi-collection-item',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'pending_payment' } },
+            title: 'Pending Payment',
+            icon: 'zmdi zmdi-time',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'payment_submitted' } },
+            title: 'Payment Submitted',
+            icon: 'zmdi zmdi-receipt',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'payment_verified' } },
+            title: 'Payment Verified',
+            icon: 'zmdi zmdi-check-circle',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'access_sent' } },
+            title: 'Access Sent',
+            icon: 'zmdi zmdi-mail-send',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'cancelled' } },
+            title: 'Cancelled',
+            icon: 'zmdi zmdi-close-circle',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'refunded' } },
+            title: 'Refunded',
+            icon: 'zmdi zmdi-money-off',
+          },
+        ]"
+      />
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`TodoManagement`"
+        :menus="[
+          {
+            route_name: `AllTodoMilestone`,
+            title: `TodoMilestone`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllTodoGroup`,
+            title: `TodoGroup`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllTodoList`,
+            title: `TodoList`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
+      <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
         :menu_title="`FinanceManagement`"
         :menus="[
@@ -119,91 +247,8 @@
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
-/>
-<side-bar-drop-down-menus
-        :icon="`fa fa-plus`"
-        :menu_title="`WebsiteManagement`"
-        :menus="[
-          {
-            route_name: `AllHeroSection`,
-            title: `HeroSection`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllSiteSection`,
-            title: `SiteSection`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllTeamMember`,
-            title: `TeamMember`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllTestimonial`,
-            title: `Testimonial`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllBlogPost`,
-            title: `BlogPost`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllAboutUs`,
-            title: `AboutUs`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllFaq`,
-            title: `Faq`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllContactLead`,
-            title: `ContactLead`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllSubscriber`,
-            title: `Subscriber`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-        ]"
-/>
-<side-bar-drop-down-menus
-        :icon="`fa fa-plus`"
-        :menu_title="`OrderManagement`"
-        :menus="[
-          {
-            route_name: `AllOrder`,
-            title: `Order`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-        ]"
-/>
-<side-bar-drop-down-menus
-        :icon="`fa fa-plus`"
-        :menu_title="`TodoManagement`"
-        :menus="[
-          {
-            route_name: `AllTodoMilestone`,
-            title: `TodoMilestone`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllTodoGroup`,
-            title: `TodoGroup`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-          {
-            route_name: `AllTodoList`,
-            title: `TodoList`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-        ]"
-/>
-<!-- Management end -->
+      />
+      <!-- Management end -->
     </ul>
   </div>
 </template>

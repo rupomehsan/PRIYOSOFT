@@ -12,6 +12,7 @@ export const initialState = {
     blogPosts:     []    as any[],
     faqs:          []    as any[],
     aboutSections: []    as any[],
+    whoWeAre:      null  as any,
 
     // ── Newsletter ────────────────────────────────────────────────────
     newsletterLoading: false,

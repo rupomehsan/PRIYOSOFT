@@ -20,7 +20,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('status', ['planning','development','active','paused'])->nullable();
             $table->date('launch_date')->nullable();
-            $table->decimal('monthly_target_revenue')->nullable();
+            $table->decimal('monthly_target_revenue', 12, 2)->nullable();
+            $table->decimal('regular_price', 12, 2)->nullable();
+            $table->decimal('sales_price', 12, 2)->nullable();
             $table->json('features')->nullable();
             $table->text('screenshots')->nullable();
                     $table->bigInteger('creator')->unsigned()->nullable();

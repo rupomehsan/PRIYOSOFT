@@ -16,22 +16,22 @@
                 <div class="code-line" v-for="l in codeLines" :key="l.id" :style="{ width: l.w, background: l.c, opacity: l.o }"></div>
               </div>
             </div>
-            <div class="about-badge-yr">
-              <span class="badge-num">{{ yearsExp }}+</span>
-              <span class="badge-txt">Years<br>of craft</span>
+            <div v-if="statBadge0" class="about-badge-yr">
+              <span class="badge-num">{{ statBadge0.stat_value }}</span>
+              <span class="badge-txt" v-html="statBadge0.stat_label.replace(' ', '<br>')"></span>
             </div>
-            <div class="about-badge-proj">
+            <div v-if="statBadge1" class="about-badge-proj">
               <i class="fas fa-rocket mb-1"></i>
-              <span>50+ Projects</span>
+              <span>{{ statBadge1.stat_value }} {{ statBadge1.stat_label }}</span>
             </div>
           </div>
         </div>
 
         <!-- Text right -->
         <div class="col-lg-7">
-          <span class="section-tag">Who We Are</span>
-          <h2 class="section-title">{{ storyTitle }}</h2>
-          <p class="about-lead">{{ storyDesc }}</p>
+          <span class="section-tag">{{ sectionBadge }}</span>
+          <h2 class="section-title">{{ sectionTitle }}</h2>
+          <p class="about-lead">{{ sectionDesc }}</p>
 
           <div class="kv-grid">
             <div v-for="(kv, i) in keyValues" :key="i" class="kv-card">
@@ -40,7 +40,7 @@
               </div>
               <div>
                 <div class="kv-card__title">{{ kv.title }}</div>
-                <div class="kv-card__desc">{{ kv.desc }}</div>
+                <div class="kv-card__desc">{{ kv.description || kv.desc }}</div>
               </div>
             </div>
           </div>
@@ -73,19 +73,37 @@ const PILLAR_LABELS = { story:'Our Story', mission:'Our Mission', vision:'Our Vi
 
 export default {
   name: 'AboutSection',
-  props: { data: { type: Array, default: () => [] } },
+  props: {
+    data:      { type: Array,  default: () => [] },
+    whoWeAre:  { type: Object, default: () => null },
+  },
   computed: {
-    storyItem() { return this.data.find(s => s.section === 'story') || null; },
-    storyTitle() { return this.storyItem?.title || FALLBACK_STORY.title; },
-    storyDesc()  { return this.storyItem?.description || FALLBACK_STORY.description; },
+    storyItem()    { return this.data.find(s => s.section === 'story') || null; },
+    sectionBadge() { return this.whoWeAre?.badge_label || 'Who We Are'; },
+    sectionTitle() { return this.whoWeAre?.title || this.storyItem?.title || FALLBACK_STORY.title; },
+    sectionDesc()  { return this.whoWeAre?.description || this.storyItem?.description || FALLBACK_STORY.description; },
+    storyTitle()   { return this.sectionTitle; },
+    storyDesc()    { return this.sectionDesc; },
     yearsExp()   { return new Date().getFullYear() - 2016; },
     pillars()    { return this.data.filter(s => ['mission','vision','value'].includes(s.section)); },
+    statsArr()   {
+      const s = this.whoWeAre?.stats;
+      if (!s) return [];
+      return Array.isArray(s) ? s : (typeof s === 'string' ? JSON.parse(s) : []);
+    },
+    statBadge0() { return this.statsArr[0] || null; },
+    statBadge1() { return this.statsArr[1] || null; },
     keyValues() {
+      const f = this.whoWeAre?.features;
+      if (f) {
+        const arr = Array.isArray(f) ? f : (typeof f === 'string' ? JSON.parse(f) : []);
+        if (arr.length) return arr;
+      }
       return [
-        { icon:'fas fa-rocket',     title:'Fast Delivery',  desc:'We ship on time, every time.' },
-        { icon:'fas fa-shield-alt', title:'Reliable Code',  desc:'Clean, tested, maintainable.' },
-        { icon:'fas fa-users',      title:'Client-Focused', desc:'Your success is our goal.' },
-        { icon:'fas fa-lightbulb',  title:'Innovation',     desc:'Always evolving our stack.' },
+        { icon:'fas fa-rocket',     title:'Fast Delivery',  description:'We ship on time, every time.' },
+        { icon:'fas fa-shield-alt', title:'Reliable Code',  description:'Clean, tested, maintainable.' },
+        { icon:'fas fa-users',      title:'Client-Focused', description:'Your success is our goal.' },
+        { icon:'fas fa-lightbulb',  title:'Innovation',     description:'Always evolving our stack.' },
       ];
     },
     codeLines() {

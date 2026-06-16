@@ -14,10 +14,13 @@ return new class extends Migration
     {
         Schema::create('todo_groups', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('todo_milestone_id')->unsigned()->nullable();
             $table->string('name', 200)->nullable();
             $table->string('phase', 100)->nullable();
             $table->integer('sort_order')->nullable();
-            $table->enum('status', ['pending','in_progress','completed'])->nullable();
+            $table->integer('cost')->nullable();
+            $table->enum('current_status', ['pending','in_progress','completed'])->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
                     $table->bigInteger('creator')->unsigned()->nullable();
                     $table->string('slug', 50)->nullable();
             $table->timestamps();

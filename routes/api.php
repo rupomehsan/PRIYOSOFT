@@ -12,11 +12,9 @@ require_once __DIR__ . '/../Modules/Routes/Backend/ApiRoutes.php';
 
 /*
 |--------------------------------------------------------------------------
-| Frontend API Routes
+| Frontend API Routes — registered in RouteServiceProvider with api/v1 prefix
 |--------------------------------------------------------------------------
 */
-
-require_once __DIR__ . '/../Modules/Routes/Frontend/ApiRoutes.php';
 
 /*
 |--------------------------------------------------------------------------

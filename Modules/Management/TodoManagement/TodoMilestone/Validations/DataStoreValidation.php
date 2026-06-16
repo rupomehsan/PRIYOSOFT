@@ -44,11 +44,10 @@ class DataStoreValidation extends FormRequest
         return [
             'title' => 'required | sometimes',
             'phase' => 'required | sometimes',
-            'target_date' => 'required | sometimes',
-            'achieved_date' => 'required | sometimes',
-            'status' => 'required | sometimes',
-            'note' => 'required | sometimes',
-            'sort_order' => 'required | sometimes',
+            'target_date' => 'sometimes',
+            'achieved_date' => 'sometimes',
+            'note' => 'sometimes',
+            'sort_order' => 'sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

@@ -33,12 +33,12 @@ class Model extends EloquentModel
 
     public function scopeActive($q)
     {
-        return $q->where('status', 'active');
+        return $q->whereIn('status', ['pending_payment', 'payment_submitted', 'payment_verified', 'access_sent']);
     }
 
     public function scopeInactive($q)
     {
-        return $q->where('status', 'inactive');
+        return $q->whereIn('status', ['cancelled', 'refunded']);
     }
 
     public function productId()
