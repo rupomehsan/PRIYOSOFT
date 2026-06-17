@@ -99,11 +99,11 @@ export default {
 <style scoped>
 /* ── Shell ──────────────────────────────────────── */
 .ps-footer {
-  background: linear-gradient(180deg, #050512 0%, #07071a 100%);
-  color: #9ca3af;
+  background: linear-gradient(180deg, var(--ps-footer-bg-from) 0%, var(--ps-footer-bg-to) 100%);
+  color: var(--ps-footer-text);
   padding-top: 4.5rem;
   padding-bottom: 0;
-  border-top: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid var(--ps-footer-border);
 }
 
 .ps-footer-top { padding-bottom: 3.5rem; }
@@ -138,7 +138,7 @@ export default {
 .ps-footer-desc {
   font-size: .9rem;
   line-height: 1.75;
-  color: #6b7280;
+  color: var(--ps-footer-desc);
   margin-bottom: 1.5rem;
   max-width: 360px;
 }
@@ -149,12 +149,12 @@ export default {
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.1);
+  background: var(--ps-footer-social-bg);
+  border: 1px solid var(--ps-footer-social-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: var(--ps-footer-social-color);
   font-size: .9rem;
   text-decoration: none;
   transition: background .2s, color .2s, border-color .2s, transform .2s;
@@ -168,7 +168,7 @@ export default {
 
 /* ── Heading ────────────────────────────────────── */
 .ps-footer-heading {
-  color: #e5e7eb;
+  color: var(--ps-footer-heading);
   font-weight: 700;
   font-size: .8rem;
   letter-spacing: 1.5px;
@@ -186,7 +186,7 @@ export default {
   gap: .65rem;
 }
 .ps-footer-links a {
-  color: #6b7280;
+  color: var(--ps-footer-link);
   text-decoration: none;
   font-size: .9rem;
   transition: color .2s, padding-left .2s;
@@ -221,14 +221,14 @@ export default {
   align-items: flex-start;
   gap: .75rem;
   font-size: .9rem;
-  color: #6b7280;
+  color: var(--ps-footer-link);
   line-height: 1.5;
 }
 .ps-contact-icon {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(102,126,234,.15);
+  background: var(--ps-footer-contact-icon-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,7 +258,7 @@ export default {
 /* ── Divider ────────────────────────────────────── */
 .ps-footer-hr {
   border: none;
-  border-top: 1px solid rgba(255,255,255,.07);
+  border-top: 1px solid var(--ps-footer-hr);
   margin: 0;
 }
 
@@ -274,9 +274,9 @@ export default {
 .ps-copy {
   margin: 0;
   font-size: .85rem;
-  color: #4b5563;
+  color: var(--ps-footer-copy);
 }
-.ps-copy strong { color: #9ca3af; }
+.ps-copy strong { color: var(--ps-footer-copy-strong); }
 .ps-stack {
   margin: 0;
   font-size: .82rem;

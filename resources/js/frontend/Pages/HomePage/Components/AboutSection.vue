@@ -126,7 +126,7 @@ export default {
 
 <style scoped>
 .about-section {
-  background: #07071a;
+  background: var(--ps-bg-2);
   position: relative;
   overflow: hidden;
 }
@@ -199,7 +199,7 @@ export default {
 /* Text */
 .about-lead {
   font-size: 1.05rem;
-  color: #94a3b8;
+  color: var(--ps-text-body);
   line-height: 1.85;
   margin-bottom: 2rem;
 }
@@ -216,8 +216,8 @@ export default {
   align-items: flex-start;
   padding: 1.1rem 1.25rem;
   border-radius: 14px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(255,255,255,.07);
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
   transition: border-color .3s, background .3s;
 }
 .kv-card:hover { border-color: rgba(99,102,241,.35); background: rgba(99,102,241,.06); }
@@ -227,8 +227,8 @@ export default {
   display: flex; align-items: center; justify-content: center;
   font-size: .95rem; color: #fff; flex-shrink: 0;
 }
-.kv-card__title { font-weight: 700; font-size: .9rem; color: #e2e8f0; margin-bottom: .2rem; }
-.kv-card__desc  { font-size: .78rem; color: #64748b; }
+.kv-card__title { font-weight: 700; font-size: .9rem; color: var(--ps-text-h); margin-bottom: .2rem; }
+.kv-card__desc  { font-size: .78rem; color: var(--ps-text-faint); }
 
 /* Pillars */
 .pillar-row {
@@ -240,8 +240,8 @@ export default {
 .pillar-card {
   padding: 2.25rem 2rem;
   border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.07);
-  background: rgba(255,255,255,.025);
+  border: 1px solid var(--ps-card-border);
+  background: var(--ps-card-bg);
   transition: transform .3s, border-color .3s, box-shadow .3s;
 }
 .pillar-card:hover {
@@ -260,8 +260,8 @@ export default {
   margin-bottom: 1.25rem;
   box-shadow: 0 8px 24px rgba(99,102,241,.25);
 }
-.pillar-title { font-weight: 800; font-size: 1.1rem; color: #f1f5f9; margin-bottom: .6rem; }
-.pillar-desc  { font-size: .875rem; color: #64748b; line-height: 1.75; margin: 0; }
+.pillar-title { font-weight: 800; font-size: 1.1rem; color: var(--ps-text-h); margin-bottom: .6rem; }
+.pillar-desc  { font-size: .875rem; color: var(--ps-text-faint); line-height: 1.75; margin: 0; }
 
 @media (max-width: 991px) {
   .about-badge-yr  { display: none; }

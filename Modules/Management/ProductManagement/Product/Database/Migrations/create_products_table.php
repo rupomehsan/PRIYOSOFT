@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name', 200)->nullable();
             $table->string('slug', 200)->nullable();
             $table->text('description')->nullable();
+            $table->string('thumbnail', 200)->nullable();
+            $table->string('promo_link', 500)->nullable();
             $table->enum('status', ['planning','development','active','paused'])->nullable();
             $table->date('launch_date')->nullable();
             $table->decimal('monthly_target_revenue', 12, 2)->nullable();

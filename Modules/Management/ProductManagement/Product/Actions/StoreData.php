@@ -11,11 +11,12 @@ class StoreData
         try {
             $requestData = $request->validated();
 
-            // Process file uploads for specific fields
-                            if ($request->hasFile('screenshots')) {
-                    $file = $request->file('screenshots');
-                    $requestData['screenshots'] = uploader($file, 'uploads/ProductManagement/Product');
-                }
+            if ($request->hasFile('screenshots')) {
+                $requestData['screenshots'] = uploader($request->file('screenshots'), 'uploads/ProductManagement/Product');
+            }
+            if ($request->hasFile('thumbnail')) {
+                $requestData['thumbnail'] = uploader($request->file('thumbnail'), 'uploads/ProductManagement/Product/Thumbnails');
+            }
           
             if ($data = self::$model::query()->create($requestData)) {
                 return messageResponse('Item added successfully', $data, 201);

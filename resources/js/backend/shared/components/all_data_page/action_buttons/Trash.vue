@@ -1,8 +1,8 @@
 <template lang="">
     <div v-if="canDelete" class="">
-        <a href="" @click.prevent="change_status(`trased`)"
+        <a href="" @click.prevent="change_status(`trashed`)"
             class="btn action_btn btn-sm btn-danger d-flex align-items-center mx-1">
-            <i class="fa fa-trash mr-2"></i> Trased
+            <i class="fa fa-trash mr-2"></i> Trashed
             ({{ trashed_data_count }})
         </a>
     </div>

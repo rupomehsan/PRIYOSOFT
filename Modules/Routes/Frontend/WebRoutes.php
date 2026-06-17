@@ -14,4 +14,6 @@ Route::get('/', [FrontendController::class, 'HomePage'])->name('HomePage');
 Route::get('/login', [AuthController::class, 'LoginPage'])->name('LoginPage');
 Route::get('/forgot-password', [AuthController::class, 'ForgotPassword'])->name('ForgotPassword');
 Route::get('/todo', [FrontendController::class, 'TodoPage'])->name('TodoPage');
+Route::get('/products', [FrontendController::class, 'ProductsPage'])->name('ProductsPage');
 Route::get('/products/{slug}', [FrontendController::class, 'ProductDetailsPage'])->name('ProductDetailsPage');
+Route::get('/products/{slug}/payment', [FrontendController::class, 'ProductPaymentPage'])->name('ProductPaymentPage');

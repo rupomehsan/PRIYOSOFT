@@ -86,9 +86,12 @@ class GetAllData
 
             return entityResponse([
                 ...$data->toArray(),
-                "active_data_count" => self::$model::active()->count(),
-                "inactive_data_count" => self::$model::inactive()->count(),
-                "trashed_data_count" => self::$model::onlyTrashed()->count(),
+                "active_data_count"      => self::$model::where('status', 'active')->count(),
+                "inactive_data_count"    => self::$model::where('status', 'inactive')->count(),
+                "planning_count"         => self::$model::where('status', 'planning')->count(),
+                "development_count"      => self::$model::where('status', 'development')->count(),
+                "paused_count"           => self::$model::where('status', 'paused')->count(),
+                "trashed_data_count"     => self::$model::onlyTrashed()->count(),
             ]);
 
         } catch (\Exception $e) {

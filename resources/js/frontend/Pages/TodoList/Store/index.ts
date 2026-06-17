@@ -31,6 +31,14 @@ export const store = defineStore("todo_board_store", {
                 .reduce((sum: number, g: any) => sum + (Number(g.cost) || 0), 0);
         },
 
+        totalCostSummary: (state) => {
+            const budget = state.milestones
+                .reduce((s: number, m: any) => s + (Number(m.cost) || 0), 0);
+            const grouped = state.groups
+                .reduce((s: number, g: any) => s + (Number(g.cost) || 0), 0);
+            return { budget, grouped };
+        },
+
         overallStats: (state) => {
             const total      = state.tasks.length;
             const completed  = state.tasks.filter((t: any) => t.current_status === 'completed').length;

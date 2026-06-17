@@ -71,7 +71,7 @@ export default {
 
 <style scoped>
 .testimonials-section {
-  background: #07071a;
+  background: var(--ps-bg-2);
   position: relative;
   overflow: hidden;
 }
@@ -93,8 +93,8 @@ export default {
 
 /* Card */
 .t-card {
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(255,255,255,.07);
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
   border-radius: 20px;
   padding: 2rem 1.75rem;
   display: flex;
@@ -136,7 +136,7 @@ export default {
 /* Message */
 .t-card__message {
   font-size: .92rem;
-  color: #94a3b8;
+  color: var(--ps-text-body);
   line-height: 1.85;
   flex: 1;
   margin-bottom: 1.5rem;
@@ -164,8 +164,8 @@ export default {
   border: 2px solid rgba(99,102,241,.3);
 }
 .t-card__avatar img { width:100%;height:100%;object-fit:cover; }
-.t-card__name    { font-weight: 700; font-size: .9rem; color: #e2e8f0; }
-.t-card__company { font-size: .77rem; color: #64748b; margin-top: .1rem; }
+.t-card__name    { font-weight: 700; font-size: .9rem; color: var(--ps-text-h); }
+.t-card__company { font-size: .77rem; color: var(--ps-text-faint); margin-top: .1rem; }
 
 @media (max-width: 991px) { .t-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 576px)  { .t-grid { grid-template-columns: 1fr; } }

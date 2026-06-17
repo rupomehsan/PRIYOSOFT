@@ -47,7 +47,7 @@ export default {
 
 <style scoped>
 .stats-section {
-  background: #07071a;
+  background: var(--ps-bg-2);
   padding: 5rem 0;
   position: relative;
   overflow: hidden;
@@ -82,8 +82,8 @@ export default {
 
 /* Card */
 .stat-card {
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(255,255,255,.07);
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
   border-radius: 24px;
   padding: 2.5rem 1.75rem;
   text-align: center;
@@ -111,10 +111,7 @@ export default {
   font-weight: 900;
   line-height: 1;
   margin-bottom: .5rem;
-  background: linear-gradient(135deg, #e2e8f0, #ffffff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--ps-text-h);
 }
 
 .stat-card__label {
@@ -122,7 +119,7 @@ export default {
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--ps-text-faint);
 }
 
 .stat-card__line {

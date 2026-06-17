@@ -1,0 +1,99 @@
+/* ============================================================
+   PRIYOSOFT — Theme (Dark / Light) CSS Custom Properties
+   Applied via: html[data-theme="dark"] (default) | html[data-theme="light"]
+   ============================================================ */
+
+/* ── Dark mode (default) ─────────────────────────────────── */
+:root {
+  /* Section backgrounds */
+  --ps-bg-1:    #050512;   /* deepest: Newsletter, WhoWe, Hero-fallback */
+  --ps-bg-2:    #07071a;   /* standard dark: About, Stats, Testimonials */
+  --ps-bg-3:    #0d0d26;   /* mid dark: Products */
+  --ps-bg-4:    #0a0a1e;   /* FAQ, Blog, CoreValues */
+
+  /* Cards */
+  --ps-card-bg:          rgba(255,255,255,.04);
+  --ps-card-border:      rgba(255,255,255,.07);
+  --ps-card-hover-border: rgba(99,102,241,.4);
+  --ps-card-bg-solid:    #0f0f2e;
+
+  /* Text */
+  --ps-text-h:     #f1f5f9;
+  --ps-text-body:  #94a3b8;
+  --ps-text-faint: #64748b;
+
+  /* Section tags & titles on dark-bg sections */
+  --ps-sec-tag-bg:     rgba(139,92,246,.12);
+  --ps-sec-tag-color:  #c4b5fd;
+  --ps-sec-tag-border: rgba(139,92,246,.25);
+  --ps-sec-title:      #f1f5f9;
+  --ps-sec-sub:        #94a3b8;
+
+  /* Footer (stays dark in both modes) */
+  --ps-footer-bg-from:        #050512;
+  --ps-footer-bg-to:          #07071a;
+  --ps-footer-border:         rgba(255,255,255,.06);
+  --ps-footer-text:           #9ca3af;
+  --ps-footer-desc:           #6b7280;
+  --ps-footer-link:           #6b7280;
+  --ps-footer-heading:        #e5e7eb;
+  --ps-footer-hr:             rgba(255,255,255,.07);
+  --ps-footer-copy:           #4b5563;
+  --ps-footer-copy-strong:    #9ca3af;
+  --ps-footer-social-bg:      rgba(255,255,255,.06);
+  --ps-footer-social-border:  rgba(255,255,255,.1);
+  --ps-footer-social-color:   #9ca3af;
+  --ps-footer-contact-icon-bg: rgba(102,126,234,.15);
+
+  /* Theme toggle button */
+  --ps-toggle-bg:    rgba(255,255,255,.1);
+  --ps-toggle-color: #e2e8f0;
+  --ps-toggle-hover: rgba(255,255,255,.18);
+}
+
+html[data-theme="light"] {
+  /* Section backgrounds */
+  --ps-bg-1:    #ffffff;
+  --ps-bg-2:    #f8fafc;
+  --ps-bg-3:    #eef2ff;
+  --ps-bg-4:    #f1f5f9;
+
+  /* Cards */
+  --ps-card-bg:          #ffffff;
+  --ps-card-border:      rgba(99,102,241,.15);
+  --ps-card-hover-border: rgba(99,102,241,.5);
+  --ps-card-bg-solid:    #ffffff;
+
+  /* Text */
+  --ps-text-h:     #0f172a;
+  --ps-text-body:  #374151;
+  --ps-text-faint: #6b7280;
+
+  /* Section tags & titles on dark-bg sections → now light bg */
+  --ps-sec-tag-bg:     rgba(99,102,241,.08);
+  --ps-sec-tag-color:  #6366f1;
+  --ps-sec-tag-border: rgba(99,102,241,.2);
+  --ps-sec-title:      #0f172a;
+  --ps-sec-sub:        #6b7280;
+
+  /* Footer stays dark */
+  --ps-footer-bg-from:        #1e1b4b;
+  --ps-footer-bg-to:          #0f0f2e;
+  --ps-footer-border:         rgba(255,255,255,.06);
+  --ps-footer-text:           #9ca3af;
+  --ps-footer-desc:           #94a3b8;
+  --ps-footer-link:           #94a3b8;
+  --ps-footer-heading:        #e5e7eb;
+  --ps-footer-hr:             rgba(255,255,255,.07);
+  --ps-footer-copy:           #6b7280;
+  --ps-footer-copy-strong:    #9ca3af;
+  --ps-footer-social-bg:      rgba(255,255,255,.06);
+  --ps-footer-social-border:  rgba(255,255,255,.1);
+  --ps-footer-social-color:   #9ca3af;
+  --ps-footer-contact-icon-bg: rgba(102,126,234,.15);
+
+  /* Theme toggle button */
+  --ps-toggle-bg:    rgba(99,102,241,.08);
+  --ps-toggle-color: #4f46e5;
+  --ps-toggle-hover: rgba(99,102,241,.14);
+}

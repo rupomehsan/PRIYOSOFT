@@ -1,5 +1,5 @@
 <template>
-  <section id="products" class="products-section section-pad">
+  <section id="products" class="products-section section-pad section-dark">
     <div class="container">
 
       <div class="section-head text-center">
@@ -37,6 +37,12 @@
             </a>
           </div>
         </div>
+      </div>
+
+      <div class="products-footer">
+        <a href="/products" class="see-more-btn">
+          View All Products <i class="fas fa-arrow-right ms-2"></i>
+        </a>
       </div>
 
     </div>
@@ -87,7 +93,7 @@ export default {
 </script>
 
 <style scoped>
-.products-section { background: #fafbff; }
+.products-section { background: var(--ps-bg-3); }
 
 .products-grid {
   display: grid;
@@ -97,9 +103,9 @@ export default {
 
 /* Card */
 .product-card {
-  background: #fff;
+  background: var(--ps-card-bg);
   border-radius: 20px;
-  border: 1px solid #e8eeff;
+  border: 1px solid var(--ps-card-border);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -108,8 +114,8 @@ export default {
 }
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 24px 60px rgba(99,102,241,.14);
-  border-color: #c7d2fe;
+  box-shadow: 0 24px 60px rgba(99,102,241,.18);
+  border-color: var(--ps-card-hover-border);
 }
 
 /* Top accent bar */
@@ -128,13 +134,14 @@ export default {
 .product-card__icon-wrap {
   width: 56px; height: 56px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  background: rgba(99,102,241,.15);
+  border: 1px solid rgba(99,102,241,.2);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
 }
 .product-card__img { width: 100%; height: 100%; object-fit: cover; }
-.product-card__icon-fallback { font-size: 1.6rem; color: #8b5cf6; }
+.product-card__icon-fallback { font-size: 1.6rem; color: #a5b4fc; }
 
 /* Status pill */
 .product-card__status {
@@ -153,45 +160,61 @@ export default {
   border-radius: 50%;
   display: inline-block;
 }
-.status--active     { background: #ecfdf5; color: #065f46; }
+.status--active      { background: rgba(16,185,129,.15);  color: #6ee7b7; }
 .status--active .status-dot { background: #10b981; }
-.status--development{ background: #ede9fe; color: #4c1d95; }
+.status--development { background: rgba(139,92,246,.15);  color: #c4b5fd; }
 .status--development .status-dot { background: #8b5cf6; }
-.status--planning   { background: #fffbeb; color: #78350f; }
+.status--planning    { background: rgba(245,158,11,.12);  color: #fcd34d; }
 .status--planning .status-dot { background: #f59e0b; }
-.status--paused     { background: #f9fafb; color: #374151; }
-.status--paused .status-dot { background: #9ca3af; }
+.status--paused      { background: rgba(148,163,184,.1);  color: #94a3b8; }
+.status--paused .status-dot { background: #64748b; }
 
 /* Body */
 .product-card__body { padding: .5rem 1.5rem 1rem; flex: 1; }
 .product-card__name {
   font-weight: 800; font-size: 1.15rem;
-  color: #0f172a; margin-bottom: .5rem;
+  color: var(--ps-text-h); margin-bottom: .5rem;
 }
 .product-card__desc {
-  font-size: .875rem; color: #64748b;
+  font-size: .875rem; color: var(--ps-text-faint);
   line-height: 1.65; margin-bottom: 1rem;
 }
 .product-card__features { display: flex; flex-wrap: wrap; gap: .4rem; }
 .feature-tag {
   font-size: .72rem; font-weight: 600;
-  background: #f5f3ff; color: #6d28d9;
+  background: rgba(99,102,241,.15); color: #a5b4fc;
   padding: .25rem .75rem; border-radius: 50px;
-  border: 1px solid #ede9fe;
+  border: 1px solid rgba(99,102,241,.2);
 }
 
 /* Footer */
 .product-card__footer {
   padding: 1rem 1.5rem 1.5rem;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--ps-card-border);
 }
 .product-card__more {
   font-size: .85rem; font-weight: 700;
-  color: #6366f1; cursor: pointer;
-  transition: gap .2s;
+  color: #818cf8; cursor: pointer;
+  transition: gap .2s, color .2s;
   display: inline-flex; align-items: center; gap: .35rem;
+  text-decoration: none;
 }
-.product-card:hover .product-card__more { gap: .65rem; }
+.product-card:hover .product-card__more { gap: .65rem; color: #a5b4fc; }
+
+/* See more */
+.products-footer { text-align: center; margin-top: 3rem; }
+.see-more-btn {
+  display: inline-flex; align-items: center;
+  background: linear-gradient(135deg,#4f46e5,#7c3aed);
+  color: #fff !important; font-weight: 700; font-size: 1rem;
+  padding: .9rem 2.5rem; border-radius: 50px; text-decoration: none;
+  box-shadow: 0 4px 20px rgba(79,70,229,.3);
+  transition: transform .2s, box-shadow .2s;
+}
+.see-more-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(79,70,229,.4);
+}
 
 @media (max-width: 991px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 576px)  { .products-grid { grid-template-columns: 1fr; } }

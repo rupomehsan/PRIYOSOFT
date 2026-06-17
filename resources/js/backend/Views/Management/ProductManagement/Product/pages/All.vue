@@ -3,80 +3,34 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="card">
-          <div class="card-header">
-            <div class="row align-items-center">
-              <!-- Title and Status Badges Section -->
-              <div class="col-12 col-md-3 mb-md-0">
-                <h5 class="text-capitalize mb-0">
-                  <span
-                    style="
-                      display: inline-block;
-                      padding: 4px 12px;
-                      border-radius: 20px;
-                      font-size: 0.85rem;
-                      font-weight: 600;
-                    "
-                    :style="{
-                      backgroundColor:
-                        status === 'active'
-                          ? '#d4edda'
-                          : status === 'inactive'
-                            ? '#fff3cd'
-                            : '#f8d7da',
-                      color:
-                        status === 'active'
-                          ? '#155724'
-                          : status === 'inactive'
-                            ? '#856404'
-                            : '#721c24',
-                    }"
-                  >
-                    <i
-                      :class="
-                        status === 'active'
-                          ? 'fa fa-check-circle'
-                          : status === 'inactive'
-                            ? 'fa fa-circle-o'
-                            : 'fa fa-trash'
-                      "
-                      style="margin-right: 5px"
-                    ></i>
-                    {{ setup.all_page_title }} -
-                    {{
-                      status === "active"
-                        ? "Active"
-                        : status === "inactive"
-                          ? "Inactive"
-                          : "Trash"
-                    }}
-                  </span>
-                </h5>
-                <!-- Status Filter Badges -->
-              </div>
+          <div class="card-header p-0">
+            <!-- Status Tab Bar -->
+            <div class="prod-tabs">
+              <button
+                v-for="tab in statusTabs" :key="tab.key"
+                class="prod-tab"
+                :class="{ 'prod-tab--active': status === tab.key }"
+                @click="change_status(tab.key)"
+              >
+                <i :class="tab.icon"></i>
+                {{ tab.label }}
+                <span class="prod-tab__count">{{ tab.count }}</span>
+              </button>
+            </div>
 
-              <!-- Search Input -->
-              <div class="col-12 col-md-6 mb-2 mb-md-0">
-                <input
-                  class="form-control"
-                  @keyup="(e) => set_search_key(e)"
-                  placeholder="Search"
-                />
-              </div>
-
-              <!-- Reload and Filter Buttons -->
-              <div class="col-12 col-md-3 text-md-right text-sm-left">
-                <button
-                  class="btn btn-outline-primary btn-sm mr-2"
-                  @click="get_all"
-                  title="Reload data"
-                >
+            <!-- Search + Actions Row -->
+            <div class="prod-toolbar">
+              <input
+                class="prod-search"
+                @keyup="(e) => set_search_key(e)"
+                placeholder="Search products…"
+              />
+              <div class="prod-toolbar__actions">
+                <button class="btn btn-sm btn-outline-secondary" @click="get_all" title="Reload">
                   <i class="fa fa-refresh"></i>
                 </button>
-                <button
-                  class="btn btn-outline-success btn-sm"
-                  @click="set_show_filter_canvas"
-                >
-                  <i class="fa fa-gear mx-2"></i>Filter
+                <button class="btn btn-sm btn-outline-primary" @click="set_show_filter_canvas">
+                  <i class="fa fa-sliders"></i> Filter
                 </button>
               </div>
             </div>
@@ -204,6 +158,7 @@ export default {
       "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
   }),
   created: async function () {
+    this.set_status('all');
     await this.get_all();
   },
   methods: {
@@ -394,6 +349,9 @@ export default {
       "show_filter_canvas",
       "active_data_count",
       "inactive_data_count",
+      "planning_count",
+      "development_count",
+      "paused_count",
       "trashed_data_count",
       "status",
       "selected",
@@ -415,6 +373,18 @@ export default {
         )
       );
     },
+    statusTabs() {
+      const total = (this.active_data_count || 0) + (this.inactive_data_count || 0)
+                  + (this.planning_count || 0) + (this.development_count || 0) + (this.paused_count || 0);
+      return [
+        { key: 'all',         label: 'All',     icon: 'fa fa-th-large',     count: total },
+        { key: 'active',      label: 'Live',    icon: 'fa fa-check-circle', count: this.active_data_count },
+        { key: 'planning',    label: 'Upcoming',icon: 'fa fa-clock-o',      count: this.planning_count },
+        { key: 'development', label: 'In Dev',  icon: 'fa fa-code',         count: this.development_count },
+        { key: 'paused',      label: 'Paused',  icon: 'fa fa-pause-circle', count: this.paused_count },
+        { key: 'trashed',     label: 'Trash',   icon: 'fa fa-trash',        count: this.trashed_data_count },
+      ];
+    },
   },
 
   watch: {
@@ -427,3 +397,66 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* ── Status Tabs ── */
+.prod-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 0 1rem;
+}
+.prod-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .75rem 1.1rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.prod-tab:hover { color: rgba(255,255,255,.8); }
+.prod-tab--active {
+  color: #fff;
+  border-bottom-color: #6366f1;
+}
+.prod-tab__count {
+  background: rgba(255,255,255,.12);
+  color: inherit;
+  font-size: .7rem;
+  padding: .1rem .45rem;
+  border-radius: 20px;
+  min-width: 20px;
+  text-align: center;
+}
+.prod-tab--active .prod-tab__count { background: #6366f1; color: #fff; }
+
+/* ── Search + Actions Toolbar ── */
+.prod-toolbar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem 1rem;
+}
+.prod-search {
+  flex: 1;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  color: #fff;
+  padding: .45rem .85rem;
+  font-size: .875rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.prod-search::placeholder { color: rgba(255,255,255,.35); }
+.prod-search:focus { border-color: #6366f1; }
+.prod-toolbar__actions { display: flex; gap: .5rem; flex-shrink: 0; }
+</style>

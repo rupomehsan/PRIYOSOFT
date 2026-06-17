@@ -53,6 +53,8 @@ const setup: setup_type = {
         "sales_price",
         "features",
         "screenshots",
+        "thumbnail",
+        "promo_link",
         "created_at",
         "deleted_at"
     ],
@@ -113,6 +115,8 @@ const setup: setup_type = {
         "sales_price",
         "features",
         "screenshots",
+        "thumbnail",
+        "promo_link",
         "created_at",
     ],
 

@@ -23,11 +23,11 @@
   border: 1px solid rgba(99,102,241,.2);
 }
 
-/* Section tag — dark bg override */
+/* Section tag — dark bg override (vars change per theme) */
 .section-dark .section-tag {
-  background: rgba(139,92,246,.12);
-  color: #c4b5fd;
-  border-color: rgba(139,92,246,.25);
+  background: var(--ps-sec-tag-bg);
+  color: var(--ps-sec-tag-color);
+  border-color: var(--ps-sec-tag-border);
 }
 
 .section-title {
@@ -40,7 +40,7 @@
 }
 
 .section-dark .section-title {
-  color: #f1f5f9;
+  color: var(--ps-sec-title);
 }
 
 .section-sub {
@@ -52,7 +52,7 @@
   line-height: 1.75;
 }
 
-.section-dark .section-sub { color: #94a3b8; }
+.section-dark .section-sub { color: var(--ps-sec-sub); }
 
 /* ── Gradient text utility ───────────────────────────────────── */
 .gradient-text {

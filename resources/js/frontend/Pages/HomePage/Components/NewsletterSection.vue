@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
 .newsletter-section {
-  background: #050512;
+  background: var(--ps-bg-1);
   padding: 7rem 0;
   position: relative;
   overflow: hidden;
@@ -121,14 +121,14 @@ export default {
 .nl-title {
   font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 900;
-  color: #f1f5f9;
+  color: var(--ps-text-h);
   line-height: 1.2;
   letter-spacing: -.025em;
   margin-bottom: 1.25rem;
 }
 
 .nl-sub {
-  font-size: 1rem; color: #64748b;
+  font-size: 1rem; color: var(--ps-text-faint);
   line-height: 1.8; margin-bottom: 2rem;
 }
 
@@ -139,7 +139,7 @@ export default {
 }
 .nl-perks li {
   display: flex; align-items: center; gap: .75rem;
-  color: #94a3b8; font-size: .9rem;
+  color: var(--ps-text-body); font-size: .9rem;
 }
 .nl-perk-icon {
   width: 22px; height: 22px; border-radius: 50%;
@@ -159,8 +159,8 @@ export default {
 
 /* Card */
 .nl-card {
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(255,255,255,.08);
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
   border-radius: 24px;
   padding: 2.5rem;
   backdrop-filter: blur(16px);
@@ -170,13 +170,13 @@ export default {
 .nl-field { margin-bottom: 1.25rem; }
 .nl-field label {
   display: block; font-size: .82rem; font-weight: 700;
-  color: #94a3b8; margin-bottom: .5rem; letter-spacing: .3px;
+  color: var(--ps-text-body); margin-bottom: .5rem; letter-spacing: .3px;
 }
 .nl-field input {
   width: 100%; padding: .9rem 1.25rem;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 12px; color: #e2e8f0;
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
+  border-radius: 12px; color: var(--ps-text-h);
   font-size: .95rem; outline: none;
   transition: border-color .25s, background .25s;
 }
@@ -213,8 +213,8 @@ export default {
   margin: 0 auto 1.25rem;
   box-shadow: 0 8px 24px rgba(16,185,129,.35);
 }
-.nl-success h4 { font-weight: 800; font-size: 1.35rem; color: #f1f5f9; margin-bottom: .5rem; }
-.nl-success p  { color: #64748b; font-size: .9rem; }
+.nl-success h4 { font-weight: 800; font-size: 1.35rem; color: var(--ps-text-h); margin-bottom: .5rem; }
+.nl-success p  { color: var(--ps-text-faint); font-size: .9rem; }
 
 /* Responsive */
 @media (max-width: 991px) {

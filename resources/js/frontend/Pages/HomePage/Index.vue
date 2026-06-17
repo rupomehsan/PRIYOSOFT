@@ -3,8 +3,8 @@
     <HeroSection :slides="heroSlides" />
     <StatsSection :data="aboutSections" />
     <ProductsSection :data="products" />
-    <AboutSection :data="aboutSections" :whoWeAre="whoWeAre" />
-    <TeamSection :data="teamMembers" />
+    <WhoWeAreSection :data="whoWeAre" />
+    <CoreValuesSection :data="aboutSections" :whoWeAre="whoWeAre" />
     <TestimonialsSection :data="testimonials" />
     <BlogSection :data="blogPosts" />
     <FaqSection :data="faqs" />
@@ -24,6 +24,8 @@ import { mapState, mapActions } from "pinia";
 import HeroSection from "./Components/HeroSection.vue";
 import StatsSection from "./Components/StatsSection.vue";
 import ProductsSection from "./Components/ProductsSection.vue";
+import WhoWeAreSection from "./Components/WhoWeAreSection.vue";
+import CoreValuesSection from "./Components/CoreValuesSection.vue";
 import AboutSection from "./Components/AboutSection.vue";
 import TeamSection from "./Components/TeamSection.vue";
 import TestimonialsSection from "./Components/TestimonialsSection.vue";
@@ -39,6 +41,8 @@ export default {
     HeroSection,
     StatsSection,
     ProductsSection,
+    WhoWeAreSection,
+    CoreValuesSection,
     AboutSection,
     TeamSection,
     TestimonialsSection,

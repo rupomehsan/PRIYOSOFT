@@ -1,5 +1,5 @@
 <template>
-  <section id="blog" class="blog-section section-pad">
+  <section id="blog" class="blog-section section-pad section-dark">
     <div class="container">
       <div class="section-head text-center">
         <span class="section-tag">Latest Insights</span>
@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style scoped>
-.blog-section { background: #fafbff; }
+.blog-section { background: var(--ps-bg-1); }
 
 /* Layout grid */
 .blog-grid {
@@ -105,8 +105,8 @@ export default {
 
 /* Base card */
 .blog-card {
-  background: #fff;
-  border: 1px solid #e8eeff;
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
   border-radius: 20px;
   overflow: hidden;
   transition: transform .3s, box-shadow .3s, border-color .3s;
@@ -115,8 +115,8 @@ export default {
 }
 .blog-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(99,102,241,.12);
-  border-color: #c7d2fe;
+  box-shadow: 0 20px 50px rgba(99,102,241,.15);
+  border-color: rgba(99,102,241,.3);
 }
 
 /* Featured card */
@@ -135,7 +135,7 @@ export default {
 /* Thumb */
 .blog-card__thumb {
   position: relative;
-  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(139,92,246,.08));
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -144,7 +144,7 @@ export default {
 .blog-card__no-img {
   width:100%; height: 100%; min-height: 120px;
   display:flex; align-items:center; justify-content:center;
-  font-size: 3rem; color: #c7d2fe;
+  font-size: 3rem; color: rgba(99,102,241,.35);
 }
 .blog-card__no-img--lg { min-height: 280px; font-size: 5rem; }
 
@@ -164,30 +164,30 @@ export default {
 }
 
 .blog-meta {
-  font-size: .78rem; color: #94a3b8;
+  font-size: .78rem; color: #475569;
   margin-bottom: .65rem;
   display: flex; gap: 1rem;
 }
 
 .blog-title {
   font-weight: 800; font-size: 1.05rem;
-  color: #0f172a; margin-bottom: .65rem;
+  color: var(--ps-text-h); margin-bottom: .65rem;
   line-height: 1.45;
 }
 .blog-title--lg { font-size: 1.35rem; }
 
 .blog-excerpt {
-  font-size: .875rem; color: #64748b;
+  font-size: .875rem; color: var(--ps-text-faint);
   line-height: 1.75; flex: 1;
   margin-bottom: 1.25rem;
 }
 
 .blog-read-more {
-  color: #6366f1; font-weight: 700; font-size: .85rem;
+  color: #818cf8; font-weight: 700; font-size: .85rem;
   text-decoration: none; display: inline-flex; align-items: center;
   transition: color .2s, gap .2s; gap: .3rem; margin-top: auto;
 }
-.blog-read-more:hover { color: #8b5cf6; gap: .6rem; }
+.blog-read-more:hover { color: #a5b4fc; gap: .6rem; }
 
 @media (max-width: 991px) {
   .blog-grid { grid-template-columns: 1fr; }

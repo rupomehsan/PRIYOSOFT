@@ -19,6 +19,7 @@ class Seeder extends SeederClass
             'badge_label' => 'WHO WE ARE',
             'title'       => 'Crafting Digital Excellence Since 2016',
             'description' => 'PriyoSoft was founded with a single conviction: great software should empower businesses, not complicate them. Over the past 8+ years we have partnered with startups, SMEs, and enterprises across Bangladesh and beyond — delivering ecommerce platforms, inventory systems, and business profile solutions that drive real, measurable results. We build with Laravel, Vue.js, and a relentless obsession for clean code and great UX.',
+            'experience' => '8+ years of experience ',
             'image'       => null,
             'features'    => [
                 ['icon' => 'fas fa-rocket',     'title' => 'Fast Delivery',    'description' => 'We ship on time, every time.'],

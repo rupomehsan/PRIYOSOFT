@@ -11,9 +11,11 @@
 <script>
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
+import { theme_store } from '../GlobalStore/theme_store';
 export default {
   name: "Layout",
   components: { Header, Footer },
+  mounted() { theme_store().init(); },
 };
 </script>
 

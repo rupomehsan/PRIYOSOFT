@@ -3,6 +3,7 @@
 
     <top-bar
       :stats="overallStats"
+      :total-cost="totalCostSummary"
       :search="search"
       @update:search="search = $event"
     />
@@ -189,7 +190,7 @@ export default {
       'milestones', 'groups', 'tasks',
       'selectedMilestoneId',
       'selectedMilestone', 'groupsForSelected', 'tasksForGroup',
-      'milestoneProgress', 'milestoneTotalCost', 'overallStats',
+      'milestoneProgress', 'milestoneTotalCost', 'overallStats', 'totalCostSummary',
     ]),
 
     milestoneProgresses() {

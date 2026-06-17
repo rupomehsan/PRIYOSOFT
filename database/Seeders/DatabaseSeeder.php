@@ -45,7 +45,7 @@ use Modules\Management\WebsiteManagement\AboutUs\Database\Seeders\Seeder as Abou
 use Modules\Management\WebsiteManagement\Faq\Database\Seeders\Seeder as FaqSeeder;
 use Modules\Management\WebsiteManagement\ContactLead\Database\Seeders\Seeder as ContactLeadSeeder;
 use Modules\Management\WebsiteManagement\Subscriber\Database\Seeders\Seeder as SubscriberSeeder;
-
+use Modules\Management\WebsiteManagement\WhoWeAre\Database\Seeders\Seeder as WhoWeAreSeeder;
 // Order Management
 use Modules\Management\OrderManagement\Order\Database\Seeders\Seeder as OrderSeeder;
 
@@ -96,6 +96,7 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,              // depends on: Product
             ContactLeadSeeder::class,      // depends on: Product
             SubscriberSeeder::class,
+            WhoWeAreSeeder::class,         // depends on: Product
 
             // Order Management
             OrderSeeder::class,            // depends on: Product, User

@@ -48,6 +48,12 @@
           Get In Touch <i class="fas fa-arrow-right ms-1"></i>
         </a>
 
+        <!-- Theme toggle -->
+        <button class="ps-theme-toggle" @click="toggle_theme"
+                :title="is_dark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+          <i :class="is_dark ? 'fas fa-sun' : 'fas fa-moon'"></i>
+        </button>
+
         <!-- Hamburger button -->
         <button class="ps-hamburger" :class="{ open: menuOpen }"
                 @click="menuOpen = !menuOpen" aria-label="Toggle navigation">
@@ -71,6 +77,7 @@
 <script>
 import { mapActions, mapState } from 'pinia';
 import { auth_store } from '../GlobalStore/auth_store';
+import { theme_store } from '../GlobalStore/theme_store';
 
 export default {
   name: 'PsHeader',
@@ -89,9 +96,11 @@ export default {
   }),
   computed: {
     ...mapState(auth_store, { auth_info: 'auth_info', is_auth: 'is_auth' }),
+    ...mapState(theme_store, { is_dark: 'dark' }),
   },
   methods: {
     ...mapActions(auth_store, { check_is_auth: 'check_is_auth', log_out: 'log_out' }),
+    ...mapActions(theme_store, { toggle_theme: 'toggle' }),
 
     goto(href) {
       this.menuOpen = false;
@@ -104,7 +113,7 @@ export default {
     closeDropdown()  { this.showDropdown = false; },
     handleLogout()   { this.closeDropdown(); this.log_out(); },
 
-    onScroll() { this.scrolled = window.scrollY > 30; },
+    onScroll() { this.scrolled = true; },
 
     onClickOutside(e) {
       if (!this.showDropdown) return;
@@ -115,6 +124,7 @@ export default {
   async mounted() {
     window.addEventListener('scroll', this.onScroll, { passive: true });
     document.addEventListener('click', this.onClickOutside);
+    this.scrolled = true;
     const token = localStorage.getItem('auth_token');
     if (token) { try { await this.check_is_auth(); } catch (_) {} }
   },
@@ -229,6 +239,27 @@ export default {
 .ps-cta:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 22px rgba(102,126,234,.45);
+}
+
+/* Theme toggle */
+.ps-theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .9rem;
+  background: var(--ps-toggle-bg);
+  color: var(--ps-toggle-color);
+  transition: background .2s, color .2s, transform .2s;
+  flex-shrink: 0;
+}
+.ps-theme-toggle:hover {
+  background: var(--ps-toggle-hover);
+  transform: rotate(20deg);
 }
 
 /* Hamburger */

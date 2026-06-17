@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('badge_label', 100)->nullable();
             $table->string('title', 300)->nullable();
+            $table->string('experience')->nullable();
             $table->text('description')->nullable();
             $table->string('image', 100)->nullable();
             $table->json('features')->nullable();

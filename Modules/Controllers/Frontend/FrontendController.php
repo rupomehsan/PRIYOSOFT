@@ -3,7 +3,7 @@
 namespace Modules\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+
 use Inertia\Inertia;
 
 class FrontendController extends Controller
@@ -66,9 +66,21 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function ProductDetailsPage($slug)
+    public function ProductsPage()
     {
-        return Inertia::render('ProductDetails/Index', [
+        return Inertia::render('Products/Index');
+    }
+
+    public function ProductDetailsPage(string $slug)
+    {
+        return Inertia::render('Products/Details', [
+            'slug' => $slug,
+        ]);
+    }
+
+    public function ProductPaymentPage(string $slug)
+    {
+        return Inertia::render('Products/Payment', [
             'slug' => $slug,
         ]);
     }

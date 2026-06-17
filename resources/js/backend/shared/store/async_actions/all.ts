@@ -67,9 +67,12 @@ let execute = async function (this: any) {
   this.cached = response.totalStorage;
   this.all = response.data;
   this.all_data_count = response.data.total;
-  this.active_data_count = response.data.active_data_count;
-  this.inactive_data_count = response.data.inactive_data_count;
-  this.trased_data_count = response.data.trased_data_count;
+  this.active_data_count   = response.data.active_data_count   ?? 0;
+  this.inactive_data_count = response.data.inactive_data_count ?? 0;
+  this.planning_count      = response.data.planning_count      ?? 0;
+  this.development_count   = response.data.development_count   ?? 0;
+  this.paused_count        = response.data.paused_count        ?? 0;
+  this.trashed_data_count  = response.data.trashed_data_count  ?? 0;
 
   this.is_loading = false;
   this.loading_text = "";

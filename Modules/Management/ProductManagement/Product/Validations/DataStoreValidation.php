@@ -42,18 +42,19 @@ class DataStoreValidation extends FormRequest
     public function rules(): array
     {
         return [
-            'product_group_id' => 'required | sometimes',
-            'name' => 'required | sometimes',
-            'slug' => 'required | sometimes',
-            'description' => 'required | sometimes',
-            'status' => 'required | sometimes',
-            'launch_date' => 'required | sometimes',
-            'monthly_target_revenue' => 'required | sometimes',
-            'features' => 'required | sometimes',
-            'screenshots' => 'required | sometimes',
-            'regular_price' => 'sometimes|nullable|numeric|min:0',
-            'sales_price' => 'sometimes|nullable|numeric|min:0',
-            'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+            'product_group_id'       => 'sometimes|nullable',
+            'name'                   => 'sometimes|nullable|string|max:255',
+            'slug'                   => 'sometimes|nullable|string|max:255',
+            'description'            => 'sometimes|nullable|string',
+            'status'                 => ['sometimes', 'nullable', Rule::in(['active', 'planning', 'development', 'paused'])],
+            'launch_date'            => 'sometimes|nullable|date',
+            'monthly_target_revenue' => 'sometimes|nullable|numeric|min:0',
+            'features'               => 'sometimes|nullable',
+            'screenshots'            => 'sometimes|nullable',
+            'regular_price'          => 'sometimes|nullable|numeric|min:0',
+            'sales_price'            => 'sometimes|nullable|numeric|min:0',
+            'thumbnail'              => 'sometimes|nullable|image|max:2048',
+            'promo_link'             => 'sometimes|nullable|url|max:500',
         ];
     }
 }

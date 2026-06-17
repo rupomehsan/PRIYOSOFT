@@ -14,11 +14,12 @@ class UpdateData
             }
             $requestData = $request->validated();
 
-             // Process file uploads for specific fields
-                            if ($request->hasFile('screenshots')) {
-                    $file = $request->file('screenshots');
-                    $requestData['screenshots'] = uploader($file, 'uploads/ProductManagement/Product');
-                }
+            if ($request->hasFile('screenshots')) {
+                $requestData['screenshots'] = uploader($request->file('screenshots'), 'uploads/ProductManagement/Product');
+            }
+            if ($request->hasFile('thumbnail')) {
+                $requestData['thumbnail'] = uploader($request->file('thumbnail'), 'uploads/ProductManagement/Product/Thumbnails');
+            }
   
             $data->update($requestData);
             return messageResponse('Item updated successfully',$data, 201);

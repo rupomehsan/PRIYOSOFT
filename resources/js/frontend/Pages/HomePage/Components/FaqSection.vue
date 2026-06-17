@@ -68,7 +68,7 @@ export default {
 
 <style scoped>
 .faq-section {
-  background: #07071a;
+  background: var(--ps-bg-4);
   position: relative;
   overflow: hidden;
 }
@@ -88,8 +88,8 @@ export default {
 
 /* Item */
 .faq-item {
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
+  background: var(--ps-card-bg);
+  border: 1px solid var(--ps-card-border);
   border-radius: 16px;
   overflow: hidden;
   transition: border-color .3s, background .3s;
@@ -120,14 +120,14 @@ export default {
 .faq-q__text {
   flex: 1;
   font-weight: 700; font-size: .97rem;
-  color: #e2e8f0; line-height: 1.45;
+  color: var(--ps-text-h); line-height: 1.45;
 }
 
 .faq-q__icon {
   width: 30px; height: 30px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  color: #94a3b8;
+  border: 1px solid var(--ps-card-border);
+  background: var(--ps-card-bg);
+  color: var(--ps-text-body);
   display: flex; align-items: center; justify-content: center;
   font-size: .75rem; flex-shrink: 0;
   transition: transform .3s, background .3s, color .3s, border-color .3s;
@@ -143,7 +143,7 @@ export default {
 .faq-a { padding: 0 1.5rem 1.5rem 4.25rem; }
 .faq-a p {
   font-size: .9rem;
-  color: #64748b;
+  color: var(--ps-text-faint);
   line-height: 1.85;
   margin: 0;
 }
