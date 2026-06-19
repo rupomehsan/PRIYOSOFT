@@ -17,6 +17,7 @@ use Modules\Management\WebsiteManagement\Subscriber\Controller\Controller as Sub
 use Modules\Management\ProductManagement\Product\Controller\Controller as ProductController;
 use Modules\Management\ProductManagement\ProductGroup\Controller\Controller as ProductGroupController;
 use Modules\Management\WebsiteManagement\WhoWeAre\Controller\Controller as WhoWeAreController;
+use Modules\Management\WebsiteManagement\ContactLead\Controller\Controller as ContactLeadController;
 
 Route::prefix('public')->group(function () {
     Route::get('hero-sections',    [HeroSectionController::class, 'index']);
@@ -32,6 +33,7 @@ Route::prefix('public')->group(function () {
     Route::get('product-groups',   [ProductGroupController::class,'index']);
     Route::post('subscribe',       [SubscriberController::class,  'store']);
     Route::get('who-we-are',       [WhoWeAreController::class,    'index']);
+    Route::post('contact',         [ContactLeadController::class, 'publicStore']);
 });
 
 Route::get('get-all-projects', [ProjectController::class,'index']);

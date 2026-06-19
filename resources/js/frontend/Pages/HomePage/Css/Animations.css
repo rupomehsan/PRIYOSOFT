@@ -1,0 +1,194 @@
+/* ============================================================
+   PRIYOSOFT — Scroll Animation System
+   ============================================================ */
+
+/* ── Base: all animated elements start hidden ───────────── */
+.animate {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-duration: 0.82s;
+}
+
+/*
+  Use data-anim="in" (NOT a class) so Vue's reactive class patching
+  (el.className = value) cannot accidentally remove the trigger.
+*/
+.animate[data-anim="in"] {
+  opacity: 1 !important;
+  transform: translate(0,0) scale(1) rotate(0deg) skew(0deg) !important;
+}
+
+/* ── Directions ──────────────────────────────────────────── */
+.animate.from-left   { transform: translateX(-80px); }
+.animate.from-right  { transform: translateX(80px); }
+.animate.from-bottom { transform: translateY(65px); }
+.animate.from-top    { transform: translateY(-45px); }
+.animate.zoom-in     { transform: scale(0.78); }
+.animate.zoom-out    { transform: scale(1.15); }
+.animate.rotate-in   { transform: rotate(-10deg) translateY(40px) scale(0.9); }
+.animate.flip-right  { transform: perspective(800px) rotateY(30deg) translateX(50px); opacity: 0; }
+.animate.flip-left   { transform: perspective(800px) rotateY(-30deg) translateX(-50px); opacity: 0; }
+.animate.skew-left   { transform: translateX(-55px) skewX(-7deg); }
+.animate.skew-right  { transform: translateX(55px) skewX(7deg); }
+
+/* ── Stagger delays ──────────────────────────────────────── */
+.delay-1 { transition-delay: 0.07s; }
+.delay-2 { transition-delay: 0.14s; }
+.delay-3 { transition-delay: 0.22s; }
+.delay-4 { transition-delay: 0.30s; }
+.delay-5 { transition-delay: 0.38s; }
+.delay-6 { transition-delay: 0.46s; }
+.delay-7 { transition-delay: 0.54s; }
+.delay-8 { transition-delay: 0.62s; }
+
+/* ── Speed modifiers ─────────────────────────────────────── */
+.dur-slow   { transition-duration: 1.15s; }
+.dur-xslow  { transition-duration: 1.4s; }
+.dur-fast   { transition-duration: 0.5s; }
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+@keyframes ps-float-a {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  40%       { transform: translateY(-22px) rotate(3deg) scale(1.02); }
+  70%       { transform: translateY(-10px) rotate(-1.5deg) scale(.98); }
+}
+@keyframes ps-float-b {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  35%       { transform: translateY(16px) rotate(-2deg); }
+  65%       { transform: translateY(7px) rotate(1deg); }
+}
+@keyframes ps-float-c {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50%       { transform: translateX(12px) translateY(-14px); }
+}
+@keyframes ps-pulse-orb {
+  0%, 100% { opacity: .18; transform: scale(1); }
+  50%       { opacity: .38; transform: scale(1.12); }
+}
+@keyframes ps-spin-slow  { to { transform: rotate(360deg); } }
+@keyframes ps-spin-rev   { to { transform: rotate(-360deg); } }
+@keyframes ps-blink-dot  {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes ps-line-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes ps-shimmer-move {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes ps-bounce-in {
+  0%   { transform: scale(0.6) translateY(50px); opacity: 0; }
+  60%  { transform: scale(1.06) translateY(-6px); opacity: 1; }
+  80%  { transform: scale(0.97) translateY(2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+@keyframes ps-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes ps-badge-pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes ps-ripple {
+  0%   { transform: scale(1); opacity: .6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* ============================================================
+   FLOATING UTILITIES (add to any decorative el)
+   ============================================================ */
+.ps-float-a { animation: ps-float-a var(--float-dur, 8s) ease-in-out infinite var(--float-delay, 0s); }
+.ps-float-b { animation: ps-float-b var(--float-dur, 10s) ease-in-out infinite var(--float-delay, 1s); }
+.ps-float-c { animation: ps-float-c var(--float-dur, 7s) ease-in-out infinite var(--float-delay, .5s); }
+.ps-pulse-orb { animation: ps-pulse-orb var(--float-dur, 5s) ease-in-out infinite; }
+.ps-spin-slow { animation: ps-spin-slow 22s linear infinite; }
+.ps-spin-rev  { animation: ps-spin-rev  18s linear infinite; }
+
+/* ============================================================
+   SECTION HEADING UNDERLINE (animated on scroll)
+   ============================================================ */
+.anim-heading-wrap {
+  position: relative;
+  display: inline-block;
+}
+.anim-underline {
+  display: block;
+  height: 4px;
+  border-radius: 3px;
+  margin: .5rem auto 0;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #06b6d4);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-underline[data-anim="in"] { transform: scaleX(1); }
+
+/* ============================================================
+   MARQUEE TICKER (tech stack / client logos strip)
+   ============================================================ */
+.ps-marquee-outer { overflow: hidden; width: 100%; }
+.ps-marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: ps-marquee 24s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+.ps-marquee-track:hover { animation-play-state: paused; }
+
+/* ============================================================
+   FLOATING PARTICLE DOTS (global background atmosphere)
+   ============================================================ */
+.ps-dots-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(99,102,241,.22) 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
+  opacity: .45;
+}
+
+/* ============================================================
+   BOUNCE-IN (used for badge/tag pop-up)
+   ============================================================ */
+.animate.bounce-in { transform: scale(0.6) translateY(40px); }
+.animate.bounce-in[data-anim="in"] {
+  animation: ps-bounce-in .75s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+/* ============================================================
+   RIPPLE RING (decorative circles that pulse outward)
+   ============================================================ */
+.ps-ripple-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(99,102,241,.35);
+  pointer-events: none;
+  animation: ps-ripple 3s ease-out infinite;
+}
+.ps-ripple-ring:nth-child(2) { animation-delay: 1s; }
+.ps-ripple-ring:nth-child(3) { animation-delay: 2s; }
+
+/* ============================================================
+   SHIMMER TEXT (gradient that sweeps across)
+   ============================================================ */
+.shimmer-text {
+  background: linear-gradient(100deg, #6366f1 25%, #c4b5fd 50%, #06b6d4 75%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: ps-shimmer-move 4s linear infinite;
+}

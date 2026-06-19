@@ -1,20 +1,40 @@
 <template>
-  <section class="cv-section section-pad">
+  <section id="objectives" class="cv-section section-pad">
     <div class="cv-glow cv-glow--a"></div>
     <div class="cv-glow cv-glow--b"></div>
 
     <div class="container position-relative">
 
+      <!-- ── Skeleton ── -->
+      <template v-if="loading">
+        <div class="text-center" style="margin-bottom:3.5rem">
+          <span class="skel skel-pill" style="height:28px;width:130px;display:inline-block;margin-bottom:1rem"></span>
+          <div class="skel" style="height:36px;max-width:280px;margin:0 auto .75rem;border-radius:10px"></div>
+          <div class="skel" style="height:13px;max-width:360px;margin:0 auto;border-radius:6px"></div>
+        </div>
+        <div class="cv-grid">
+          <div v-for="n in 3" :key="n" class="skel-card" style="border-radius:20px;padding:2.25rem 2rem">
+            <span class="skel" style="width:60px;height:60px;border-radius:16px;display:block;margin-bottom:1.5rem"></span>
+            <span class="skel" style="height:20px;width:70%;display:block;margin-bottom:.75rem;border-radius:6px"></span>
+            <span class="skel" style="height:13px;width:95%;display:block;margin-bottom:.4rem;border-radius:6px"></span>
+            <span class="skel" style="height:13px;width:80%;display:block;border-radius:6px"></span>
+          </div>
+        </div>
+      </template>
+
+      <!-- ── Real content ── -->
+      <template v-else>
+
       <!-- Heading -->
-      <div class="cv-heading text-center">
+      <div class="cv-heading text-center animate from-bottom section-content-in">
         <span class="cv-badge">
           <i class="fas fa-gem me-2"></i>What Drives Us
         </span>
         <h2 class="cv-title">Our <span class="cv-title--accent">Objectives</span></h2>
-        <div class="cv-divider">
-          <span class="cv-divider__line"></span>
-          <span class="cv-divider__icon"><i class="fas fa-star"></i></span>
-          <span class="cv-divider__line"></span>
+        <div class="ps-divider">
+          <span class="ps-divider__bar"></span>
+          <i class="fas fa-circle ps-divider__dot"></i>
+          <span class="ps-divider__bar"></span>
         </div>
         <p class="cv-sub">The principles that shape every line of code we write and every relationship we build.</p>
       </div>
@@ -24,8 +44,12 @@
         <div
           v-for="(card, i) in allCards"
           :key="i"
-          class="cv-card"
-          :class="'cv-card--' + (i % 4)"
+          class="cv-card animate"
+          :class="[
+            'cv-card--' + (i % 4),
+            i % 2 === 0 ? 'skew-left' : 'skew-right',
+            'delay-' + ((i % 4) + 1),
+          ]"
         >
           <div class="cv-card__icon-wrap">
             <div class="cv-card__icon">
@@ -38,6 +62,8 @@
           <div class="cv-card__bottom-bar"></div>
         </div>
       </div>
+
+      </template><!-- /v-else -->
 
     </div>
   </section>
@@ -67,8 +93,9 @@ const DEFAULT_FEATURES = [
 export default {
   name: 'CoreValuesSection',
   props: {
-    data:     { type: Array,  default: () => [] },
-    whoWeAre: { type: Object, default: () => null },
+    data:     { type: Array,   default: () => [] },
+    whoWeAre: { type: Object,  default: () => null },
+    loading:  { type: Boolean, default: false },
   },
   computed: {
     pillars() {

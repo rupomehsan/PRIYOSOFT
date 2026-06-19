@@ -2,6 +2,14 @@ export const initialState = {
     loading: false,
     error: null as null | string,
 
+    // ── Per-section loading flags (true until that section's API resolves)
+    loadingProducts:     true,
+    loadingAbout:        true,
+    loadingWhoWeAre:     true,
+    loadingTestimonials: true,
+    loadingBlog:         true,
+    loadingFaq:          true,
+
     // ── Portfolio data ────────────────────────────────────────────────
     heroSlides:    []    as any[],
     siteSections:  []    as any[],

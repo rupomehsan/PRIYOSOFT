@@ -5,14 +5,37 @@
       <div class="row justify-content-center">
         <div class="col-lg-10">
 
-          <div class="section-head text-center">
+          <!-- ── Skeleton ── -->
+          <template v-if="loading">
+            <div class="text-center" style="margin-bottom:3rem">
+              <span class="skel skel-pill" style="height:26px;width:120px;display:inline-block;margin-bottom:1rem"></span>
+              <div class="skel" style="height:36px;max-width:340px;margin:0 auto .75rem;border-radius:10px"></div>
+              <div class="skel" style="height:13px;max-width:300px;margin:0 auto;border-radius:6px"></div>
+            </div>
+            <div class="faq-list">
+              <div v-for="n in 5" :key="n" class="skel-card" style="border-radius:16px;padding:1.35rem 1.5rem;display:flex;align-items:center;gap:1.25rem">
+                <span class="skel skel-pill" style="width:36px;height:26px;flex-shrink:0;border-radius:8px"></span>
+                <span class="skel" :style="`height:16px;width:${55 + n * 7}%;border-radius:6px`"></span>
+                <span class="skel skel-circle" style="width:30px;height:30px;flex-shrink:0;margin-left:auto"></span>
+              </div>
+            </div>
+          </template>
+
+          <!-- ── Real content ── -->
+          <template v-else>
+          <div class="section-head text-center animate from-bottom section-content-in">
             <span class="section-tag">Got Questions?</span>
-            <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
+            <h2 class="section-title">Frequently Asked <span class="gradient-text shimmer-text">Questions</span></h2>
+            <div class="ps-divider">
+              <span class="ps-divider__bar"></span>
+              <i class="fas fa-circle ps-divider__dot"></i>
+              <span class="ps-divider__bar"></span>
+            </div>
             <p class="section-sub">Everything you need to know about working with us.</p>
           </div>
 
           <div class="faq-cols">
-            <div class="faq-list">
+            <div class="faq-list animate from-bottom">
               <div
                 v-for="(faq, i) in items"
                 :key="faq.id || i"
@@ -35,6 +58,8 @@
             </div>
           </div>
 
+          </template><!-- /v-else -->
+
         </div>
       </div>
     </div>
@@ -47,12 +72,15 @@ const FALLBACK = [
   { id:2, question:'How long does a typical project take?',     answer:'A standard SaaS MVP takes 6–12 weeks. Enterprise systems typically run 3–6 months. We provide a detailed timeline after the discovery phase.' },
   { id:3, question:'Do you offer support after launch?',        answer:'Yes — we offer maintenance packages covering bug fixes, security patches, and feature additions. Most clients stay with us 12+ months post-launch.' },
   { id:4, question:'Can you work with our existing codebase?',  answer:'Absolutely. We regularly perform code audits, refactors, and feature additions on legacy codebases. We assess first and give honest recommendations.' },
-  { id:5, question:'How do we get started?',                    answer:'Send us a message via the contact form below or email hello@priyosoft.com. We schedule a free discovery call within 24 hours to understand your needs and propose a plan.' },
+  { id:5, question:'How do we get started?',                    answer:'Send us a message via the contact form below or email  We schedule a free discovery call within 24 hours to understand your needs and propose a plan.' },
 ];
 
 export default {
   name: 'FaqSection',
-  props: { data: { type: Array, default: () => [] } },
+  props: {
+    data:    { type: Array,   default: () => [] },
+    loading: { type: Boolean, default: false },
+  },
   data: () => ({ openIndex: 0 }),
   computed: {
     items() {

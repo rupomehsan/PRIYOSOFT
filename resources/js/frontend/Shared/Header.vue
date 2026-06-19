@@ -22,36 +22,9 @@
       <div class="ps-actions">
 
         <!-- Authenticated user dropdown -->
-        <div v-if="is_auth" class="ps-user-wrap" ref="userWrap">
-          <button class="ps-user-btn" @click="toggleDropdown">
-            <img :src="auth_info.avatar || auth_info.image || '/avatar.png'"
-                 :alt="auth_info.name" class="ps-user-avatar" />
-            <span class="ps-user-name">{{ auth_info.name }}</span>
-            <i class="fas fa-chevron-down ps-chevron" :class="{ rotated: showDropdown }"></i>
-          </button>
-          <div class="ps-drop" :class="{ show: showDropdown }">
-            <div class="ps-drop-head">
-              <img :src="auth_info.avatar || auth_info.image || '/avatar.png'" class="ps-drop-avatar" />
-              <div>
-                <div class="ps-drop-name">{{ auth_info.name }}</div>
-                <div class="ps-drop-email">{{ auth_info.email }}</div>
-              </div>
-            </div>
-            <hr class="m-0" />
-            <Link class="ps-drop-item" href="/profile" @click="closeDropdown">
-              <i class="fas fa-user"></i> My Profile
-            </Link>
-            <a class="ps-drop-item ps-drop-danger" href="#" @click.prevent="handleLogout">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-          </div>
-        </div>
+     
 
-        <!-- Guest CTA -->
-        <a v-else href="#newsletter" class="ps-cta" @click.prevent="goto('#newsletter')">
-          Get In Touch <i class="fas fa-arrow-right ms-1"></i>
-        </a>
-
+     
         <!-- Theme toggle -->
         <button class="ps-theme-toggle" @click="toggle_theme"
                 :title="is_dark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
@@ -91,12 +64,13 @@ export default {
     menuOpen: false,
     showDropdown: false,
     links: [
-      { id: 'home',     href: '#',           label: 'Home' },
-      { id: 'products', href: '#products',   label: 'Products' },
-      { id: 'about',    href: '#about',      label: 'About' },
-      { id: 'team',     href: '#team',       label: 'Team' },
-      { id: 'blog',     href: '#blog',       label: 'Blog' },
-      { id: 'faq',      href: '#faq',        label: 'FAQ' },
+      { id: 'home',         href: '#',               label: 'Home' },
+      { id: 'products',     href: '#products',       label: 'Products' },
+      { id: 'about',        href: '#about',          label: 'About Us' },
+      { id: 'objectives',   href: '#objectives',     label: 'Objectives' },
+      { id: 'testimonials', href: '#testimonials',   label: 'Testimonials' },
+      { id: 'blog',         href: '#blog',           label: 'Blog' },
+      { id: 'faq',          href: '#faq',            label: 'FAQ' },
     ],
   }),
   computed: {
@@ -121,9 +95,17 @@ export default {
 
     goto(href) {
       this.menuOpen = false;
-      if (href === '#') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      if (href === '#') {
+        if (window.location.pathname !== '/') { window.location.href = '/'; return; }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       const el = document.querySelector(href);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = '/' + href;
+      }
     },
 
     toggleDropdown() { this.showDropdown = !this.showDropdown; },

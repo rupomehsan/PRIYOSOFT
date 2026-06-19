@@ -90,10 +90,7 @@
       ></button>
     </div>
 
-    <!-- Scroll cue -->
-    <div class="hero-scroll" @click="scrollDown">
-      <i class="fas fa-chevron-down"></i>
-    </div>
+   
 
   </section>
 </template>

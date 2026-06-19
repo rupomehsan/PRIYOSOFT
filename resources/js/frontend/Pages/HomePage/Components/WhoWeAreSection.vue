@@ -1,20 +1,52 @@
 <template>
-  <section class="wwa-section section-pad">
+  <section id="about" class="wwa-section section-pad">
     <div class="wwa-bg-glow wwa-bg-glow--a"></div>
     <div class="wwa-bg-glow wwa-bg-glow--b"></div>
 
     <div class="container position-relative">
 
+      <!-- ── Skeleton ── -->
+      <template v-if="loading">
+        <div class="text-center" style="margin-bottom:4rem">
+          <span class="skel skel-pill" style="height:28px;width:110px;display:inline-block;margin-bottom:1rem"></span>
+          <div class="skel" style="height:38px;max-width:360px;margin:0 auto .75rem;border-radius:10px"></div>
+          <div class="skel" style="height:3px;max-width:160px;margin:.75rem auto 1rem;border-radius:3px"></div>
+          <div class="skel" style="height:14px;max-width:420px;margin:0 auto;border-radius:6px"></div>
+        </div>
+        <div class="row align-items-center g-5">
+          <div class="col-lg-5">
+            <span class="skel skel-card" style="display:block;aspect-ratio:4/3;border-radius:24px"></span>
+          </div>
+          <div class="col-lg-7" style="padding-left:.5rem">
+            <span class="skel" style="height:14px;width:95%;display:block;margin-bottom:.7rem;border-radius:6px"></span>
+            <span class="skel" style="height:14px;width:88%;display:block;margin-bottom:.7rem;border-radius:6px"></span>
+            <span class="skel" style="height:14px;width:70%;display:block;margin-bottom:2rem;border-radius:6px"></span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem">
+              <span v-for="n in 4" :key="n" class="skel skel-card" style="height:80px;border-radius:14px"></span>
+            </div>
+            <div style="display:flex;gap:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.07)">
+              <div v-for="n in 2" :key="n">
+                <span class="skel" style="height:32px;width:70px;display:block;margin-bottom:.4rem;border-radius:8px"></span>
+                <span class="skel" style="height:12px;width:100px;display:block;border-radius:6px"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ── Real content ── -->
+      <template v-else>
+
       <!-- Section heading -->
-      <div class="wwa-heading text-center">
+      <div class="wwa-heading text-center animate from-bottom section-content-in">
         <span class="wwa-badge">
           <i class="fas fa-users me-2"></i>{{ badge }}
         </span>
         <h2 class="wwa-title">{{ title }}</h2>
-        <div class="wwa-title-line">
-          <span class="wwa-title-line__bar"></span>
-          <i class="fas fa-circle wwa-title-line__dot"></i>
-          <span class="wwa-title-line__bar"></span>
+        <div class="ps-divider">
+          <span class="ps-divider__bar"></span>
+          <i class="fas fa-circle ps-divider__dot"></i>
+          <span class="ps-divider__bar"></span>
         </div>
         <p class="wwa-subtitle">{{ subtitle }}</p>
       </div>
@@ -24,7 +56,7 @@
 
         <!-- Image col -->
         <div class="col-lg-5">
-          <div class="wwa-visual">
+          <div class="wwa-visual animate from-left dur-slow">
             <div class="wwa-img-wrap">
               <img
                 v-if="data && data.image"
@@ -63,13 +95,15 @@
 
         <!-- Content col -->
         <div class="col-lg-7">
-          <div class="wwa-content">
+          <div class="wwa-content animate from-right dur-slow">
 
             <p class="wwa-desc">{{ description }}</p>
 
             <!-- Features -->
             <div v-if="features.length" class="wwa-features">
-              <div v-for="(f, i) in features" :key="i" class="wwa-feature">
+              <div v-for="(f, i) in features" :key="i"
+                   class="wwa-feature animate from-bottom"
+                   :class="'delay-' + (i + 1)">
                 <div class="wwa-feature__icon" :class="'wwa-feature__icon--' + (i % 4)">
                   <i :class="f.icon || 'fas fa-check-circle'"></i>
                 </div>
@@ -93,6 +127,8 @@
 
       </div>
 
+      </template><!-- /v-else -->
+
     </div>
   </section>
 </template>
@@ -101,7 +137,8 @@
 export default {
   name: 'WhoWeAreSection',
   props: {
-    data: { type: Object, default: () => null },
+    data:    { type: Object,  default: () => null },
+    loading: { type: Boolean, default: false },
   },
   computed: {
     badge()       { return this.data?.badge_label || 'Who We Are'; },
@@ -222,9 +259,18 @@ export default {
 .wwa-img-wrap {
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid var(--ps-card-border);
-  background: var(--ps-card-bg);
+  border: 1px solid rgba(139,92,246,.25);
+  background: #0d0d26;
   aspect-ratio: 4/3;
+  box-shadow:
+    0 0 0 4px rgba(99,102,241,.08),
+    0 20px 60px rgba(0,0,0,.5),
+    inset 0 0 30px rgba(99,102,241,.06);
+}
+html[data-theme="light"] .wwa-img-wrap {
+  background: #ffffff;
+  border-color: rgba(99,102,241,.15);
+  box-shadow: 0 8px 40px rgba(99,102,241,.1);
 }
 
 .wwa-img {
@@ -275,47 +321,73 @@ export default {
 /* Stat cards */
 .wwa-stat-card {
   position: absolute;
-  border-radius: 16px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--ps-stat-card-border);
+  border-radius: 18px;
   display: flex;
   align-items: center;
-  gap: .65rem;
+  gap: .7rem;
   z-index: 2;
-  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  /* solid dark-glass — readable over any background */
+  background: linear-gradient(135deg, #1a1a3e 0%, #0f0f2e 100%);
+  border: 1px solid rgba(139,92,246,.35);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.5),
+    0 12px 40px rgba(0,0,0,.55),
+    0 0 20px rgba(99,102,241,.2);
 }
 
 .wwa-stat-card--tl {
-  top: -1.1rem;
-  left: -1.25rem;
-  background: var(--ps-stat-card-bg-1);
-  padding: .85rem 1.25rem;
+  top: -1.2rem;
+  left: -1.4rem;
+  padding: 1rem 1.4rem;
   flex-direction: column;
   align-items: flex-start;
 }
 
 .wwa-stat-card--br {
-  bottom: -1.1rem;
-  right: -1.25rem;
-  background: var(--ps-stat-card-bg-2);
-  padding: .85rem 1.25rem;
+  bottom: -1.2rem;
+  right: -1.4rem;
+  padding: 1rem 1.4rem;
+  background: linear-gradient(135deg, #0c1a2e 0%, #071525 100%);
+  border-color: rgba(6,182,212,.35);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.5),
+    0 12px 40px rgba(0,0,0,.55),
+    0 0 20px rgba(6,182,212,.18);
 }
 
 .wwa-stat-card__num {
-  font-size: 1.75rem;
+  font-size: 1.9rem;
   font-weight: 900;
-  color: var(--ps-stat-card-num);
+  color: #ffffff;
   line-height: 1;
+  letter-spacing: -.02em;
 }
 .wwa-stat-card__label {
   font-size: .72rem;
-  font-weight: 600;
-  color: var(--ps-stat-card-label-1);
-  line-height: 1.3;
+  font-weight: 700;
+  color: #c4b5fd;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: .05em;
 }
-.wwa-stat-card--br .wwa-stat-card__label { color: var(--ps-stat-card-label-2); }
-.wwa-stat-card__icon { font-size: 1.3rem; color: var(--ps-stat-card-icon); }
+.wwa-stat-card--br .wwa-stat-card__label { color: #67e8f9; }
+.wwa-stat-card__icon { font-size: 1.4rem; color: #38bdf8; }
+
+/* Light-mode overrides for stat cards */
+html[data-theme="light"] .wwa-stat-card {
+  background: #ffffff;
+  border-color: rgba(99,102,241,.2);
+  box-shadow: 0 8px 28px rgba(99,102,241,.14), 0 2px 8px rgba(0,0,0,.06);
+}
+html[data-theme="light"] .wwa-stat-card--br {
+  background: #f0fdff;
+  border-color: rgba(6,182,212,.25);
+  box-shadow: 0 8px 28px rgba(6,182,212,.14), 0 2px 8px rgba(0,0,0,.06);
+}
+html[data-theme="light"] .wwa-stat-card__num   { color: #1e1b4b; }
+html[data-theme="light"] .wwa-stat-card__label { color: #6366f1; }
+html[data-theme="light"] .wwa-stat-card--br .wwa-stat-card__label { color: #0891b2; }
+html[data-theme="light"] .wwa-stat-card__icon  { color: #0891b2; }
 
 /* Decorative rings */
 .wwa-ring {

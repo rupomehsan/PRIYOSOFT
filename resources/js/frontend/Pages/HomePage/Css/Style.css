@@ -68,6 +68,69 @@
   100% { background-position: -200% 0; }
 }
 
+/* ── Section title divider (two gradient bars + centre dot) ──── */
+.ps-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  margin: .6rem 0 1.3rem;
+}
+.ps-divider__bar {
+  width: 70px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #6366f1);
+}
+.ps-divider__bar:last-child {
+  background: linear-gradient(90deg, #6366f1, transparent);
+}
+.ps-divider__dot {
+  font-size: .35rem;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+/* ── Skeleton / Shimmer loading system ───────────────────────── */
+@keyframes ps-skel {
+  0%   { background-position: -500px 0; }
+  100% { background-position:  500px 0; }
+}
+.skel {
+  display: block;
+  border-radius: 8px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.04) 25%,
+    rgba(255,255,255,.11) 50%,
+    rgba(255,255,255,.04) 75%
+  );
+  background-size: 500px 100%;
+  animation: ps-skel 1.55s ease-in-out infinite;
+}
+html[data-theme="light"] .skel {
+  background: linear-gradient(90deg, #f1f5f9 25%, #dde4f0 50%, #f1f5f9 75%);
+  background-size: 500px 100%;
+}
+/* Skel shape helpers */
+.skel-circle { border-radius: 50% !important; }
+.skel-pill   { border-radius: 999px !important; }
+.skel-card   {
+  border-radius: 20px !important;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+}
+html[data-theme="light"] .skel-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+/* Section fade-in when real content appears */
+@keyframes ps-content-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.section-content-in { animation: ps-content-in .45s ease-out both; }
+
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .section-pad  { padding: 5rem 0; }

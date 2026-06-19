@@ -28,15 +28,7 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "description",
-		label: "Enter Description",
-		type: "textarea",
-		rows: 4,
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "primary_button_text",
 		label: "Enter Primary Button Text",
@@ -126,5 +118,14 @@ export default [
 		value: "",
 		is_visible: true,
 		class: "col-md-6",
+	},
+	{
+		name: "description",
+		label: "Enter Description",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-12",
 	},
 ];

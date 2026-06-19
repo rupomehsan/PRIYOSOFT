@@ -3,14 +3,52 @@
     <div class="t-glow t-glow--1"></div>
     <div class="t-glow t-glow--2"></div>
     <div class="container position-relative">
-      <div class="section-head text-center">
+      <!-- ── Skeleton ── -->
+      <template v-if="loading">
+        <div class="section-head text-center" style="margin-bottom:3rem">
+          <span class="skel skel-pill" style="height:26px;width:100px;display:inline-block;margin-bottom:1rem"></span>
+          <div class="skel" style="height:36px;max-width:320px;margin:0 auto .75rem;border-radius:10px"></div>
+          <div class="skel" style="height:13px;max-width:360px;margin:0 auto;border-radius:6px"></div>
+        </div>
+        <div class="t-grid">
+          <div v-for="n in 3" :key="n" class="t-card skel-card" style="border-radius:20px;padding:2rem 1.75rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+              <div style="display:flex;gap:4px">
+                <span v-for="s in 5" :key="s" class="skel" style="width:16px;height:14px;border-radius:3px"></span>
+              </div>
+            </div>
+            <span class="skel" style="height:30px;width:30px;border-radius:6px;display:block;margin-bottom:.75rem"></span>
+            <span class="skel" style="height:13px;width:100%;display:block;margin-bottom:.4rem;border-radius:6px"></span>
+            <span class="skel" style="height:13px;width:92%;display:block;margin-bottom:.4rem;border-radius:6px"></span>
+            <span class="skel" style="height:13px;width:78%;display:block;margin-bottom:1.5rem;border-radius:6px"></span>
+            <div style="display:flex;align-items:center;gap:.875rem;margin-top:auto">
+              <span class="skel skel-circle" style="width:46px;height:46px;flex-shrink:0"></span>
+              <div style="flex:1">
+                <span class="skel" style="height:14px;width:60%;display:block;margin-bottom:.3rem;border-radius:6px"></span>
+                <span class="skel" style="height:11px;width:80%;display:block;border-radius:6px"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ── Real content ── -->
+      <template v-else>
+      <div class="section-head text-center animate from-bottom section-content-in">
         <span class="section-tag">Social Proof</span>
-        <h2 class="section-title">What Our <span class="gradient-text">Clients</span> Say</h2>
+        <h2 class="section-title">What Our <span class="gradient-text shimmer-text">Clients</span> Say</h2>
+        <div class="ps-divider">
+          <span class="ps-divider__bar"></span>
+          <i class="fas fa-circle ps-divider__dot"></i>
+          <span class="ps-divider__bar"></span>
+        </div>
         <p class="section-sub">Real words from real people who trusted us with their vision.</p>
       </div>
 
-      <div class="t-grid">
-        <div v-for="t in items" :key="t.id" class="t-card">
+      <div class="t-grid section-content-in">
+        <div v-for="(t, i) in items" :key="t.id"
+             class="t-card animate"
+             :class="[i % 3 === 0 ? 'flip-left' : i % 3 === 1 ? 'from-bottom' : 'flip-right', 'delay-' + (i + 1)]">
           <div class="t-card__top">
             <div class="t-card__stars">
               <i v-for="n in 5" :key="n"
@@ -46,6 +84,7 @@
           </div>
         </div>
       </div>
+      </template><!-- /v-else -->
     </div>
   </section>
 </template>
@@ -59,7 +98,10 @@ const FALLBACK = [
 
 export default {
   name: 'TestimonialsSection',
-  props: { data: { type: Array, default: () => [] } },
+  props: {
+    data:    { type: Array,   default: () => [] },
+    loading: { type: Boolean, default: false },
+  },
   computed: {
     items() {
       const list = this.data.filter(t => t.is_visible !== false).slice(0, 6);

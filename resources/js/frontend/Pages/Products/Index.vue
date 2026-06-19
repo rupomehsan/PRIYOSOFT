@@ -141,6 +141,7 @@ export default {
           params: {
             get_all: 1,
             limit: 100,
+            status: 'active',
             fields: ['id','name','slug','status','project_status','description','features','regular_price','sales_price','thumbnail','screenshots','product_group_id'],
           }
         });

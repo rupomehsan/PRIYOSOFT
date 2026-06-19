@@ -3,8 +3,21 @@
     <div class="stats-glow stats-glow--1"></div>
     <div class="stats-glow stats-glow--2"></div>
     <div class="container position-relative">
-      <div class="stats-grid">
-        <div v-for="(stat, i) in visibleStats" :key="i" class="stat-card">
+
+      <!-- Skeleton -->
+      <div v-if="loading" class="stats-grid">
+        <div v-for="n in 4" :key="n" class="stat-card skel-card" style="padding:2.5rem 1.75rem;text-align:center">
+          <span class="skel skel-circle" style="width:60px;height:60px;margin:0 auto 1.25rem"></span>
+          <span class="skel" style="height:44px;width:70px;margin:0 auto .75rem;border-radius:8px"></span>
+          <span class="skel" style="height:13px;width:110px;margin:0 auto;border-radius:6px"></span>
+        </div>
+      </div>
+
+      <!-- Real content -->
+      <div v-else class="stats-grid section-content-in">
+        <div v-for="(stat, i) in visibleStats" :key="i"
+             class="stat-card animate from-bottom"
+             :class="'delay-' + (i + 1)">
           <div class="stat-card__icon" :style="{ background: stat.color }">
             <i :class="stat.icon || 'fas fa-chart-bar'"></i>
           </div>
@@ -13,6 +26,7 @@
           <div class="stat-card__line" :style="{ background: stat.color }"></div>
         </div>
       </div>
+
     </div>
   </section>
 </template>
@@ -34,7 +48,10 @@ const COLORS = [
 
 export default {
   name: 'StatsSection',
-  props: { data: { type: Array, default: () => [] } },
+  props: {
+    data:    { type: Array,   default: () => [] },
+    loading: { type: Boolean, default: false },
+  },
   computed: {
     stats() { return this.data.filter(s => s.section === 'stat'); },
     visibleStats() {

@@ -14,6 +14,7 @@ use Modules\Management\WebsiteManagement\ContactLead\Validations\BulkActionsVali
 use Modules\Management\WebsiteManagement\ContactLead\Validations\DataStoreValidation;
 use Modules\Management\WebsiteManagement\ContactLead\Actions\BulkActions;
 use App\Http\Controllers\Controller as ControllersController;
+use Illuminate\Http\Request;
 
 
 class Controller extends ControllersController
@@ -23,6 +24,26 @@ class Controller extends ControllersController
 
         $data = GetAllData::execute();
         return $data;
+    }
+
+    public function publicStore(Request $request)
+    {
+        try {
+            $model = \Modules\Management\WebsiteManagement\ContactLead\Database\Models\Model::class;
+            $data = $model::create([
+                'name'       => $request->input('name'),
+                'email'      => $request->input('email'),
+                'phone'      => $request->input('phone'),
+                'subject'    => $request->input('subject'),
+                'product_id' => $request->input('product_id'),
+                'message'    => $request->input('message'),
+                'status'     => 'new',
+                'ip_address' => $request->ip(),
+            ]);
+            return messageResponse('Message sent successfully', $data, 201);
+        } catch (\Exception $e) {
+            return messageResponse($e->getMessage(), [], 500, 'server_error');
+        }
     }
 
     public function store(DataStoreValidation $request)

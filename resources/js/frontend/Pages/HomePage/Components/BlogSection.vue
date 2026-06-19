@@ -1,15 +1,57 @@
 <template>
   <section id="blog" class="blog-section section-pad section-dark">
     <div class="container">
-      <div class="section-head text-center">
+
+      <!-- ── Skeleton ── -->
+      <template v-if="loading">
+        <div class="section-head text-center" style="margin-bottom:3rem">
+          <span class="skel skel-pill" style="height:26px;width:110px;display:inline-block;margin-bottom:1rem"></span>
+          <div class="skel" style="height:36px;max-width:220px;margin:0 auto .75rem;border-radius:10px"></div>
+          <div class="skel" style="height:13px;max-width:320px;margin:0 auto;border-radius:6px"></div>
+        </div>
+        <div class="blog-grid">
+          <!-- Featured skeleton -->
+          <div class="skel-card" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column">
+            <span class="skel" style="display:block;height:280px;border-radius:0"></span>
+            <div style="padding:1.75rem;flex:1">
+              <span class="skel" style="height:12px;width:100px;display:block;margin-bottom:.75rem;border-radius:6px"></span>
+              <span class="skel" style="height:24px;width:85%;display:block;margin-bottom:.5rem;border-radius:8px"></span>
+              <span class="skel" style="height:24px;width:65%;display:block;margin-bottom:1rem;border-radius:8px"></span>
+              <span class="skel" style="height:13px;width:100%;display:block;margin-bottom:.4rem;border-radius:6px"></span>
+              <span class="skel" style="height:13px;width:88%;display:block;border-radius:6px"></span>
+            </div>
+          </div>
+          <!-- Side skeletons -->
+          <div class="blog-side">
+            <div v-for="n in 2" :key="n" class="skel-card" style="border-radius:16px;overflow:hidden;display:flex;flex-direction:row">
+              <span class="skel" style="width:130px;min-width:130px;border-radius:0"></span>
+              <div style="padding:1.25rem;flex:1">
+                <span class="skel" style="height:11px;width:80px;display:block;margin-bottom:.6rem;border-radius:6px"></span>
+                <span class="skel" style="height:18px;width:90%;display:block;margin-bottom:.4rem;border-radius:6px"></span>
+                <span class="skel" style="height:13px;width:100%;display:block;margin-bottom:.35rem;border-radius:6px"></span>
+                <span class="skel" style="height:13px;width:75%;display:block;border-radius:6px"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ── Real content ── -->
+      <template v-else>
+      <div class="section-head text-center animate from-bottom section-content-in">
         <span class="section-tag">Latest Insights</span>
-        <h2 class="section-title">From Our <span class="gradient-text">Blog</span></h2>
+        <h2 class="section-title">From Our <span class="gradient-text shimmer-text">Blog</span></h2>
+        <div class="ps-divider">
+          <span class="ps-divider__bar"></span>
+          <i class="fas fa-circle ps-divider__dot"></i>
+          <span class="ps-divider__bar"></span>
+        </div>
         <p class="section-sub">Thoughts on software, technology, and building great products.</p>
       </div>
 
-      <div class="blog-grid">
+      <div class="blog-grid section-content-in">
         <!-- Featured post (first) -->
-        <article v-if="items[0]" class="blog-card blog-card--featured">
+        <article v-if="items[0]" class="blog-card blog-card--featured animate from-left dur-slow">
           <div class="blog-card__thumb">
             <img :src="thumbSrc(items[0].thumbnail)" :alt="items[0].title" class="blog-card__img" />
             <span class="blog-cat">Article</span>
@@ -27,8 +69,10 @@
         </article>
 
         <!-- Side posts -->
-        <div class="blog-side">
-          <article v-for="post in items.slice(1)" :key="post.id" class="blog-card blog-card--sm">
+        <div class="blog-side animate from-right dur-slow">
+          <article v-for="(post, i) in items.slice(1)" :key="post.id"
+                   class="blog-card blog-card--sm animate from-right"
+                   :class="'delay-' + (i + 2)">
             <div class="blog-card__thumb blog-card__thumb--sm">
               <img :src="thumbSrc(post.thumbnail)" :alt="post.title" class="blog-card__img" />
               <span class="blog-cat">Article</span>
@@ -52,6 +96,7 @@
           View All Articles <i class="fas fa-arrow-right ms-2"></i>
         </a>
       </div>
+      </template><!-- /v-else -->
 
     </div>
   </section>
@@ -66,7 +111,10 @@ const FALLBACK = [
 
 export default {
   name: 'BlogSection',
-  props: { data: { type: Array, default: () => [] } },
+  props: {
+    data:    { type: Array,   default: () => [] },
+    loading: { type: Boolean, default: false },
+  },
   computed: {
     items() { return this.data.length ? this.data.slice(0, 3) : FALLBACK; },
   },

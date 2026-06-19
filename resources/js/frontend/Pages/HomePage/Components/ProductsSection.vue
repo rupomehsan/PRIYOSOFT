@@ -2,16 +2,47 @@
   <section id="products" class="products-section section-pad section-dark">
     <div class="container">
 
-      <div class="section-head text-center">
-        <span class="section-tag">What We Build</span>
-        <h2 class="section-title">Our <span class="gradient-text">Products</span> &amp; Solutions</h2>
-        <p class="section-sub">Innovative software products engineered to solve real business challenges at any scale.</p>
-      </div>
+      <!-- ── Skeleton ── -->
+      <template v-if="loading">
+        <div class="section-head text-center" style="margin-bottom:3rem">
+          <span class="skel skel-pill" style="height:28px;width:120px;display:inline-block;margin-bottom:1rem"></span>
+          <div class="skel" style="height:38px;max-width:400px;margin:0 auto .75rem;border-radius:10px"></div>
+          <div class="skel" style="height:14px;max-width:300px;margin:0 auto;border-radius:6px"></div>
+        </div>
+        <div class="products-grid">
+          <div v-for="n in 3" :key="n" class="skel-card" style="border-radius:20px;overflow:hidden">
+            <span class="skel" style="display:block;height:200px;border-radius:0"></span>
+            <div style="padding:1.5rem">
+              <span class="skel" style="height:22px;width:60%;margin-bottom:.75rem;border-radius:6px"></span>
+              <span class="skel" style="height:13px;width:90%;margin-bottom:.4rem;border-radius:6px"></span>
+              <span class="skel" style="height:13px;width:75%;margin-bottom:1.25rem;border-radius:6px"></span>
+              <div style="display:flex;gap:.5rem">
+                <span class="skel skel-pill" style="height:24px;width:80px"></span>
+                <span class="skel skel-pill" style="height:24px;width:70px"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
 
-      <div class="products-grid">
-        <a v-for="product in items" :key="product.id"
+      <!-- ── Real content ── -->
+      <template v-else>
+        <div class="section-head text-center animate from-bottom section-content-in">
+          <span class="section-tag bounce-in animate delay-1">What We Build</span>
+          <h2 class="section-title">Our <span class="gradient-text shimmer-text">Products</span> &amp; Solutions</h2>
+          <div class="ps-divider">
+            <span class="ps-divider__bar"></span>
+            <i class="fas fa-circle ps-divider__dot"></i>
+            <span class="ps-divider__bar"></span>
+          </div>
+          <p class="section-sub">Innovative software products engineered to solve real business challenges at any scale.</p>
+        </div>
+
+        <div class="products-grid section-content-in">
+        <a v-for="(product, i) in items" :key="product.id"
            :href="'/products/' + product.slug"
-           class="product-card">
+           class="product-card animate from-bottom"
+           :class="'delay-' + (i + 1)">
 
           <!-- Thumbnail banner -->
           <div class="product-card__banner" :style="{ background: accentColor(product.project_status) }">
@@ -38,13 +69,14 @@
             </span>
           </div>
         </a>
-      </div>
+        </div>
 
-      <div class="products-footer">
-        <a href="/products" class="see-more-btn">
-          View All Products <i class="fas fa-arrow-right ms-2"></i>
-        </a>
-      </div>
+        <div class="products-footer">
+          <a href="/products" class="see-more-btn">
+            View All Products <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </template><!-- /v-else -->
 
     </div>
   </section>
@@ -69,7 +101,10 @@ const ACCENT = {
 
 export default {
   name: 'ProductsSection',
-  props: { data: { type: Array, default: () => [] } },
+  props: {
+    data:    { type: Array,   default: () => [] },
+    loading: { type: Boolean, default: false },
+  },
   computed: {
     items() { return this.data.length ? this.data.slice(0, 6) : FALLBACK; },
   },

@@ -40,7 +40,7 @@ export const actions = {
         try {
             const res = await api('public/products?get_all=1&status=active&limit=12');
             this.products = res?.data?.data ?? res?.data ?? [];
-        } catch { }
+        } catch { } finally { this.loadingProducts = false; }
     },
 
     async fetchTeamMembers(this: any) {
@@ -54,21 +54,21 @@ export const actions = {
         try {
             const res = await api('public/testimonials?get_all=1&status=active&limit=12');
             this.testimonials = res?.data?.data ?? res?.data ?? [];
-        } catch { }
+        } catch { } finally { this.loadingTestimonials = false; }
     },
 
     async fetchBlogPosts(this: any) {
         try {
             const res = await api('public/blogs?get_all=1&status=active&limit=3');
             this.blogPosts = res?.data?.data ?? res?.data ?? [];
-        } catch { }
+        } catch { } finally { this.loadingBlog = false; }
     },
 
     async fetchFaqs(this: any) {
         try {
             const res = await api('public/faqs?get_all=1&status=active');
             this.faqs = res?.data?.data ?? res?.data ?? [];
-        } catch { }
+        } catch { } finally { this.loadingFaq = false; }
     },
 
     async fetchWhoWeAre(this: any) {
@@ -76,14 +76,14 @@ export const actions = {
             const res = await api('public/who-we-are?get_all=1&status=active&limit=1');
             const list = res?.data?.data ?? res?.data ?? [];
             this.whoWeAre = Array.isArray(list) ? (list[0] ?? null) : (list || null);
-        } catch { }
+        } catch { } finally { this.loadingWhoWeAre = false; }
     },
 
     async fetchAboutUs(this: any) {
         try {
             const res = await api('public/about-us?get_all=1&status=active&limit=100&sort_by_col=sort_order&sort_type=asc');
             this.aboutSections = res?.data?.data ?? res?.data ?? [];
-        } catch { }
+        } catch { } finally { this.loadingAbout = false; }
     },
 
     async subscribeNewsletter(this: any, payload: { email: string; name?: string }) {
