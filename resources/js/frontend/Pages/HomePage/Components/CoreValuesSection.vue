@@ -10,7 +10,7 @@
         <span class="cv-badge">
           <i class="fas fa-gem me-2"></i>What Drives Us
         </span>
-        <h2 class="cv-title">Our Mission, Vision <span class="cv-title--accent">&amp; Values</span></h2>
+        <h2 class="cv-title">Our <span class="cv-title--accent">Objectives</span></h2>
         <div class="cv-divider">
           <span class="cv-divider__line"></span>
           <span class="cv-divider__icon"><i class="fas fa-star"></i></span>
@@ -93,7 +93,8 @@ export default {
       return DEFAULT_FEATURES;
     },
     allCards() {
-      return [...this.pillars, ...this.features];
+      if (this.pillars.length) return this.pillars;
+      return this.features;
     },
   },
 };
@@ -125,13 +126,13 @@ export default {
   align-items: center;
   padding: .45rem 1.2rem;
   border-radius: 999px;
-  background: rgba(99,102,241,.1);
-  border: 1px solid rgba(99,102,241,.25);
+  background: var(--ps-badge-bg);
+  border: 1px solid var(--ps-badge-border);
   font-size: .78rem;
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #a5b4fc;
+  color: var(--ps-badge-color);
   margin-bottom: 1.1rem;
 }
 

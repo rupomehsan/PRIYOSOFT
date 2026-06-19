@@ -11,11 +11,8 @@
         <!-- Featured post (first) -->
         <article v-if="items[0]" class="blog-card blog-card--featured">
           <div class="blog-card__thumb">
-            <img v-if="items[0].thumbnail" :src="items[0].thumbnail" :alt="items[0].title" class="blog-card__img" />
-            <div v-else class="blog-card__no-img blog-card__no-img--lg">
-              <i class="fas fa-newspaper"></i>
-            </div>
-            <span class="blog-cat">{{ items[0].status === 'published' ? 'Published' : (items[0].status || 'Article') }}</span>
+            <img :src="thumbSrc(items[0].thumbnail)" :alt="items[0].title" class="blog-card__img" />
+            <span class="blog-cat">Article</span>
           </div>
           <div class="blog-card__body">
             <div class="blog-meta">
@@ -33,11 +30,8 @@
         <div class="blog-side">
           <article v-for="post in items.slice(1)" :key="post.id" class="blog-card blog-card--sm">
             <div class="blog-card__thumb blog-card__thumb--sm">
-              <img v-if="post.thumbnail" :src="post.thumbnail" :alt="post.title" class="blog-card__img" />
-              <div v-else class="blog-card__no-img">
-                <i class="fas fa-newspaper"></i>
-              </div>
-              <span class="blog-cat">{{ post.status === 'published' ? 'Published' : (post.status || 'Article') }}</span>
+              <img :src="thumbSrc(post.thumbnail)" :alt="post.title" class="blog-card__img" />
+              <span class="blog-cat">Article</span>
             </div>
             <div class="blog-card__body">
               <div class="blog-meta">
@@ -51,6 +45,12 @@
             </div>
           </article>
         </div>
+      </div>
+
+      <div class="blog-footer">
+        <a href="/blog" class="blog-view-all">
+          View All Articles <i class="fas fa-arrow-right ms-2"></i>
+        </a>
       </div>
 
     </div>
@@ -80,6 +80,10 @@ export default {
       if (!d) return '';
       try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
       catch { return d; }
+    },
+    thumbSrc(t) {
+      if (!t || t === 'default.png') return '/default.png';
+      return t.startsWith('http') ? t : '/' + t;
     },
   },
 };
@@ -188,6 +192,20 @@ export default {
   transition: color .2s, gap .2s; gap: .3rem; margin-top: auto;
 }
 .blog-read-more:hover { color: #a5b4fc; gap: .6rem; }
+
+.blog-footer { text-align: center; margin-top: 3rem; }
+.blog-view-all {
+  display: inline-flex; align-items: center;
+  background: linear-gradient(135deg,#4f46e5,#7c3aed);
+  color: #fff !important; font-weight: 700; font-size: 1rem;
+  padding: .9rem 2.5rem; border-radius: 50px; text-decoration: none;
+  box-shadow: 0 4px 20px rgba(79,70,229,.3);
+  transition: transform .2s, box-shadow .2s;
+}
+.blog-view-all:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(79,70,229,.4);
+}
 
 @media (max-width: 991px) {
   .blog-grid { grid-template-columns: 1fr; }

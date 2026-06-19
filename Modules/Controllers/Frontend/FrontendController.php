@@ -84,4 +84,16 @@ class FrontendController extends Controller
             'slug' => $slug,
         ]);
     }
+
+    public function BlogsPage()
+    {
+        return Inertia::render('Blog/Index');
+    }
+
+    public function BlogDetailsPage(string $slug)
+    {
+        return Inertia::render('Blog/Details', [
+            'slug' => $slug,
+        ]);
+    }
 }

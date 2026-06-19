@@ -75,6 +75,7 @@ export default {
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
     this.reset_fields();
+    await this.load_products();
     if (id) {
       this.set_fields(id);
     }
@@ -92,18 +93,31 @@ export default {
         item.value = "";
       });
     },
+
+    load_products: async function () {
+      try {
+        const res = await window.axios.get("products?limit=500&status=active");
+        const list = res?.data?.data?.data || res?.data?.data || res?.data || [];
+        const field = this.form_fields.find((f) => f.name === "product_id");
+        if (field) {
+          field.data_list = list.map((p) => ({ label: p.name, value: p.id }));
+        }
+      } catch (e) {
+        console.warn("Could not load products:", e);
+      }
+    },
+
     set_fields: async function (id) {
       this.param_id = id;
       await this.details(id);
       if (this.item) {
         this.form_fields.forEach((field, index) => {
-          Object.entries(this.item).forEach((value) => {
-            if (field.name == value[0]) {
-              this.form_fields[index].value = value[1];
+          Object.entries(this.item).forEach(([key, val]) => {
+            if (field.name === key) {
+              this.form_fields[index].value = val ?? "";
             }
-
-            if (field.name == "description" && value[0] == "description") {
-              $("#description").summernote("code", value[1]);
+            if (field.name === "description" && key === "description") {
+              $("#description").summernote("code", val);
             }
           });
         });

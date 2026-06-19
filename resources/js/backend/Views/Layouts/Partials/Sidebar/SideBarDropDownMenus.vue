@@ -142,12 +142,20 @@ export default {
     isActiveRoute(menu) {
       if (!menu) return false;
       if (menu.route && menu.route.name) {
-        return this.$route.name === menu.route.name;
+        if (this.$route.name !== menu.route.name) return false;
+        const menuQuery  = menu.route.query  || {};
+        const routeQuery = this.$route.query || {};
+        const menuKeys   = Object.keys(menuQuery);
+        // Menu item has no query → active only when current URL also has no query
+        if (menuKeys.length === 0) {
+          return Object.keys(routeQuery).length === 0;
+        }
+        // Menu item has query → every key/value must match
+        return menuKeys.every((k) => routeQuery[k] === menuQuery[k]);
       }
       if (menu.route_name) {
         return this.$route.name === menu.route_name;
       }
-      // fallback if a plain string is passed
       if (typeof menu === "string") {
         return this.$route.name === menu;
       }

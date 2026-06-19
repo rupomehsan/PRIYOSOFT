@@ -12,7 +12,13 @@ class StoreData
             $requestData = $request->validated();
 
             if ($request->hasFile('screenshots')) {
-                $requestData['screenshots'] = uploader($request->file('screenshots'), 'uploads/ProductManagement/Product');
+                $files = $request->file('screenshots');
+                if (is_array($files)) {
+                    $paths = array_map(fn($f) => uploader($f, 'uploads/ProductManagement/Product'), $files);
+                    $requestData['screenshots'] = json_encode(array_values($paths));
+                } else {
+                    $requestData['screenshots'] = uploader($files, 'uploads/ProductManagement/Product');
+                }
             }
             if ($request->hasFile('thumbnail')) {
                 $requestData['thumbnail'] = uploader($request->file('thumbnail'), 'uploads/ProductManagement/Product/Thumbnails');

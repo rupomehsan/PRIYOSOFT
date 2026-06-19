@@ -16,18 +16,17 @@ class StoreData
             $responseData = [];
 
             foreach ($requestData as $title => $value) {
-                if (is_null($value) && !request()->hasFile('image')) {
-                    continue; // Skip if no value or image exists
+                if (is_null($value) && !request()->hasFile($title)) {
+                    continue; // Skip if no value or file exists
                 }
 
                 DB::transaction(function () use ($title, $value, &$responseData) {
                     $finalValue = $value; // Default to the provided value
 
-                    // Handle image upload only if the title is for an image
-                    if (request()->hasFile('image') && $title === 'image') {
-                        $image = request()->file('image');
-                        $imagePath = uploader($image, 'uploads/settings'); // Upload the image
-                        $finalValue = $imagePath; // Set the image path as the value
+                    // Handle file upload for any file field
+                    if (request()->hasFile($title)) {
+                        $file = request()->file($title);
+                        $finalValue = uploader($file, 'uploads/settings');
                     }
 
                     // Update or create the setting title

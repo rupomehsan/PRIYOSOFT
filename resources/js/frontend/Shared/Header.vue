@@ -4,8 +4,12 @@
 
       <!-- Brand -->
       <a href="/" class="ps-brand">
-        <span class="ps-brand-icon">P</span>
-        <span class="ps-brand-name">Priyo<em>Soft</em></span>
+        <img v-if="logoUrl" :src="logoUrl" :alt="siteName" class="ps-brand-logo-img"
+             fetchpriority="high" loading="eager" />
+        <template v-else>
+          <span class="ps-brand-icon">{{ siteName.charAt(0) }}</span>
+          <span class="ps-brand-name">{{ siteName }}</span>
+        </template>
       </a>
 
       <!-- Desktop nav -->
@@ -78,6 +82,7 @@
 import { mapActions, mapState } from 'pinia';
 import { auth_store } from '../GlobalStore/auth_store';
 import { theme_store } from '../GlobalStore/theme_store';
+import { site_settings_store } from '../GlobalStore/site_settings_store';
 
 export default {
   name: 'PsHeader',
@@ -97,10 +102,22 @@ export default {
   computed: {
     ...mapState(auth_store, { auth_info: 'auth_info', is_auth: 'is_auth' }),
     ...mapState(theme_store, { is_dark: 'dark' }),
+    ...mapState(site_settings_store, { website_settings_data: 'website_settings_data' }),
+
+    siteName() {
+      const s = this.website_settings_data?.find?.(i => i.title === 'site_name');
+      return s?.setting_values?.[0]?.value || 'PriyoSoft';
+    },
+    logoUrl() {
+      const s = this.website_settings_data?.find?.(i => i.title === 'header_logo');
+      const val = s?.setting_values?.[0]?.value;
+      return val && val !== 'avatar.png' ? '/' + val : null;
+    },
   },
   methods: {
     ...mapActions(auth_store, { check_is_auth: 'check_is_auth', log_out: 'log_out' }),
     ...mapActions(theme_store, { toggle_theme: 'toggle' }),
+    ...mapActions(site_settings_store, { get_all_website_settings: 'get_all_website_settings' }),
 
     goto(href) {
       this.menuOpen = false;
@@ -125,6 +142,7 @@ export default {
     window.addEventListener('scroll', this.onScroll, { passive: true });
     document.addEventListener('click', this.onClickOutside);
     this.scrolled = true;
+    this.get_all_website_settings();
     const token = localStorage.getItem('auth_token');
     if (token) { try { await this.check_is_auth(); } catch (_) {} }
   },
@@ -145,10 +163,10 @@ export default {
 }
 .ps-header.scrolled,
 .ps-header.menu-open {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.08);
+  background: var(--ps-header-scrolled-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--ps-header-scrolled-shadow);
 }
 
 /* ── Nav row ───────────────────────────────────── */
@@ -166,6 +184,13 @@ export default {
   gap: .55rem;
   text-decoration: none;
   flex-shrink: 0;
+}
+.ps-brand-logo-img {
+  height: 42px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  display: block;
 }
 .ps-brand-icon {
   width: 38px;
@@ -192,8 +217,8 @@ export default {
   color: #c4b5fd;
   transition: color .3s;
 }
-.ps-header.scrolled .ps-brand-name   { color: #1a1a3e; }
-.ps-header.scrolled .ps-brand-name em { color: #667eea; }
+.ps-header.scrolled .ps-brand-name    { color: var(--ps-header-brand-scrolled); }
+.ps-header.scrolled .ps-brand-name em { color: var(--ps-header-brand-em-scrolled); }
 
 /* ── Desktop links ─────────────────────────────── */
 .ps-links {
@@ -212,8 +237,8 @@ export default {
   transition: color .2s, background .2s;
 }
 .ps-link:hover { color: #fff; background: rgba(255,255,255,.12); }
-.ps-header.scrolled .ps-link         { color: #374151; }
-.ps-header.scrolled .ps-link:hover   { color: #667eea; background: #f5f3ff; }
+.ps-header.scrolled .ps-link       { color: var(--ps-header-link-scrolled); }
+.ps-header.scrolled .ps-link:hover { color: var(--ps-header-link-hover-scrolled); background: var(--ps-header-link-hover-bg); }
 
 /* ── Actions ───────────────────────────────────── */
 .ps-actions {
@@ -284,7 +309,7 @@ export default {
   transition: transform .3s ease, opacity .3s ease;
 }
 .ps-header.scrolled .ps-hamburger span,
-.ps-header.menu-open .ps-hamburger span { background: #374151; }
+.ps-header.menu-open .ps-hamburger span { background: var(--ps-header-hamburger-scrolled); }
 .ps-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
 .ps-hamburger.open span:nth-child(2) { opacity: 0; }
 .ps-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
@@ -303,11 +328,11 @@ export default {
   transition: background .2s, border-color .2s;
 }
 .ps-header.scrolled .ps-user-btn {
-  background: rgba(102,126,234,.08);
-  border-color: rgba(102,126,234,.25);
+  background: var(--ps-header-user-btn-bg);
+  border-color: var(--ps-header-user-btn-border);
 }
 .ps-user-btn:hover { background: rgba(255,255,255,.2); }
-.ps-header.scrolled .ps-user-btn:hover { background: rgba(102,126,234,.14); }
+.ps-header.scrolled .ps-user-btn:hover { background: var(--ps-header-user-btn-bg); filter: brightness(1.15); }
 
 .ps-user-avatar {
   width: 30px;
@@ -324,14 +349,14 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.ps-header.scrolled .ps-user-name { color: #1a1a3e; }
+.ps-header.scrolled .ps-user-name { color: var(--ps-header-user-name-scrolled); }
 
 .ps-chevron {
   font-size: .68rem;
   color: rgba(255,255,255,.7);
   transition: transform .25s;
 }
-.ps-header.scrolled .ps-chevron { color: #667eea; }
+.ps-header.scrolled .ps-chevron { color: var(--ps-header-chevron-scrolled); }
 .ps-chevron.rotated { transform: rotate(180deg); }
 
 /* Dropdown panel */
@@ -340,9 +365,10 @@ export default {
   top: calc(100% + 10px);
   right: 0;
   width: 260px;
-  background: #fff;
+  background: var(--ps-drop-bg);
   border-radius: 14px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.14);
+  box-shadow: 0 12px 40px rgba(0,0,0,.22);
+  border: 1px solid var(--ps-card-border);
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
@@ -380,20 +406,20 @@ export default {
   padding: .75rem 1.25rem;
   font-size: .875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--ps-drop-item-color);
   text-decoration: none;
   transition: background .15s;
 }
-.ps-drop-item:hover          { background: #f5f3ff; color: #667eea; }
-.ps-drop-danger              { color: #ef4444; }
-.ps-drop-danger:hover        { background: #fef2f2; color: #dc2626; }
+.ps-drop-item:hover   { background: var(--ps-drop-item-hover-bg); color: var(--ps-drop-item-hover-color); }
+.ps-drop-danger       { color: #ef4444; }
+.ps-drop-danger:hover { background: var(--ps-drop-danger-hover-bg); color: #dc2626; }
 
 /* ── Mobile drawer ─────────────────────────────── */
 .ps-mobile {
   display: none;
   flex-direction: column;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
+  background: var(--ps-header-mobile-bg);
+  border-top: 1px solid var(--ps-header-mobile-border);
   max-height: 0;
   overflow: hidden;
   transition: max-height .35s cubic-bezier(.4,0,.2,1);
@@ -406,11 +432,11 @@ export default {
   padding: .78rem 0;
   font-weight: 600;
   font-size: .95rem;
-  color: #374151;
+  color: var(--ps-header-mobile-link);
   text-decoration: none;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--ps-header-mobile-border);
 }
-.ps-mobile-link:hover { color: #667eea; }
+.ps-mobile-link:hover { color: #818cf8; }
 
 .ps-mobile-cta {
   display: block;
@@ -426,9 +452,9 @@ export default {
 
 /* ── Responsive ────────────────────────────────── */
 @media (max-width: 991px) {
-  .ps-links    { display: none; }
+  .ps-links     { display: none; }
   .ps-hamburger { display: flex; }
-  .ps-mobile   { display: flex; }
+  .ps-mobile    { display: flex; }
 }
 @media (max-width: 575px) {
   .ps-user-name { display: none; }

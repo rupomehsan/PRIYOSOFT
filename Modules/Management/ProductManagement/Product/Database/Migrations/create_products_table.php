@@ -20,13 +20,15 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('thumbnail', 200)->nullable();
             $table->string('promo_link', 500)->nullable();
-            $table->enum('status', ['planning','development','active','paused'])->nullable();
+            $table->enum('project_status', ['planning','development','active','paused'])->nullable();
+              $table->string('version', 50)->nullable()->default('v1.0.0');$table->string('video_url', 500)->nullable();
             $table->date('launch_date')->nullable();
             $table->decimal('monthly_target_revenue', 12, 2)->nullable();
             $table->decimal('regular_price', 12, 2)->nullable();
             $table->decimal('sales_price', 12, 2)->nullable();
             $table->json('features')->nullable();
             $table->text('screenshots')->nullable();
+             $table->enum('status', ['active', 'inactive'])->default('active');
                     $table->bigInteger('creator')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();

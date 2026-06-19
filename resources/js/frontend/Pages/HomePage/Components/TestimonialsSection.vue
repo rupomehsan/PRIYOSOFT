@@ -33,8 +33,11 @@
 
           <div class="t-card__client">
             <div class="t-card__avatar">
-              <img v-if="t.client_photo" :src="t.client_photo" :alt="t.client_name" />
-              <span v-else>{{ initial(t.client_name) }}</span>
+              <img
+                :src="t.client_photo || '/default.png'"
+                :alt="t.client_name"
+                @error="$event.target.src='/default.png'"
+              />
             </div>
             <div class="t-card__info">
               <div class="t-card__name">{{ t.client_name }}</div>

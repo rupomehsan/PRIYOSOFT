@@ -43,8 +43,22 @@
               <div v-if="slide.media_type === 'video' && slide.video_url" class="hero-video-wrap">
                 <iframe :src="youtubeEmbed(slide.video_url)" frameborder="0" allowfullscreen class="hero-video"></iframe>
               </div>
-              <div v-else-if="slide.hero_image || slide.background_image" class="hero-img-wrap">
-                <img :src="slide.hero_image || slide.background_image" :alt="slide.headline" class="hero-img" />
+              <div v-else-if="slide.hero_image" class="hero-img-wrap">
+                <div v-if="!imageLoadedMap[i]" class="hero-img-skeleton">
+                  <div class="skeleton-shimmer"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton-line skeleton-line--wide"></div>
+                    <div class="skeleton-line skeleton-line--medium"></div>
+                    <div class="skeleton-line skeleton-line--short"></div>
+                  </div>
+                </div>
+                <img
+                  :src="slide.hero_image"
+                  :alt="slide.headline"
+                  class="hero-img"
+                  :class="{ 'hero-img--loaded': imageLoadedMap[i] }"
+                  @load="onImageLoad(i)"
+                />
               </div>
               <div v-else class="hero-placeholder">
                 <i class="fas fa-code"></i>
@@ -131,6 +145,7 @@ export default {
       current: 0,
       timer: null,
       autoplay: 5000,
+      imageLoadedMap: {},
     };
   },
   computed: {
@@ -147,14 +162,7 @@ export default {
   methods: {
     slideStyle(slide) {
       const idx = this.visibleSlides.indexOf(slide);
-      const bg = slide.background_image
-        ? `url(${slide.background_image})`
-        : SLIDE_GRADIENTS[idx % SLIDE_GRADIENTS.length];
-      return {
-        background: bg,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      };
+      return { background: SLIDE_GRADIENTS[idx % SLIDE_GRADIENTS.length] };
     },
     youtubeEmbed(url) {
       if (!url) return '';
@@ -180,6 +188,9 @@ export default {
     resetTimer() {
       clearInterval(this.timer);
       this.startTimer();
+    },
+    onImageLoad(i) {
+      this.imageLoadedMap = { ...this.imageLoadedMap, [i]: true };
     },
     scrollDown() {
       const next = document.querySelector('.stats-wrap, section:not(.hero-slider)');
@@ -307,14 +318,23 @@ export default {
 
 /* ── Media ──────────────────────────────── */
 .hero-img-wrap {
+  position: relative;
   background: rgba(255,255,255,.05);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 24px;
   padding: .75rem;
   backdrop-filter: blur(8px);
   box-shadow: 0 30px 80px rgba(0,0,0,.4);
+  min-height: 320px;
 }
-.hero-img { width: 100%; border-radius: 18px; display: block; }
+.hero-img {
+  width: 100%;
+  border-radius: 18px;
+  display: block;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.hero-img--loaded { opacity: 1; }
 .hero-video-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 .hero-video { width: 100%; aspect-ratio: 16/9; }
 .hero-placeholder {
@@ -327,6 +347,62 @@ export default {
   border-radius: 24px;
   font-size: 7rem;
   color: rgba(255,255,255,.12);
+}
+
+/* ── Image skeleton ─────────────────────── */
+.hero-img-skeleton {
+  position: absolute;
+  inset: .75rem;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,.06);
+  z-index: 1;
+}
+
+.skeleton-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(255,255,255,0)     0%,
+    rgba(255,255,255,0)    38%,
+    rgba(255,255,255,.09)  50%,
+    rgba(255,255,255,0)    62%,
+    rgba(255,255,255,0)   100%
+  );
+  background-size: 250% 100%;
+  animation: skeleton-sweep 1.8s infinite linear;
+}
+
+@keyframes skeleton-sweep {
+  0%   { background-position: -250% 0; }
+  100% { background-position:  250% 0; }
+}
+
+.skeleton-lines {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  z-index: 1;
+}
+
+.skeleton-line {
+  height: 11px;
+  border-radius: 6px;
+  background: rgba(255,255,255,.1);
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+.skeleton-line--wide   { width: 75%; }
+.skeleton-line--medium { width: 55%; animation-delay: .2s; }
+.skeleton-line--short  { width: 35%; animation-delay: .4s; }
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: .4; }
+  50%       { opacity: .85; }
 }
 
 /* ── Arrows ─────────────────────────────── */

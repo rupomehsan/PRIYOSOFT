@@ -91,6 +91,34 @@
                                     >
                                     <hr />
                                 </li>
+                                <li class="nav-item" @click="tab = 'payment_settings'">
+                                    <a
+                                        :class="tab == 'payment_settings' ? ' active' : ''"
+                                        href="javascript:void();"
+                                        data-target="#payment_settings"
+                                        data-toggle="pill"
+                                        class="nav-link"
+                                        ><i class="icon-credit-card"></i>
+                                        <span class="hidden-xs"
+                                            >Mobile Banking</span
+                                        ></a
+                                    >
+                                    <hr />
+                                </li>
+                                <li class="nav-item" @click="tab = 'card_payment'">
+                                    <a
+                                        :class="tab == 'card_payment' ? ' active' : ''"
+                                        href="javascript:void();"
+                                        data-target="#card_payment"
+                                        data-toggle="pill"
+                                        class="nav-link"
+                                        ><i class="icon-credit-card"></i>
+                                        <span class="hidden-xs"
+                                            >Card Payment</span
+                                        ></a
+                                    >
+                                    <hr />
+                                </li>
                             </ul>
                             <div class="ml-2 flex-grow-1 tab-content p-3 card">
                                 <div
@@ -151,7 +179,7 @@
                                             >
                                             <div class="col-lg-9">
                                                 <input
-                                                    name="phone_number"
+                                                    name="phone_numbers"
                                                     class="form-control"
                                                     type="text"
                                                     placeholder="Enter phone number"
@@ -218,26 +246,107 @@
                                             </div>
                                         </div>
 
+                                        <!-- Copyright -->
                                         <div class="form-group row">
                                             <label
                                                 class="col-lg-3 col-form-label form-control-label"
-                                                >Site Logo</label
+                                                >Copyright Text</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="copy_right"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="e.g. © 2024 Your Company. All rights reserved."
+                                                    :value="`${get_setting_value(
+                                                        'copy_right'
+                                                    )}`"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- Map Link -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Google Map Embed</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <textarea
+                                                    name="map_link"
+                                                    class="form-control"
+                                                    rows="3"
+                                                    placeholder="Paste Google Maps iframe embed code"
+                                                    :value="`${get_setting_value(
+                                                        'map_link'
+                                                    )}`"
+                                                ></textarea>
+                                            </div>
+                                        </div>
+
+                                        <!-- Header Logo -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Header Logo</label
                                             >
                                             <div class="col-lg-9">
                                                 <input
                                                     class="form-control"
-                                                    name="image"
+                                                    name="header_logo"
                                                     type="file"
                                                 />
                                                 <img
-                                                    v-if="auth_info.image"
+                                                    v-if="get_setting_value('header_logo')"
                                                     class="mt-2"
-                                                    :src="`${get_setting_value(
-                                                        'image'
-                                                    )}`"
-                                                    height="100"
-                                                    width="100"
-                                                    alt=""
+                                                    :src="`/${get_setting_value('header_logo')}`"
+                                                    height="60"
+                                                    alt="Header Logo"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- Footer Logo -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Footer Logo</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    class="form-control"
+                                                    name="footer_logo"
+                                                    type="file"
+                                                />
+                                                <img
+                                                    v-if="get_setting_value('footer_logo')"
+                                                    class="mt-2"
+                                                    :src="`/${get_setting_value('footer_logo')}`"
+                                                    height="60"
+                                                    alt="Footer Logo"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- Favicon -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Favicon</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    class="form-control"
+                                                    name="fabicon"
+                                                    type="file"
+                                                />
+                                                <img
+                                                    v-if="get_setting_value('fabicon')"
+                                                    class="mt-2"
+                                                    :src="`/${get_setting_value('fabicon')}`"
+                                                    height="32"
+                                                    width="32"
+                                                    alt="Favicon"
                                                 />
                                             </div>
                                         </div>
@@ -335,11 +444,74 @@
                                                     name="canonical_url"
                                                     class="form-control"
                                                     type="text"
-                                                    placeholder="Enter canonical URL"
+                                                    placeholder="https://yoursite.com"
                                                     :value="`${get_setting_value(
                                                         'canonical_url'
                                                     )}`"
                                                 />
+                                            </div>
+                                        </div>
+
+                                        <!-- OG Image -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >OG Image</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    class="form-control"
+                                                    name="seo_image"
+                                                    type="file"
+                                                />
+                                                <small class="text-muted">Used for Open Graph / social sharing preview (recommended 1200×630px)</small>
+                                                <img
+                                                    v-if="get_setting_value('seo_image')"
+                                                    class="mt-2 d-block"
+                                                    :src="`/${get_setting_value('seo_image')}`"
+                                                    height="80"
+                                                    alt="OG Image"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- Meta Tag -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Meta Tags</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <textarea
+                                                    name="meta_tag"
+                                                    class="form-control"
+                                                    rows="4"
+                                                    placeholder="Paste custom <meta> tags here"
+                                                    :value="`${get_setting_value(
+                                                        'meta_tag'
+                                                    )}`"
+                                                ></textarea>
+                                                <small class="text-muted">These tags will be injected into the &lt;head&gt; section</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Schema Markup -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Schema Markup</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <textarea
+                                                    name="meta_schema_tag"
+                                                    class="form-control"
+                                                    rows="5"
+                                                    placeholder='{"@context":"https://schema.org","@type":"Organization",...}'
+                                                    :value="`${get_setting_value(
+                                                        'meta_schema_tag'
+                                                    )}`"
+                                                ></textarea>
+                                                <small class="text-muted">JSON-LD structured data for rich search results</small>
                                             </div>
                                         </div>
 
@@ -454,6 +626,78 @@
                                                     placeholder="https://youtube.com/yourchannel"
                                                     :value="`${get_setting_value(
                                                         'youtube'
+                                                    )}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <!-- WhatsApp -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >WhatsApp</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="whatsapp"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="https://wa.me/1234567890"
+                                                    :value="`${get_setting_value(
+                                                        'whatsapp'
+                                                    )}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <!-- Telegram -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Telegram</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="telegram"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="https://t.me/yourusername"
+                                                    :value="`${get_setting_value(
+                                                        'telegram'
+                                                    )}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <!-- Pinterest -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >Pinterest</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="pinterest"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="https://pinterest.com/yourprofile"
+                                                    :value="`${get_setting_value(
+                                                        'pinterest'
+                                                    )}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <!-- TikTok -->
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label form-control-label"
+                                                >TikTok</label
+                                            >
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="tiktok"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="https://tiktok.com/@yourusername"
+                                                    :value="`${get_setting_value(
+                                                        'tiktok'
                                                     )}`"
                                                 />
                                             </div>
@@ -583,6 +827,270 @@
                                                     type="submit"
                                                     class="btn btn-primary"
                                                     value="Save Details"
+                                                />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div
+                                    v-if="tab == 'payment_settings'"
+                                    :class="tab == 'payment_settings' ? ' active' : ''"
+                                    class="tab-pane"
+                                    id="payment_settings"
+                                >
+                                    <form @submit.prevent="SiteSettingsHandler">
+
+                                        <!-- bKash -->
+                                        <h6 class="mb-3 text-muted font-weight-bold">bKash</h6>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Number</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="bkash_number"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="01XXXXXXXXX"
+                                                    :value="`${get_setting_value('bkash_number')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Type</label>
+                                            <div class="col-lg-9">
+                                                <select name="bkash_account_type" class="form-control">
+                                                    <option value="Personal" :selected="get_setting_value('bkash_account_type') == 'Personal'">Personal</option>
+                                                    <option value="Merchant" :selected="get_setting_value('bkash_account_type') == 'Merchant'">Merchant</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <!-- Nagad -->
+                                        <h6 class="mb-3 text-muted font-weight-bold">Nagad</h6>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Number</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="nagad_number"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="01XXXXXXXXX"
+                                                    :value="`${get_setting_value('nagad_number')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Type</label>
+                                            <div class="col-lg-9">
+                                                <select name="nagad_account_type" class="form-control">
+                                                    <option value="Personal" :selected="get_setting_value('nagad_account_type') == 'Personal'">Personal</option>
+                                                    <option value="Merchant" :selected="get_setting_value('nagad_account_type') == 'Merchant'">Merchant</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <!-- Rocket -->
+                                        <h6 class="mb-3 text-muted font-weight-bold">Rocket</h6>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Number</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="rocket_number"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="01XXXXXXXXX"
+                                                    :value="`${get_setting_value('rocket_number')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Type</label>
+                                            <div class="col-lg-9">
+                                                <select name="rocket_account_type" class="form-control">
+                                                    <option value="Personal" :selected="get_setting_value('rocket_account_type') == 'Personal'">Personal</option>
+                                                    <option value="Merchant" :selected="get_setting_value('rocket_account_type') == 'Merchant'">Merchant</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <!-- Bank Account -->
+                                        <h6 class="mb-3 text-muted font-weight-bold">Bank Account</h6>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Bank Name</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="bank_name"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="e.g. Dutch Bangla Bank"
+                                                    :value="`${get_setting_value('bank_name')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Name</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="bank_account_name"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="Account holder name"
+                                                    :value="`${get_setting_value('bank_account_name')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Account Number</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="bank_account_number"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="e.g. 1234567890"
+                                                    :value="`${get_setting_value('bank_account_number')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Branch Name</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="bank_branch_name"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="e.g. Mirpur Branch"
+                                                    :value="`${get_setting_value('bank_branch_name')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Routing Number</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="bank_routing_number"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="e.g. 123456789"
+                                                    :value="`${get_setting_value('bank_routing_number')}`"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- Save Button -->
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label"></label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    type="submit"
+                                                    class="btn btn-primary"
+                                                    value="Save Changes"
+                                                />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Card Payment Tab -->
+                                <div
+                                    v-if="tab == 'card_payment'"
+                                    :class="tab == 'card_payment' ? ' active' : ''"
+                                    class="tab-pane"
+                                    id="card_payment"
+                                >
+                                    <form @submit.prevent="SiteSettingsHandler">
+
+                                        <!-- Payment Gateway -->
+                                        <h6 class="mb-3 text-muted font-weight-bold">Payment Gateway</h6>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Gateway</label>
+                                            <div class="col-lg-9">
+                                                <select name="card_gateway" class="form-control">
+                                                    <option value="sslcommerz" :selected="get_setting_value('card_gateway') == 'sslcommerz'">SSL Commerz</option>
+                                                    <option value="stripe" :selected="get_setting_value('card_gateway') == 'stripe'">Stripe</option>
+                                                    <option value="paypal" :selected="get_setting_value('card_gateway') == 'paypal'">PayPal</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Mode</label>
+                                            <div class="col-lg-9">
+                                                <select name="card_gateway_mode" class="form-control">
+                                                    <option value="sandbox" :selected="get_setting_value('card_gateway_mode') == 'sandbox'">Sandbox (Test)</option>
+                                                    <option value="live" :selected="get_setting_value('card_gateway_mode') == 'live'">Live</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Store ID / API Key</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="card_store_id"
+                                                    class="form-control"
+                                                    type="text"
+                                                    placeholder="Enter Store ID or API Key"
+                                                    :value="`${get_setting_value('card_store_id')}`"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Store Password / Secret Key</label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    name="card_store_password"
+                                                    class="form-control"
+                                                    type="password"
+                                                    placeholder="Enter Store Password or Secret Key"
+                                                    :value="`${get_setting_value('card_store_password')}`"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <!-- Accepted Cards -->
+                                        <h6 class="mb-3 text-muted font-weight-bold">Accepted Cards</h6>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Visa</label>
+                                            <div class="col-lg-9">
+                                                <select name="accept_visa" class="form-control">
+                                                    <option value="yes" :selected="get_setting_value('accept_visa') == 'yes'">Yes</option>
+                                                    <option value="no" :selected="get_setting_value('accept_visa') == 'no'">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">MasterCard</label>
+                                            <div class="col-lg-9">
+                                                <select name="accept_mastercard" class="form-control">
+                                                    <option value="yes" :selected="get_setting_value('accept_mastercard') == 'yes'">Yes</option>
+                                                    <option value="no" :selected="get_setting_value('accept_mastercard') == 'no'">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">American Express</label>
+                                            <div class="col-lg-9">
+                                                <select name="accept_amex" class="form-control">
+                                                    <option value="yes" :selected="get_setting_value('accept_amex') == 'yes'">Yes</option>
+                                                    <option value="no" :selected="get_setting_value('accept_amex') == 'no'">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Save Button -->
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label"></label>
+                                            <div class="col-lg-9">
+                                                <input
+                                                    type="submit"
+                                                    class="btn btn-primary"
+                                                    value="Save Changes"
                                                 />
                                             </div>
                                         </div>

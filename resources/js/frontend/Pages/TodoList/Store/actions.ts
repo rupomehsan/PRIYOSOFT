@@ -1,4 +1,4 @@
-const api = (path: string) => (window as any).privateAxios(path);
+const api = (path: string) => (window as any).publicAxios(path);
 
 export const actions = {
 

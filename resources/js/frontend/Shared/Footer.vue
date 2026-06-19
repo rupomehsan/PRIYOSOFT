@@ -8,18 +8,25 @@
         <!-- Brand column -->
         <div class="col-lg-4 col-md-12">
           <div class="ps-footer-brand">
-            <span class="ps-footer-icon">P</span>
-            <span class="ps-footer-bname">Priyo<em>Soft</em></span>
+            <template v-if="footerLogoUrl">
+              <img :src="footerLogoUrl" :alt="siteName" class="ps-footer-logo-img" />
+            </template>
+            <template v-else>
+              <span class="ps-footer-icon">{{ siteName.charAt(0) }}</span>
+              <span class="ps-footer-bname">{{ siteName.replace(/soft$/i, '') }}<em>Soft</em></span>
+            </template>
           </div>
           <p class="ps-footer-desc">
             We craft modern, scalable web &amp; mobile software that empowers
             businesses to grow faster and smarter. From idea to launch — we build it.
           </p>
           <div class="ps-socials">
-            <a href="#" aria-label="LinkedIn"  class="ps-social-link"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" aria-label="GitHub"    class="ps-social-link"><i class="fab fa-github"></i></a>
-            <a href="#" aria-label="Twitter"   class="ps-social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="Facebook"  class="ps-social-link"><i class="fab fa-facebook-f"></i></a>
+            <a v-if="social.linkedin" :href="social.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn"  class="ps-social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a v-if="social.facebook" :href="social.facebook" target="_blank" rel="noopener" aria-label="Facebook"  class="ps-social-link"><i class="fab fa-facebook-f"></i></a>
+            <a v-if="social.twitter"  :href="social.twitter"  target="_blank" rel="noopener" aria-label="Twitter"   class="ps-social-link"><i class="fab fa-twitter"></i></a>
+            <a v-if="social.youtube"  :href="social.youtube"  target="_blank" rel="noopener" aria-label="YouTube"   class="ps-social-link"><i class="fab fa-youtube"></i></a>
+            <a v-if="social.instagram" :href="social.instagram" target="_blank" rel="noopener" aria-label="Instagram" class="ps-social-link"><i class="fab fa-instagram"></i></a>
+            <a v-if="social.github"   :href="social.github"   target="_blank" rel="noopener" aria-label="GitHub"    class="ps-social-link"><i class="fab fa-github"></i></a>
           </div>
         </div>
 
@@ -50,17 +57,21 @@
         <div class="col-lg-4 col-md-12">
           <h6 class="ps-footer-heading">Get In Touch</h6>
           <ul class="ps-footer-contact">
-            <li>
+            <li v-if="contactEmail">
               <span class="ps-contact-icon"><i class="fas fa-envelope"></i></span>
-              hello@priyosoft.com
+              <a :href="'mailto:' + contactEmail">{{ contactEmail }}</a>
             </li>
-            <li>
+            <li v-if="contactPhone">
               <span class="ps-contact-icon"><i class="fas fa-phone"></i></span>
-              +880 1XXX-XXXXXX
+              <a :href="'tel:' + contactPhone">{{ contactPhone }}</a>
             </li>
-            <li>
+            <li v-if="whatsapp">
+              <span class="ps-contact-icon"><i class="fab fa-whatsapp"></i></span>
+              <a :href="'https://wa.me/' + whatsapp" target="_blank" rel="noopener">+{{ whatsapp }}</a>
+            </li>
+            <li v-if="address">
               <span class="ps-contact-icon"><i class="fas fa-map-marker-alt"></i></span>
-              Dhaka, Bangladesh
+              <span>{{ address }}</span>
             </li>
           </ul>
           <a href="#newsletter" class="ps-footer-cta">
@@ -75,7 +86,7 @@
       <!-- ── Bottom bar ── -->
       <div class="ps-footer-bottom">
         <p class="ps-copy">
-          &copy; {{ year }} <strong>PriyoSoft</strong>. All rights reserved.
+          &copy; {{ year }} <strong>{{ siteName }}</strong>. {{ copyRight || 'All rights reserved.' }}
         </p>
         <p class="ps-stack">
           Built with <i class="fas fa-heart ps-heart"></i> using
@@ -88,10 +99,49 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia';
+import { site_settings_store } from '../GlobalStore/site_settings_store';
+
 export default {
   name: 'PsFooter',
   computed: {
+    ...mapState(site_settings_store, { _settings: 'website_settings_data' }),
+
     year() { return new Date().getFullYear(); },
+
+    siteName()      { return this._val('site_name')      || 'PriyoSoft'; },
+    copyRight()     { return this._val('copy_right')     || ''; },
+    contactEmail()  { return this._val('email') || ''; },
+    contactPhone()  { return this._val('phone_numbers')  || ''; },
+    whatsapp()      { return this._val('whatsapp')       || ''; },
+    address()       { return this._val('address')        || ''; },
+
+    footerLogoUrl() {
+      const val = this._val('footer_logo');
+      return val && val !== 'default.png' && val !== 'logo.png' ? '/' + val : null;
+    },
+
+    social() {
+      return {
+        facebook:  this._val('facebook')  || '',
+        instagram: this._val('instagram') || '',
+        twitter:   this._val('twitter')   || '',
+        linkedin:  this._val('linkedin')  || '',
+        youtube:   this._val('youtube')   || '',
+        github:    this._val('github')    || '',
+      };
+    },
+  },
+  methods: {
+    ...mapActions(site_settings_store, ['get_all_website_settings']),
+    _val(key) {
+      if (!Array.isArray(this._settings)) return '';
+      const item = this._settings.find(i => i.title === key);
+      return item?.setting_values?.[0]?.value || '';
+    },
+  },
+  mounted() {
+    this.get_all_website_settings();
   },
 };
 </script>
@@ -115,6 +165,11 @@ export default {
   gap: .6rem;
   margin-bottom: 1.1rem;
 }
+.ps-footer-logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
 .ps-footer-icon {
   width: 38px;
   height: 38px;
@@ -131,9 +186,10 @@ export default {
 .ps-footer-bname {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--ps-footer-bname-color);
+  transition: color .3s;
 }
-.ps-footer-bname em { font-style: normal; color: #a78bfa; }
+.ps-footer-bname em { font-style: normal; color: var(--ps-footer-bname-em); transition: color .3s; }
 
 .ps-footer-desc {
   font-size: .9rem;
@@ -144,7 +200,7 @@ export default {
 }
 
 /* ── Social icons ───────────────────────────────── */
-.ps-socials { display: flex; gap: .6rem; }
+.ps-socials { display: flex; gap: .6rem; flex-wrap: wrap; }
 .ps-social-link {
   width: 38px;
   height: 38px;
@@ -224,6 +280,12 @@ export default {
   color: var(--ps-footer-link);
   line-height: 1.5;
 }
+.ps-footer-contact a {
+  color: var(--ps-footer-link);
+  text-decoration: none;
+  transition: color .2s;
+}
+.ps-footer-contact a:hover { color: #c4b5fd; }
 .ps-contact-icon {
   width: 32px;
   height: 32px;
@@ -280,7 +342,7 @@ export default {
 .ps-stack {
   margin: 0;
   font-size: .82rem;
-  color: #4b5563;
+  color: var(--ps-footer-stack);
   display: flex;
   align-items: center;
   gap: .3rem;

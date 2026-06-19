@@ -46,21 +46,18 @@
             :href="'/products/' + p.slug"
             class="pl-card"
           >
-            <div class="pl-card__accent" :style="{ background: accentFor(p.status) }"></div>
-
-            <div class="pl-card__head">
-              <div class="pl-card__icon-wrap" :style="{ background: iconBg(p.status) }">
-                <img v-if="p.screenshots" :src="p.screenshots" :alt="p.name" class="pl-card__img" />
-                <i v-else class="fas fa-cube pl-card__icon-fb"></i>
-              </div>
-              <span class="pl-card__status" :class="'st--' + (p.status || 'active')">
-                <span class="pl-dot"></span>{{ statusLabel(p.status) }}
+            <!-- Thumbnail banner -->
+            <div class="pl-card__banner" :style="{ background: accentFor(p.project_status) }">
+              <img v-if="imgSrc(p)" :src="imgSrc(p)" :alt="p.name" class="pl-card__banner-img" />
+              <div class="pl-card__banner-overlay"></div>
+              <span class="pl-card__status" :class="'st--' + (p.project_status || 'active')">
+                <span class="pl-dot"></span>{{ statusLabel(p.project_status) }}
               </span>
             </div>
 
             <div class="pl-card__body">
               <h3 class="pl-card__name">{{ p.name }}</h3>
-              <p class="pl-card__desc">{{ trunc(p.description, 120) }}</p>
+              <p class="pl-card__desc">{{ trunc(p.description, 110) }}</p>
               <div v-if="feats(p.features).length" class="pl-card__tags">
                 <span v-for="(f, i) in feats(p.features)" :key="i" class="pl-tag">{{ f }}</span>
               </div>
@@ -86,16 +83,10 @@
 
 <script>
 const ACCENT = {
-  active:      'linear-gradient(90deg,#10b981,#06b6d4)',
-  development: 'linear-gradient(90deg,#6366f1,#8b5cf6)',
-  planning:    'linear-gradient(90deg,#f59e0b,#f97316)',
-  paused:      'linear-gradient(90deg,#6b7280,#9ca3af)',
-};
-const ICON_BG = {
-  active:      'linear-gradient(135deg,#ecfdf5,#d1fae5)',
-  development: 'linear-gradient(135deg,#eef2ff,#ede9fe)',
-  planning:    'linear-gradient(135deg,#fffbeb,#fef3c7)',
-  paused:      'linear-gradient(135deg,#f9fafb,#f3f4f6)',
+  active:      'linear-gradient(135deg,#0f766e,#0891b2)',
+  development: 'linear-gradient(135deg,#4f46e5,#7c3aed)',
+  planning:    'linear-gradient(135deg,#d97706,#ea580c)',
+  paused:      'linear-gradient(135deg,#475569,#64748b)',
 };
 const STATUS_LABELS = { active:'Live', development:'In Dev', planning:'Upcoming', paused:'Paused' };
 const FILTERS = [
@@ -113,24 +104,34 @@ export default {
     filters() { return FILTERS; },
     filtered() {
       if (this.activeFilter === 'all') return this.products;
-      return this.products.filter(p => p.status === this.activeFilter);
+      return this.products.filter(p => p.project_status === this.activeFilter);
     },
   },
 
   methods: {
     countFor(key) {
       if (key === 'all') return this.products.length;
-      return this.products.filter(p => p.status === key).length;
+      return this.products.filter(p => p.project_status === key).length;
     },
     statusLabel: s => STATUS_LABELS[s] || s || 'Active',
     accentFor:   s => ACCENT[s]  || ACCENT.active,
-    iconBg:      s => ICON_BG[s] || ICON_BG.active,
     trunc(str, n) { return str && str.length > n ? str.slice(0, n) + '…' : str || ''; },
     fmt: n => n ? new Intl.NumberFormat('en-BD').format(n) : '0',
     feats(f) {
       if (!f) return [];
       try { const a = typeof f === 'string' ? JSON.parse(f) : f; return Array.isArray(a) ? a.slice(0, 3) : []; }
       catch { return []; }
+    },
+    imgSrc(p) {
+      const img = p.thumbnail || p.screenshots;
+      if (!img) return '/default.png';
+      let src = img;
+      if (typeof img === 'string' && img.startsWith('[')) {
+        try { const arr = JSON.parse(img); src = Array.isArray(arr) ? arr[0] : img; }
+        catch { src = img; }
+      }
+      if (!src || src === 'default.png') return '/default.png';
+      return src.startsWith('http') ? src : '/' + src;
     },
 
     async fetchProducts() {
@@ -140,7 +141,7 @@ export default {
           params: {
             get_all: 1,
             limit: 100,
-            fields: ['id','name','slug','status','description','features','regular_price','sales_price','screenshots','product_group_id'],
+            fields: ['id','name','slug','status','project_status','description','features','regular_price','sales_price','thumbnail','screenshots','product_group_id'],
           }
         });
         const raw = res?.data?.data ?? [];
@@ -177,7 +178,7 @@ export default {
 }
 .pl-grad {
   background: linear-gradient(90deg,#818cf8,#c4b5fd);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 .pl-hero__sub { font-size: 1rem; color: rgba(255,255,255,.65); max-width: 580px; line-height: 1.7; margin-bottom: 2.25rem; }
 
@@ -204,7 +205,7 @@ export default {
 /* Loading skeletons */
 .pl-loading { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.75rem; }
 .pl-skeleton {
-  height: 300px; border-radius: 20px;
+  height: 360px; border-radius: 20px;
   background: linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -212,15 +213,11 @@ export default {
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
 /* Empty */
-.pl-empty {
-  text-align: center; padding: 4rem 0; color: #9ca3af;
-}
+.pl-empty { text-align: center; padding: 4rem 0; color: #9ca3af; }
 .pl-empty i { font-size: 3.5rem; margin-bottom: 1rem; display: block; color: #d1d5db; }
 
 /* ── Grid ── */
-.pl-grid {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.75rem;
-}
+.pl-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.75rem; }
 
 /* ── Card ── */
 .pl-card {
@@ -228,35 +225,45 @@ export default {
   display: flex; flex-direction: column; overflow: hidden;
   text-decoration: none;
   transition: transform .25s, box-shadow .25s, border-color .25s;
-  position: relative;
 }
 .pl-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 50px rgba(99,102,241,.14);
   border-color: #c7d2fe;
 }
-.pl-card__accent { height: 4px; flex-shrink: 0; }
-.pl-card__head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1.4rem 1.5rem .6rem;
+
+/* Banner */
+.pl-card__banner {
+  width: 100%; height: 190px;
+  position: relative; overflow: hidden; flex-shrink: 0;
 }
-.pl-card__icon-wrap {
-  width: 52px; height: 52px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center; overflow: hidden;
+.pl-card__banner-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .4s;
 }
-.pl-card__img { width: 100%; height: 100%; object-fit: cover; }
-.pl-card__icon-fb { font-size: 1.5rem; color: #8b5cf6; }
+.pl-card:hover .pl-card__banner-img { transform: scale(1.05); }
+.pl-card__banner-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.4));
+  pointer-events: none;
+}
+
+/* Status pill */
 .pl-card__status {
+  position: absolute; top: .75rem; right: .75rem;
   display: inline-flex; align-items: center; gap: .35rem;
   font-size: .68rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: .7px; padding: .28rem .8rem; border-radius: 50px;
+  backdrop-filter: blur(6px);
 }
-.pl-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .8; }
-.st--active      { background: #ecfdf5; color: #065f46; }
-.st--development { background: #ede9fe; color: #4c1d95; }
-.st--planning    { background: #fffbeb; color: #78350f; }
-.st--paused      { background: #f9fafb; color: #374151; }
-.pl-card__body { padding: .4rem 1.5rem 1rem; flex: 1; }
+.pl-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .9; }
+.st--active      { background: rgba(16,185,129,.2);  color: #6ee7b7; }
+.st--development { background: rgba(139,92,246,.2);  color: #c4b5fd; }
+.st--planning    { background: rgba(245,158,11,.2);  color: #fcd34d; }
+.st--paused      { background: rgba(148,163,184,.15); color: #94a3b8; }
+
+/* Card body */
+.pl-card__body { padding: 1.1rem 1.5rem .75rem; flex: 1; }
 .pl-card__name { font-size: 1.1rem; font-weight: 800; color: #111827; margin-bottom: .4rem; }
 .pl-card__desc { font-size: .855rem; color: #6b7280; line-height: 1.65; margin-bottom: .85rem; }
 .pl-card__tags { display: flex; flex-wrap: wrap; gap: .35rem; }
@@ -265,6 +272,8 @@ export default {
   background: #f5f3ff; color: #6d28d9;
   padding: .22rem .7rem; border-radius: 50px; border: 1px solid #ede9fe;
 }
+
+/* Card footer */
 .pl-card__foot {
   display: flex; align-items: center; justify-content: space-between;
   padding: .9rem 1.5rem 1.4rem; border-top: 1px solid #f1f5f9;

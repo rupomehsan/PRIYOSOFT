@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longtext('body')->nullable();
             $table->bigInteger('author_id')->nullable();
             $table->bigInteger('product_id')->nullable();
-            $table->enum('status', ['draft','published'])->nullable();
+             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->datetime('published_at')->nullable();
                     $table->bigInteger('creator')->unsigned()->nullable();
             $table->timestamps();

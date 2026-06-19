@@ -45,8 +45,7 @@ class Seeder extends SeederClass
                 "title" => "site_name",
                 "values" => [
                     [
-                        "value" => "Site Name",
-
+                        "value" => "PriyoSoft",
                     ],
                 ]
             ],
@@ -55,7 +54,7 @@ class Seeder extends SeederClass
                 "title" => "header_logo",
                 "values" => [
                     [
-                        "value" => "avatar.png",
+                        "value" => "logo.png",
                     ],
                 ]
             ],
@@ -65,8 +64,7 @@ class Seeder extends SeederClass
                 "title" => "footer_logo",
                 "values" => [
                     [
-                        "value" => "avatar.png",
-
+                        "value" => "logo.png",
                     ],
                 ]
             ],
@@ -76,7 +74,7 @@ class Seeder extends SeederClass
                 "title" => "fabicon",
                 "values" => [
                     [
-                        "value" => "avatar.png",
+                        "value" => "default.png",
                     ],
                 ]
             ],
@@ -92,8 +90,33 @@ class Seeder extends SeederClass
                     ],
                 ]
             ],
-
-
+            [
+                "group" => "basic_info",
+                "title" => "website",
+                "values" => [
+                    [
+                        "value" => "https://yoursite.com",
+                    ],
+                ]
+            ],
+            [
+                "group" => "basic_info",
+                "title" => "emails",
+                "values" => [
+                    [
+                        "value" => "info@yoursite.com",
+                    ],
+                ]
+            ],
+            [
+                "group" => "basic_info",
+                "title" => "fax_number",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
 
         ];
 
@@ -105,10 +128,7 @@ class Seeder extends SeederClass
                 "title" => "phone_numbers",
                 "values" => [
                     [
-                        "value" => "1234567789"
-                    ],
-                    [
-                        "value" => "123454566767",
+                        "value" => "01931374336"
                     ],
                 ],
 
@@ -118,7 +138,7 @@ class Seeder extends SeederClass
                 "title" => "whatsapp",
                 "values" => [
                     [
-                        "value" => "12342354345",
+                        "value" => "8801931374336",
                     ],
                 ]
             ],
@@ -133,10 +153,10 @@ class Seeder extends SeederClass
             ],
             [
                 "group" => "contact_information",
-                "title" => "emails",
+                "title" => "email",
                 "values" => [
                     [
-                        "value" => "support@gmail.com",
+                        "value" => "support@priyosoft.com",
                     ],
                 ]
             ],
@@ -214,7 +234,42 @@ class Seeder extends SeederClass
                     ],
                 ]
             ],
-
+            [
+                "group" => "social_media",
+                "title" => "whatsapp",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
+            [
+                "group" => "social_media",
+                "title" => "telegram",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
+            [
+                "group" => "social_media",
+                "title" => "pinterest",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
+            [
+                "group" => "social_media",
+                "title" => "tiktok",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
 
         ];
 
@@ -348,9 +403,127 @@ class Seeder extends SeederClass
                     ],
                 ]
             ],
+            [
+                "group" => "seo",
+                "title" => "canonical_url",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
+            [
+                "group" => "seo",
+                "title" => "seo_image",
+                "values" => [
+                    [
+                        "value" => "",
+                    ],
+                ]
+            ],
         ];
 
         $this->setting_save($seo_settings);
+
+        $payment_settings = [
+            [
+                "group" => "payment",
+                "title" => "bkash_number",
+                "values" => [["value" => "01931374336"]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "bkash_account_type",
+                "values" => [["value" => "Personal"]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "nagad_number",
+                "values" => [["value" => "01931374336"]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "nagad_account_type",
+                "values" => [["value" => "Personal"]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "rocket_number",
+                "values" => [["value" => "01931374336"]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "rocket_account_type",
+                "values" => [["value" => "Personal"]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "bank_name",
+                "values" => [["value" => ""]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "bank_account_name",
+                "values" => [["value" => ""]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "bank_account_number",
+                "values" => [["value" => ""]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "bank_branch_name",
+                "values" => [["value" => ""]],
+            ],
+            [
+                "group" => "payment",
+                "title" => "bank_routing_number",
+                "values" => [["value" => ""]],
+            ],
+        ];
+
+        $this->setting_save($payment_settings);
+
+        $card_payment_settings = [
+            [
+                "group" => "card_payment",
+                "title" => "card_gateway",
+                "values" => [["value" => "sslcommerz"]],
+            ],
+            [
+                "group" => "card_payment",
+                "title" => "card_gateway_mode",
+                "values" => [["value" => "sandbox"]],
+            ],
+            [
+                "group" => "card_payment",
+                "title" => "card_store_id",
+                "values" => [["value" => ""]],
+            ],
+            [
+                "group" => "card_payment",
+                "title" => "card_store_password",
+                "values" => [["value" => ""]],
+            ],
+            [
+                "group" => "card_payment",
+                "title" => "accept_visa",
+                "values" => [["value" => "yes"]],
+            ],
+            [
+                "group" => "card_payment",
+                "title" => "accept_mastercard",
+                "values" => [["value" => "yes"]],
+            ],
+            [
+                "group" => "card_payment",
+                "title" => "accept_amex",
+                "values" => [["value" => "no"]],
+            ],
+        ];
+
+        $this->setting_save($card_payment_settings);
 
         $pages = [
             [

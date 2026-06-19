@@ -45,20 +45,72 @@
               </div>
 
               <h1 class="pd-hero__title">{{ product.name }}</h1>
-              <p class="pd-hero__desc">{{ product.description }}</p>
+              <p class="pd-hero__desc">{{ shortDesc }}</p>
 
               <div class="pd-hero__cta">
                 <a :href="'/products/' + product.slug + '/payment'" class="pd-btn pd-btn--cta">
                   Get Started <i class="fas fa-arrow-right ms-2"></i>
                 </a>
-                <a :href="whatsappUrl" target="_blank" rel="noopener" class="pd-btn pd-btn--ghost">
+                <a v-if="product.promo_link" :href="product.promo_link" target="_blank" rel="noopener" class="pd-btn pd-btn--ghost">
+                  <i class="fas fa-desktop me-2"></i>View Demo
+                </a>
+                <a v-else :href="whatsappUrl" target="_blank" rel="noopener" class="pd-btn pd-btn--ghost">
                   <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
                 </a>
               </div>
             </div>
 
-            <!-- Hero price card -->
-            <div class="pd-hero__price-card">
+            <!-- Hero right: promo embed or price card -->
+            <div v-if="promoEmbed" class="pd-hero__video-wrap">
+
+              <!-- Badge -->
+              <div class="pd-hero__video-badge">
+                <template v-if="promoEmbed.type === 'youtube'">
+                  <i class="fab fa-youtube me-1"></i> Product Demo
+                </template>
+                <template v-else>
+                  <i class="fas fa-desktop me-1"></i> Live Preview
+                </template>
+              </div>
+
+              <!-- YouTube embed -->
+              <iframe
+                v-if="promoEmbed.type === 'youtube'"
+                :src="promoEmbed.src"
+                class="pd-hero__video"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+
+              <!-- Website live preview -->
+              <div v-else class="pd-hero__site-preview">
+                <div class="pd-hero__browser-bar">
+                  <span class="pd-browser__dots">
+                    <span></span><span></span><span></span>
+                  </span>
+                  <span class="pd-browser__url">{{ promoEmbed.src }}</span>
+                  <a :href="promoEmbed.src" target="_blank" rel="noopener" class="pd-browser__open" title="Open in new tab">
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                </div>
+                <iframe
+                  :src="promoEmbed.src"
+                  class="pd-hero__site-frame"
+                  frameborder="0"
+                  scrolling="no"
+                ></iframe>
+                <a :href="promoEmbed.src" target="_blank" rel="noopener" class="pd-hero__site-overlay">
+                  <span><i class="fas fa-external-link-alt me-2"></i>Open Live Demo</span>
+                </a>
+              </div>
+
+              <!-- Price strip below embed -->
+          
+            </div>
+
+            <!-- Price card fallback (no promo_link) -->
+            <div v-else class="pd-hero__price-card">
               <p class="pd-hero__price-label">Starting from</p>
               <div class="pd-hero__price-row">
                 <template v-if="product.sales_price">
@@ -111,20 +163,7 @@
                   <span class="pd-section__eyebrow">Details</span>
                   <h2 class="pd-section__title">Product Overview</h2>
                 </div>
-                <div class="pd-prose">
-                  <p>{{ product.description }}</p>
-                </div>
-              </div>
-
-              <!-- Screenshot -->
-              <div v-if="product.screenshots" class="pd-section">
-                <div class="pd-section__header">
-                  <span class="pd-section__eyebrow">Preview</span>
-                  <h2 class="pd-section__title">Screenshots</h2>
-                </div>
-                <div class="pd-screenshot-wrap">
-                  <img :src="product.screenshots" :alt="product.name" class="pd-screenshot" />
-                </div>
+                <div class="pd-prose" v-html="product.description"></div>
               </div>
 
             </main>
@@ -136,7 +175,7 @@
                 <!-- Pricing card -->
                 <div class="pd-price-card">
                   <div class="pd-price-card__head" :style="heroBg">
-                    <img v-if="product.screenshots" :src="product.screenshots" :alt="product.name" class="pd-price-card__img" />
+                    <img v-if="productImage" :src="productImage" :alt="product.name" class="pd-price-card__img" />
                     <div v-else class="pd-price-card__img-placeholder">
                       <i class="fas fa-cube"></i>
                     </div>
@@ -190,6 +229,10 @@
                         <i class="fas fa-shield-alt"></i>
                         <span>Built with Laravel + Vue.js</span>
                       </li>
+                      <li v-if="product.version">
+                        <i class="fas fa-code-branch"></i>
+                        <span>Version: <strong>{{ product.version }}</strong></span>
+                      </li>
                     </ul>
 
                   </div>
@@ -220,6 +263,25 @@
                   </div>
                 </div>
 
+                <!-- Screenshot gallery — inside sticky, below trust badges -->
+                <div v-if="screenshots.length" class="pd-gallery">
+                  <div class="pd-gallery__header">
+                    <span class="pd-gallery__label"><i class="fas fa-images me-1"></i> Screenshots</span>
+                    <span class="pd-gallery__count">{{ screenshots.length }} image{{ screenshots.length > 1 ? 's' : '' }}</span>
+                  </div>
+                  <div class="pd-gallery__grid">
+                    <button
+                      v-for="(img, i) in screenshots"
+                      :key="i"
+                      class="pd-gallery__thumb"
+                      @click="openLightbox(i)"
+                    >
+                      <img :src="imgSrc(img)" :alt="product.name + ' ' + (i + 1)" loading="lazy" />
+                      <span class="pd-gallery__zoom"><i class="fas fa-expand-alt"></i></span>
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </aside>
 
@@ -228,12 +290,30 @@
       </section>
 
     </template>
+
+    <!-- ── Lightbox ── -->
+    <div v-if="lightboxIndex !== null" class="pd-lightbox" @click.self="closeLightbox">
+      <button class="pd-lightbox__close" @click="closeLightbox" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+      <button v-if="screenshots.length > 1" class="pd-lightbox__nav pd-lightbox__nav--prev" @click="prevImage" aria-label="Previous">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="pd-lightbox__stage">
+        <img :src="imgSrc(screenshots[lightboxIndex])" :alt="product.name" class="pd-lightbox__img" />
+        <p class="pd-lightbox__caption">{{ lightboxIndex + 1 }} / {{ screenshots.length }}</p>
+      </div>
+      <button v-if="screenshots.length > 1" class="pd-lightbox__nav pd-lightbox__nav--next" @click="nextImage" aria-label="Next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
   </div>
 </template>
 
 <script>
-const CONTACT_PHONE   = '01700000000';
-const WHATSAPP_NUMBER = '8801700000000';
+import { mapActions, mapState } from 'pinia';
+import { site_settings_store } from '../../GlobalStore/site_settings_store';
 
 const STATUS_LABEL = {
   active: 'Live Now', development: 'In Development',
@@ -252,10 +332,29 @@ export default {
 
   data: () => ({
     product: null, loading: true,
-    contactPhone: CONTACT_PHONE,
+    lightboxIndex: null,
   }),
 
   computed: {
+    ...mapState(site_settings_store, { _siteSettings: 'website_settings_data' }),
+
+    contactPhone() {
+      const s = this._siteSettings?.find?.(i => i.title === 'phone_numbers');
+      return s?.setting_values?.[0]?.value || '01931374336';
+    },
+    whatsappNumber() {
+      let num = this.contactPhone.replace(/\D/g, '');
+      if (num.startsWith('00'))  num = num.slice(2);
+      if (num.startsWith('880')) return num;
+      if (num.startsWith('0'))   return '880' + num.slice(1);
+      return num;
+    },
+
+    shortDesc() {
+      const html = this.product?.description || '';
+      const plain = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      return plain.length > 220 ? plain.slice(0, 217) + '…' : plain;
+    },
     features() {
       const f = this.product?.features;
       if (!f) return [];
@@ -266,19 +365,55 @@ export default {
     },
     whatsappUrl() {
       const msg = encodeURIComponent(`Hi PriyoSoft, I'm interested in "${this.product?.name}"`);
-      return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+      return `https://wa.me/${this.whatsappNumber}?text=${msg}`;
+    },
+    productImage() {
+      const img = this.product?.thumbnail || this.product?.screenshots;
+      if (!img) return '/default.png';
+      return img.startsWith('http') ? img : '/' + img;
     },
     discountPct() {
       const r = +this.product?.regular_price, s = +this.product?.sales_price;
       if (!r || !s || s >= r) return 0;
       return Math.round((r - s) / r * 100);
     },
+    screenshots() {
+      const s = this.product?.screenshots;
+      if (!s) return [];
+      try {
+        const p = JSON.parse(s);
+        return Array.isArray(p) ? p : [s];
+      } catch { return typeof s === 'string' && s.trim() ? [s] : []; }
+    },
+    promoEmbed() {
+      const vidUrl  = this.product?.video_url;
+      const demoUrl = this.product?.promo_link;
+      if (vidUrl) {
+        const yt = vidUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\s]{11})/);
+        if (yt) return { type: 'youtube', src: `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1&autoplay=1&mute=1` };
+      }
+      if (demoUrl) return { type: 'website', src: demoUrl };
+      return null;
+    },
   },
 
   methods: {
+    ...mapActions(site_settings_store, { get_all_website_settings: 'get_all_website_settings' }),
     statusLabel: s => STATUS_LABEL[s] || s || 'Active',
     fmt: n => n ? new Intl.NumberFormat('en-BD').format(n) : '—',
     fmtDate: d => d ? new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : '—',
+    imgSrc(src) { return src?.startsWith('http') ? src : '/' + src; },
+
+    openLightbox(i)  { this.lightboxIndex = i; document.body.style.overflow = 'hidden'; },
+    closeLightbox()  { this.lightboxIndex = null; document.body.style.overflow = ''; },
+    prevImage()      { this.lightboxIndex = (this.lightboxIndex - 1 + this.screenshots.length) % this.screenshots.length; },
+    nextImage()      { this.lightboxIndex = (this.lightboxIndex + 1) % this.screenshots.length; },
+    onKeyDown(e) {
+      if (this.lightboxIndex === null) return;
+      if (e.key === 'Escape')     this.closeLightbox();
+      if (e.key === 'ArrowLeft')  this.prevImage();
+      if (e.key === 'ArrowRight') this.nextImage();
+    },
 
     async fetchProduct() {
       this.loading = true;
@@ -290,7 +425,15 @@ export default {
     },
   },
 
-  mounted() { this.fetchProduct(); },
+  mounted() {
+    this.fetchProduct();
+    this.get_all_website_settings();
+    window.addEventListener('keydown', this.onKeyDown);
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown);
+    document.body.style.overflow = '';
+  },
 };
 </script>
 
@@ -371,9 +514,9 @@ export default {
 
 /* Hero body */
 .pd-hero__body {
-  display: flex; align-items: flex-start; gap: 3rem; flex-wrap: wrap;
+  display: flex; align-items: stretch; gap: 3rem; flex-wrap: wrap;
 }
-.pd-hero__content { flex: 1; min-width: 280px; }
+.pd-hero__content { flex: 1; min-width: 280px; display: flex; flex-direction: column; justify-content: center; }
 
 /* Tags */
 .pd-hero__tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.25rem; }
@@ -402,6 +545,89 @@ export default {
   line-height: 1.75; max-width: 600px; margin-bottom: 2.25rem;
 }
 .pd-hero__cta { display: flex; flex-wrap: wrap; gap: .85rem; }
+
+/* Hero video embed */
+.pd-hero__video-wrap {
+  flex-shrink: 0;
+  width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.pd-hero__video-badge {
+  display: inline-flex; align-items: center;
+  font-size: .7rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  color: #fff; background: rgba(220,38,38,.85);
+  padding: .25rem .8rem; border-radius: 50px;
+  align-self: flex-start; flex-shrink: 0;
+}
+.pd-hero__video {
+  width: 100%;
+  flex: 1;
+  min-height: 220px;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  display: block;
+}
+
+/* Website live preview */
+.pd-hero__site-preview {
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  position: relative;
+}
+.pd-hero__browser-bar {
+  display: flex; align-items: center; gap: .6rem;
+  background: #1e1e2e; padding: .5rem .85rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.pd-browser__dots {
+  display: flex; gap: .3rem; flex-shrink: 0;
+}
+.pd-browser__dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.pd-browser__dots span:nth-child(1) { background: #ff5f57; }
+.pd-browser__dots span:nth-child(2) { background: #febc2e; }
+.pd-browser__dots span:nth-child(3) { background: #28c840; }
+.pd-browser__url {
+  flex: 1; font-size: .68rem; color: rgba(255,255,255,.45);
+  background: rgba(255,255,255,.08); border-radius: 6px;
+  padding: .2rem .6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pd-browser__open {
+  color: rgba(255,255,255,.4); font-size: .7rem; flex-shrink: 0;
+  text-decoration: none; transition: color .2s;
+}
+.pd-browser__open:hover { color: #fff; }
+.pd-hero__site-frame {
+  width: 100%; height: 300px; display: block; border: none;
+  background: #fff;
+  pointer-events: none;
+}
+.pd-hero__site-overlay {
+  position: absolute; inset: 30px 0 0 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.0); transition: background .25s;
+  text-decoration: none;
+}
+.pd-hero__site-overlay span {
+  opacity: 0; transition: opacity .25s;
+  background: rgba(79,70,229,.92); color: #fff;
+  font-size: .9rem; font-weight: 700;
+  padding: .7rem 1.5rem; border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.pd-hero__site-preview:hover .pd-hero__site-overlay { background: rgba(0,0,0,.35); }
+.pd-hero__site-preview:hover .pd-hero__site-overlay span { opacity: 1; }
+
+.pd-hero__video-price {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .5rem;
+  background: rgba(255,255,255,.1); backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px; padding: .75rem 1.25rem;
+}
 
 /* Hero price card */
 .pd-hero__price-card {
@@ -469,7 +695,32 @@ export default {
   background: #fff; border: 1px solid #e9ecf3; border-radius: 16px;
   padding: 2rem; box-shadow: 0 1px 8px rgba(0,0,0,.04);
 }
-.pd-prose p { font-size: .97rem; color: #4b5563; line-height: 1.85; margin: 0; }
+.pd-prose :deep(p)  { font-size: .97rem; color: #4b5563; line-height: 1.85; margin: 0 0 1rem; }
+.pd-prose :deep(p:last-child) { margin-bottom: 0; }
+.pd-prose :deep(h1),.pd-prose :deep(h2),.pd-prose :deep(h3),
+.pd-prose :deep(h4),.pd-prose :deep(h5),.pd-prose :deep(h6) {
+  color: #111827; font-weight: 700; line-height: 1.35;
+  margin: 1.5rem 0 .6rem;
+}
+.pd-prose :deep(h2) { font-size: 1.3rem; }
+.pd-prose :deep(h3) { font-size: 1.1rem; }
+.pd-prose :deep(ul),.pd-prose :deep(ol) {
+  padding-left: 1.5rem; margin: .75rem 0 1rem; color: #4b5563;
+}
+.pd-prose :deep(li) { margin-bottom: .35rem; line-height: 1.7; font-size: .97rem; }
+.pd-prose :deep(strong),.pd-prose :deep(b) { color: #111827; font-weight: 700; }
+.pd-prose :deep(a) { color: #4f46e5; text-decoration: underline; }
+.pd-prose :deep(img) { max-width: 100%; border-radius: 10px; margin: 1rem 0; }
+.pd-prose :deep(blockquote) {
+  border-left: 4px solid #4f46e5; padding: .75rem 1.25rem;
+  margin: 1rem 0; background: #f5f3ff; border-radius: 0 8px 8px 0;
+  color: #374151;
+}
+.pd-prose :deep(pre),.pd-prose :deep(code) {
+  background: #f3f4f6; border-radius: 6px; font-size: .88rem;
+}
+.pd-prose :deep(pre) { padding: 1rem 1.25rem; overflow-x: auto; }
+.pd-prose :deep(code) { padding: .15rem .4rem; }
 
 /* ─── Screenshot ────────────────────────────────── */
 .pd-screenshot-wrap {
@@ -560,16 +811,93 @@ export default {
 .pd-trust__title { font-size: .85rem; font-weight: 700; color: #111827; margin: 0; }
 .pd-trust__sub   { font-size: .75rem; color: #9ca3af; margin: 0; }
 
+/* ─── Screenshot Gallery ────────────────────────── */
+.pd-gallery {
+  margin-top: 1.25rem;
+  background: #fff;
+  border: 1px solid #e9ecf3;
+  border-radius: 16px;
+  padding: 1.1rem 1.1rem 1.25rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,.04);
+}
+.pd-gallery__header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .85rem;
+}
+.pd-gallery__label {
+  font-size: .78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: #374151;
+}
+.pd-gallery__count { font-size: .72rem; color: #9ca3af; font-weight: 500; }
+.pd-gallery__grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem;
+}
+.pd-gallery__thumb {
+  position: relative; aspect-ratio: 4/3; overflow: hidden;
+  border-radius: 8px; border: 1.5px solid #e9ecf3;
+  padding: 0; cursor: pointer; background: #f3f4f6;
+  transition: border-color .2s, transform .2s;
+}
+.pd-gallery__thumb:hover { border-color: #4f46e5; transform: scale(1.04); }
+.pd-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pd-gallery__zoom {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: .9rem; opacity: 0;
+  transition: background .2s, opacity .2s;
+}
+.pd-gallery__thumb:hover .pd-gallery__zoom { background: rgba(79,70,229,.55); opacity: 1; }
+
+/* ─── Lightbox ───────────────────────────────────── */
+.pd-lightbox {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.92);
+  display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem;
+}
+.pd-lightbox__close {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,.12);
+  color: #fff; font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, transform .15s; z-index: 1;
+}
+.pd-lightbox__close:hover { background: rgba(255,255,255,.28); transform: scale(1.1); }
+.pd-lightbox__nav {
+  flex-shrink: 0; width: 50px; height: 50px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,.12);
+  color: #fff; font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, transform .15s;
+}
+.pd-lightbox__nav:hover { background: rgba(255,255,255,.28); transform: scale(1.08); }
+.pd-lightbox__stage {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: .75rem;
+  max-width: 900px; min-width: 0;
+}
+.pd-lightbox__img {
+  max-width: 100%; max-height: 82vh;
+  border-radius: 12px; object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5); display: block;
+}
+.pd-lightbox__caption { color: rgba(255,255,255,.5); font-size: .85rem; margin: 0; }
+
 /* ─── Responsive ────────────────────────────────── */
 @media (max-width: 1024px) {
   .pd-layout { grid-template-columns: 1fr; }
   .pd-sidebar__sticky { position: static; }
   .pd-feat-grid { grid-template-columns: 1fr 1fr; }
+  .pd-hero__body { align-items: flex-start; }
+  .pd-hero__video-wrap { width: 100%; }
+  .pd-hero__video { aspect-ratio: 16/9; flex: none; min-height: unset; }
 }
 @media (max-width: 640px) {
   .pd-hero { padding: 4rem 0 3.5rem; }
-  .pd-hero__body { gap: 2rem; }
+  .pd-hero__body { gap: 2rem; align-items: flex-start; }
   .pd-feat-grid { grid-template-columns: 1fr; }
   .pd-hero__price-card { width: 100%; }
+  .pd-hero__video-wrap { width: 100%; }
+  .pd-hero__video { aspect-ratio: 16/9; flex: none; min-height: unset; }
 }
 </style>

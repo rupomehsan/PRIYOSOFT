@@ -27,7 +27,7 @@ class Seeder extends SeederClass
             'name'     => 'Super Admin',
             'email'    => 'superadmin@gmail.com',
             'password' => Hash::make('@12345678'),
-            'image'    => 'avatar.png',
+            'image'    => 'default.png',
             'role_id'  => 1,
         ]);
 

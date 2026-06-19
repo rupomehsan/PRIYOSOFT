@@ -14,8 +14,27 @@ class UpdateData
             }
             $requestData = $request->validated();
 
-            if ($request->hasFile('screenshots')) {
-                $requestData['screenshots'] = uploader($request->file('screenshots'), 'uploads/ProductManagement/Product');
+            // Screenshots: merge kept existing paths + newly uploaded files
+            if ($request->input('screenshots_present')) {
+                $kept = array_values(array_filter((array) $request->input('screenshots_kept', [])));
+                $newPaths = [];
+                if ($request->hasFile('screenshots')) {
+                    $files = $request->file('screenshots');
+                    $files = is_array($files) ? $files : [$files];
+                    $newPaths = array_map(fn($f) => uploader($f, 'uploads/ProductManagement/Product'), $files);
+                }
+                $all = array_values(array_merge($kept, $newPaths));
+                if (empty($all)) {
+                    $requestData['screenshots'] = null;
+                } else {
+                    $requestData['screenshots'] = count($all) === 1 ? $all[0] : json_encode($all);
+                }
+            } elseif ($request->hasFile('screenshots')) {
+                // Fallback: no sentinel but files were still sent (single-mode or direct API)
+                $files = $request->file('screenshots');
+                $files = is_array($files) ? $files : [$files];
+                $paths = array_map(fn($f) => uploader($f, 'uploads/ProductManagement/Product'), $files);
+                $requestData['screenshots'] = count($paths) === 1 ? $paths[0] : json_encode($paths);
             }
             if ($request->hasFile('thumbnail')) {
                 $requestData['thumbnail'] = uploader($request->file('thumbnail'), 'uploads/ProductManagement/Product/Thumbnails');

@@ -190,6 +190,7 @@ export default {
       // multiple mode
       existingImages: [],     // raw DB paths (e.g. "uploads/Blog/file.jpg")
       localFiles:     [],     // newly picked files with preview data URLs
+      fileObjects:    [],     // raw File objects — kept in sync with localFiles
       // ui state
       isDragging: false,
     };
@@ -247,6 +248,8 @@ export default {
 
     // ── Browse / drop ─────────────────────────────────────────────
     browse() {
+      // Don't clear value — let onFileChange accumulate into fileObjects.
+      // Reset only so the same file can be re-selected after removal.
       this.$refs.fileInput.value = '';
       this.$refs.fileInput.click();
     },
@@ -260,6 +263,15 @@ export default {
     onFileChange(e) {
       const files = Array.from(e.target.files);
       if (files.length) this.processFiles(files);
+    },
+
+    // ── Keep <input type="file"> FileList in sync with fileObjects ─
+    syncFilesToInput() {
+      try {
+        const dt = new DataTransfer();
+        this.fileObjects.forEach(f => dt.items.add(f));
+        this.$refs.fileInput.files = dt.files;
+      } catch (_) { /* DataTransfer not supported (very old browsers) */ }
     },
 
     // ── File processing ───────────────────────────────────────────
@@ -286,8 +298,10 @@ export default {
             };
           })
         );
-        // Single atomic write — Vue only re-renders once, after all previews are ready
-        this.localFiles = [...this.localFiles, ...entries];
+        // Accumulate — add new entries to what was already picked
+        this.localFiles  = [...this.localFiles, ...entries];
+        this.fileObjects = [...this.fileObjects, ...Array.from(files)];
+        this.syncFilesToInput();
       } else {
         const file         = files[0];
         this.fileName      = file.name;
@@ -312,10 +326,10 @@ export default {
 
     // ── Remove ────────────────────────────────────────────────────
     removeSingle() {
-      this.preview       = null;
-      this.fileName      = '';
-      this.fileSize      = '';
-      this.singleCleared = true;
+      this.preview           = null;
+      this.fileName          = '';
+      this.fileSize          = '';
+      this.singleCleared     = true;
       this.$refs.fileInput.value = '';
     },
 
@@ -325,7 +339,9 @@ export default {
     },
 
     removeLocal(idx) {
-      this.localFiles = this.localFiles.filter((_, i) => i !== idx);
+      this.localFiles  = this.localFiles.filter((_, i) => i !== idx);
+      this.fileObjects = this.fileObjects.filter((_, i) => i !== idx);
+      this.syncFilesToInput();
     },
 
     // ── Util ──────────────────────────────────────────────────────

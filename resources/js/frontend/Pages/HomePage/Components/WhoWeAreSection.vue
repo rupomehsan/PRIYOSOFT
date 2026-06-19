@@ -168,13 +168,13 @@ export default {
   align-items: center;
   padding: .45rem 1.25rem;
   border-radius: 999px;
-  background: rgba(99,102,241,.12);
-  border: 1px solid rgba(99,102,241,.3);
+  background: var(--ps-badge-bg);
+  border: 1px solid var(--ps-badge-border);
   font-size: .8rem;
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #a5b4fc;
+  color: var(--ps-badge-color);
   margin-bottom: 1.25rem;
 }
 
@@ -278,17 +278,18 @@ export default {
   border-radius: 16px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid var(--ps-stat-card-border);
   display: flex;
   align-items: center;
   gap: .65rem;
   z-index: 2;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
 }
 
 .wwa-stat-card--tl {
   top: -1.1rem;
   left: -1.25rem;
-  background: rgba(99,102,241,.22);
+  background: var(--ps-stat-card-bg-1);
   padding: .85rem 1.25rem;
   flex-direction: column;
   align-items: flex-start;
@@ -297,24 +298,24 @@ export default {
 .wwa-stat-card--br {
   bottom: -1.1rem;
   right: -1.25rem;
-  background: rgba(6,182,212,.18);
+  background: var(--ps-stat-card-bg-2);
   padding: .85rem 1.25rem;
 }
 
 .wwa-stat-card__num {
   font-size: 1.75rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--ps-stat-card-num);
   line-height: 1;
 }
 .wwa-stat-card__label {
   font-size: .72rem;
   font-weight: 600;
-  color: #c4b5fd;
+  color: var(--ps-stat-card-label-1);
   line-height: 1.3;
 }
-.wwa-stat-card--br .wwa-stat-card__label { color: #67e8f9; }
-.wwa-stat-card__icon { font-size: 1.3rem; color: #67e8f9; }
+.wwa-stat-card--br .wwa-stat-card__label { color: var(--ps-stat-card-label-2); }
+.wwa-stat-card__icon { font-size: 1.3rem; color: var(--ps-stat-card-icon); }
 
 /* Decorative rings */
 .wwa-ring {
@@ -404,7 +405,7 @@ export default {
 }
 .wwa-stat__label {
   font-size: .75rem;
-  color: #475569;
+  color: var(--ps-stat-label);
   font-weight: 600;
   margin-top: .2rem;
   text-transform: uppercase;

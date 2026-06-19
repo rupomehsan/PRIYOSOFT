@@ -46,7 +46,8 @@ class DataStoreValidation extends FormRequest
             'name'                   => 'sometimes|nullable|string|max:255',
             'slug'                   => 'sometimes|nullable|string|max:255',
             'description'            => 'sometimes|nullable|string',
-            'status'                 => ['sometimes', 'nullable', Rule::in(['active', 'planning', 'development', 'paused'])],
+            'status'                 => ['sometimes', 'nullable', Rule::in(['active', 'inactive'])],
+            'project_status'         => ['sometimes', 'nullable', Rule::in(['planning', 'development', 'active', 'paused'])],
             'launch_date'            => 'sometimes|nullable|date',
             'monthly_target_revenue' => 'sometimes|nullable|numeric|min:0',
             'features'               => 'sometimes|nullable',
@@ -55,6 +56,7 @@ class DataStoreValidation extends FormRequest
             'sales_price'            => 'sometimes|nullable|numeric|min:0',
             'thumbnail'              => 'sometimes|nullable|image|max:2048',
             'promo_link'             => 'sometimes|nullable|url|max:500',
+            'video_url'              => 'sometimes|nullable|url|max:500',
         ];
     }
 }

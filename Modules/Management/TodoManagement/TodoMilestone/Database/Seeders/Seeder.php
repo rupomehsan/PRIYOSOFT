@@ -15,104 +15,75 @@ class Seeder extends SeederClass
     {
         self::$model::truncate();
 
+        // Costs = sum of all group costs per milestone  (৳800/day work + fixed out-of-pocket)
         $milestones = [
             [
-                'title'          => 'Market Research & Competitor Analysis',
-                'phase'          => 'Business Planning',
-                'target_date'    => '2026-07-15',
-                'achieved_date'  => null,
+                'title'          => 'Milestone One - Planning & Research: Software Company Foundation',
+                'phase'          => 'Phase 1 - Foundation',
+                'target_date'    => '2026-07-31',
                 'current_status' => 'upcoming',
-                'note'           => 'Identify top 10 competitors, pricing models, target audience segments, and market gaps for software positioning.',
+                'cost'           => 52100,
+                'note'           => 'Complete all groundwork before development: product decisions, legal setup, brand identity, domain/hosting, and social presence.',
                 'sort_order'     => 1,
             ],
             [
-                'title'          => 'Business Plan & Revenue Model Finalized',
-                'phase'          => 'Business Planning',
-                'target_date'    => '2026-08-01',
-                'achieved_date'  => null,
+                'title'          => 'Milestone Two - Build Company Website & eCommerce Software',
+                'phase'          => 'Phase 2 - Build',
+                'target_date'    => '2026-10-31',
                 'current_status' => 'upcoming',
-                'note'           => 'Define subscription tiers, one-time licensing, freemium model, and 3-year revenue projections.',
+                'cost'           => 128800,
+                'note'           => 'Build the company portfolio website (Laravel + Vue.js) and the first product: a single-page eCommerce software with bKash/Nagad payment for the Bangladesh market.',
                 'sort_order'     => 2,
             ],
             [
-                'title'          => 'Brand Identity & Marketing Assets Ready',
-                'phase'          => 'Marketing',
-                'target_date'    => '2026-08-20',
-                'achieved_date'  => null,
+                'title'          => 'Milestone Three - Content Marketing & SEO Strategy Launched',
+                'phase'          => 'Phase 3 - Marketing',
+                'target_date'    => '2026-12-31',
                 'current_status' => 'upcoming',
-                'note'           => 'Logo, color palette, brand guidelines, pitch deck, and social media profile creatives.',
+                'cost'           => 58400,
+                'note'           => 'Publish 12+ blog posts, launch YouTube channel in Bangla, run social media content calendar, build email list, and achieve first-page Google ranking for 5 target keywords.',
                 'sort_order'     => 3,
             ],
             [
-                'title'          => 'Landing Page & Lead Capture System Live',
-                'phase'          => 'Marketing',
-                'target_date'    => '2026-09-01',
-                'achieved_date'  => null,
+                'title'          => 'Milestone Four - Sales Pipeline & CRM Setup Completed',
+                'phase'          => 'Phase 3 - Marketing',
+                'target_date'    => '2027-01-31',
                 'current_status' => 'upcoming',
-                'note'           => 'SEO-optimized landing page with email capture, live chat, and CRM integration for lead management.',
+                'cost'           => 28400,
+                'note'           => 'Configure CRM, document full sales process, build prospect list, finalize pricing and proposal templates, and close first 10 paying customers via direct outreach.',
                 'sort_order'     => 4,
             ],
             [
-                'title'          => 'Content Marketing & SEO Strategy Launched',
-                'phase'          => 'Marketing',
-                'target_date'    => '2026-09-20',
-                'achieved_date'  => null,
+                'title'          => 'Milestone Five - Paid Advertising Campaigns Go Live',
+                'phase'          => 'Phase 4 - Growth',
+                'target_date'    => '2027-03-31',
                 'current_status' => 'upcoming',
-                'note'           => 'Publish 10 blog posts, 5 case studies, and initiate link-building. Target 20 high-value keywords.',
+                'cost'           => 32400,
+                'note'           => 'Launch Facebook Ads and Google Ads campaigns. Target cost-per-lead under ৳500. Scale winning ads and build retargeting audiences for both website and eCommerce app.',
                 'sort_order'     => 5,
             ],
             [
-                'title'          => 'Sales Pipeline & CRM Setup Completed',
-                'phase'          => 'Sales',
-                'target_date'    => '2026-10-01',
-                'achieved_date'  => null,
+                'title'          => 'Milestone Six - Partnership & Reseller Program Launched',
+                'phase'          => 'Phase 4 - Growth',
+                'target_date'    => '2027-05-31',
                 'current_status' => 'upcoming',
-                'note'           => 'Configure CRM (HubSpot/Zoho), define sales stages, create email templates, and set up follow-up automation.',
+                'cost'           => 22400,
+                'note'           => 'Sign 2+ agency partners and 3+ resellers in Bangladesh. Define commission structure (15-20% recurring), build partner toolkit, and co-launch first joint marketing campaign.',
                 'sort_order'     => 6,
             ],
             [
-                'title'          => 'First 10 Paying Customers Onboarded',
-                'phase'          => 'Sales',
-                'target_date'    => '2026-11-01',
-                'achieved_date'  => null,
+                'title'          => 'Milestone Seven - ১০ লক্ষ টাকা MRR Target Achieved',
+                'phase'          => 'Phase 5 - Scale',
+                'target_date'    => '2027-12-31',
                 'current_status' => 'upcoming',
-                'note'           => 'Close first 10 paid subscriptions via direct outreach, LinkedIn campaigns, and referral network.',
+                'cost'           => 36000,
+                'note'           => 'Reach ১০,০০,০০০ BDT monthly recurring revenue through all 3 products, combined direct sales, resellers, and inbound marketing. Launch Inventory and Portfolio products.',
                 'sort_order'     => 7,
-            ],
-            [
-                'title'          => 'Paid Advertising Campaigns Go Live',
-                'phase'          => 'Marketing',
-                'target_date'    => '2026-11-15',
-                'achieved_date'  => null,
-                'current_status' => 'upcoming',
-                'note'           => 'Launch Google Ads and Facebook/LinkedIn retargeting campaigns. Budget: $500/month. Target CAC under $80.',
-                'sort_order'     => 8,
-            ],
-            [
-                'title'          => 'Partnership & Reseller Program Launched',
-                'phase'          => 'Sales',
-                'target_date'    => '2026-12-01',
-                'achieved_date'  => null,
-                'current_status' => 'upcoming',
-                'note'           => 'Onboard 3 agency partners and 2 resellers. Define commission structure (20% recurring revenue share).',
-                'sort_order'     => 9,
-            ],
-            [
-                'title'          => '$10,000 MRR Target Achieved',
-                'phase'          => 'Growth',
-                'target_date'    => '2027-03-01',
-                'achieved_date'  => null,
-                'current_status' => 'upcoming',
-                'note'           => 'Reach $10K monthly recurring revenue through combined direct sales, partnerships, and inbound marketing.',
-                'sort_order'     => 10,
             ],
         ];
 
-        $words = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
-
-        foreach ($milestones as $i => $data) {
-            $data['title'] = 'Milestone ' . $words[$i] . ' - ' . $data['title'];
-            $data['cost'] = 100;
+        foreach ($milestones as $data) {
+            $data['achieved_date'] = null;
             self::$model::create($data);
         }
     }

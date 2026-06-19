@@ -24,6 +24,7 @@ Route::prefix('public')->group(function () {
     Route::get('team-members',     [TeamMemberController::class,  'index']);
     Route::get('testimonials',     [TestimonialController::class, 'index']);
     Route::get('blogs',            [BlogPostController::class,    'index']);
+    Route::get('blogs/{slug}',     [BlogPostController::class,    'show']);
     Route::get('about-us',         [AboutUsController::class,     'index']);
     Route::get('faqs',             [FaqController::class,         'index']);
     Route::get('products',         [ProductController::class,     'index']);

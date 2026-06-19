@@ -42,24 +42,46 @@ class DataStoreValidation extends FormRequest
     public function rules(): array
     {
         return [
-            'order_number' => 'required | sometimes',
-            'product_id' => 'required | sometimes',
-            'customer_id' => 'required | sometimes',
-            'plan_name' => 'required | sometimes',
-            'billing_cycle' => 'required | sometimes',
-            'status' => 'required | sometimes',
-            'delivery_method' => 'required | sometimes',
-            'subtotal' => 'required | sometimes',
-            'discount_amount' => 'required | sometimes',
-            'total_amount' => 'required | sometimes',
-            'coupon_code' => 'required | sometimes',
-            'customer_note' => 'required | sometimes',
-            'ordered_at' => 'required | sometimes',
-            'payment_verified_at' => 'required | sometimes',
-            'access_sent_at' => 'required | sometimes',
-            'cancelled_at' => 'required | sometimes',
-            'created_by' => 'required | sometimes',
-            'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+            // order identifiers
+            'order_number'            => 'sometimes|nullable|string',
+            'product_id'              => 'sometimes|nullable|integer',
+            'customer_id'             => 'sometimes|nullable|integer',
+            'billing_cycle'           => 'sometimes|nullable|string',
+            'coupon_code'             => 'sometimes|nullable|string',
+            'ordered_at'              => 'sometimes|nullable',
+            'payment_verified_at'     => 'sometimes|nullable',
+            'access_sent_at'          => 'sometimes|nullable',
+            'cancelled_at'            => 'sometimes|nullable',
+            'created_by'              => 'sometimes|nullable',
+            'status'                  => ['sometimes', 'nullable', Rule::in(['active', 'inactive'])],
+
+            // customer
+            'customer_name'           => 'sometimes|nullable|string|max:200',
+            'customer_phone'          => 'sometimes|nullable|string|max:30',
+            'customer_email'          => 'sometimes|nullable|email|max:200',
+            'domain_name'             => 'sometimes|nullable|string|max:255',
+            'preferred_delivery_date' => 'sometimes|nullable|date',
+
+            // product / plan
+            'product_name'            => 'sometimes|nullable|string|max:255',
+            'plan_name'               => 'sometimes|nullable|string|max:200',
+
+            // pricing
+            'subtotal'                => 'sometimes|nullable|numeric|min:0',
+            'discount_amount'         => 'sometimes|nullable|numeric|min:0',
+            'total_amount'            => 'sometimes|nullable|numeric|min:0',
+
+            // payment
+            'payment_method'          => 'sometimes|nullable|string',
+            'pay_now'                 => 'sometimes|nullable|boolean',
+            'order_status'            => 'sometimes|nullable|string',
+            'delivery_method'         => 'sometimes|nullable|string',
+
+            // text
+            'project_description'     => 'sometimes|nullable|string',
+            'special_requirements'    => 'sometimes|nullable|string',
+            'customer_note'           => 'sometimes|nullable|string',
+            'admin_note'              => 'sometimes|nullable|string',
         ];
     }
 }

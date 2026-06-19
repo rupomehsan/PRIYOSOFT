@@ -6,51 +6,101 @@
 /* ── Dark mode (default) ─────────────────────────────────── */
 :root {
   /* Section backgrounds */
-  --ps-bg-1:    #050512;   /* deepest: Newsletter, WhoWe, Hero-fallback */
-  --ps-bg-2:    #07071a;   /* standard dark: About, Stats, Testimonials */
-  --ps-bg-3:    #0d0d26;   /* mid dark: Products */
-  --ps-bg-4:    #0a0a1e;   /* FAQ, Blog, CoreValues */
+  --ps-bg-1:    #050512;
+  --ps-bg-2:    #07071a;
+  --ps-bg-3:    #0d0d26;
+  --ps-bg-4:    #0a0a1e;
 
   /* Cards */
-  --ps-card-bg:          rgba(255,255,255,.04);
-  --ps-card-border:      rgba(255,255,255,.07);
+  --ps-card-bg:           rgba(255,255,255,.04);
+  --ps-card-border:       rgba(255,255,255,.07);
   --ps-card-hover-border: rgba(99,102,241,.4);
-  --ps-card-bg-solid:    #0f0f2e;
+  --ps-card-bg-solid:     #0f0f2e;
 
   /* Text */
   --ps-text-h:     #f1f5f9;
   --ps-text-body:  #94a3b8;
   --ps-text-faint: #64748b;
 
-  /* Section tags & titles on dark-bg sections */
+  /* Section tags & titles */
   --ps-sec-tag-bg:     rgba(139,92,246,.12);
   --ps-sec-tag-color:  #c4b5fd;
   --ps-sec-tag-border: rgba(139,92,246,.25);
   --ps-sec-title:      #f1f5f9;
   --ps-sec-sub:        #94a3b8;
 
-  /* Footer (stays dark in both modes) */
-  --ps-footer-bg-from:        #050512;
-  --ps-footer-bg-to:          #07071a;
-  --ps-footer-border:         rgba(255,255,255,.06);
-  --ps-footer-text:           #9ca3af;
-  --ps-footer-desc:           #6b7280;
-  --ps-footer-link:           #6b7280;
-  --ps-footer-heading:        #e5e7eb;
-  --ps-footer-hr:             rgba(255,255,255,.07);
-  --ps-footer-copy:           #4b5563;
-  --ps-footer-copy-strong:    #9ca3af;
-  --ps-footer-social-bg:      rgba(255,255,255,.06);
-  --ps-footer-social-border:  rgba(255,255,255,.1);
-  --ps-footer-social-color:   #9ca3af;
-  --ps-footer-contact-icon-bg: rgba(102,126,234,.15);
+  /* ── Header ────────────────────────────────────── */
+  --ps-header-scrolled-bg:         rgba(10,10,30,.96);
+  --ps-header-scrolled-shadow:     0 1px 28px rgba(0,0,0,.35);
+  --ps-header-brand-scrolled:      #e2e8f0;
+  --ps-header-brand-em-scrolled:   #a78bfa;
+  --ps-header-link-scrolled:       #94a3b8;
+  --ps-header-link-hover-scrolled: #c4b5fd;
+  --ps-header-link-hover-bg:       rgba(255,255,255,.07);
+  --ps-header-hamburger-scrolled:  #e2e8f0;
+  --ps-header-user-btn-bg:         rgba(255,255,255,.09);
+  --ps-header-user-btn-border:     rgba(255,255,255,.14);
+  --ps-header-user-name-scrolled:  #e2e8f0;
+  --ps-header-chevron-scrolled:    #818cf8;
+  --ps-header-mobile-bg:           #0d0d26;
+  --ps-header-mobile-border:       rgba(255,255,255,.07);
+  --ps-header-mobile-link:         #94a3b8;
+
+  /* Dropdown panel */
+  --ps-drop-bg:               #12122e;
+  --ps-drop-item-color:       #cbd5e1;
+  --ps-drop-item-hover-bg:    rgba(99,102,241,.15);
+  --ps-drop-item-hover-color: #c4b5fd;
+  --ps-drop-danger-hover-bg:  rgba(239,68,68,.12);
+
+  /* Who We Are floating stat cards */
+  --ps-stat-card-bg-1:    rgba(99,102,241,.22);
+  --ps-stat-card-bg-2:    rgba(6,182,212,.18);
+  --ps-stat-card-border:  rgba(255,255,255,.12);
+  --ps-stat-card-num:     #ffffff;
+  --ps-stat-card-label-1: #c4b5fd;
+  --ps-stat-card-label-2: #67e8f9;
+  --ps-stat-card-icon:    #67e8f9;
+
+  /* Section badge / pill (above headings) */
+  --ps-badge-color:     #a5b4fc;
+  --ps-badge-bg:        rgba(99,102,241,.12);
+  --ps-badge-border:    rgba(99,102,241,.3);
+
+  /* Feature tags inside cards */
+  --ps-feat-tag-color:  #a5b4fc;
+  --ps-feat-tag-bg:     rgba(99,102,241,.15);
+  --ps-feat-tag-border: rgba(99,102,241,.2);
+
+  /* Stat label */
+  --ps-stat-label: #64748b;
 
   /* Theme toggle button */
   --ps-toggle-bg:    rgba(255,255,255,.1);
   --ps-toggle-color: #e2e8f0;
   --ps-toggle-hover: rgba(255,255,255,.18);
+
+  /* ── Footer ────────────────────────────────────── */
+  --ps-footer-bg-from:         #050512;
+  --ps-footer-bg-to:           #07071a;
+  --ps-footer-border:          rgba(255,255,255,.06);
+  --ps-footer-text:            #9ca3af;
+  --ps-footer-desc:            #6b7280;
+  --ps-footer-link:            #6b7280;
+  --ps-footer-heading:         #e5e7eb;
+  --ps-footer-hr:              rgba(255,255,255,.07);
+  --ps-footer-copy:            #4b5563;
+  --ps-footer-copy-strong:     #9ca3af;
+  --ps-footer-social-bg:       rgba(255,255,255,.06);
+  --ps-footer-social-border:   rgba(255,255,255,.1);
+  --ps-footer-social-color:    #9ca3af;
+  --ps-footer-contact-icon-bg: rgba(102,126,234,.15);
+  --ps-footer-bname-color:     #ffffff;
+  --ps-footer-bname-em:        #a78bfa;
+  --ps-footer-stack:           #4b5563;
 }
 
+/* ── Light mode ──────────────────────────────────────────── */
 html[data-theme="light"] {
   /* Section backgrounds */
   --ps-bg-1:    #ffffff;
@@ -59,41 +109,90 @@ html[data-theme="light"] {
   --ps-bg-4:    #f1f5f9;
 
   /* Cards */
-  --ps-card-bg:          #ffffff;
-  --ps-card-border:      rgba(99,102,241,.15);
+  --ps-card-bg:           #ffffff;
+  --ps-card-border:       rgba(99,102,241,.15);
   --ps-card-hover-border: rgba(99,102,241,.5);
-  --ps-card-bg-solid:    #ffffff;
+  --ps-card-bg-solid:     #ffffff;
 
   /* Text */
   --ps-text-h:     #0f172a;
   --ps-text-body:  #374151;
   --ps-text-faint: #6b7280;
 
-  /* Section tags & titles on dark-bg sections → now light bg */
+  /* Section tags & titles */
   --ps-sec-tag-bg:     rgba(99,102,241,.08);
   --ps-sec-tag-color:  #6366f1;
   --ps-sec-tag-border: rgba(99,102,241,.2);
   --ps-sec-title:      #0f172a;
   --ps-sec-sub:        #6b7280;
 
-  /* Footer stays dark */
-  --ps-footer-bg-from:        #1e1b4b;
-  --ps-footer-bg-to:          #0f0f2e;
-  --ps-footer-border:         rgba(255,255,255,.06);
-  --ps-footer-text:           #9ca3af;
-  --ps-footer-desc:           #94a3b8;
-  --ps-footer-link:           #94a3b8;
-  --ps-footer-heading:        #e5e7eb;
-  --ps-footer-hr:             rgba(255,255,255,.07);
-  --ps-footer-copy:           #6b7280;
-  --ps-footer-copy-strong:    #9ca3af;
-  --ps-footer-social-bg:      rgba(255,255,255,.06);
-  --ps-footer-social-border:  rgba(255,255,255,.1);
-  --ps-footer-social-color:   #9ca3af;
-  --ps-footer-contact-icon-bg: rgba(102,126,234,.15);
+  /* ── Header ────────────────────────────────────── */
+  --ps-header-scrolled-bg:         rgba(255,255,255,.96);
+  --ps-header-scrolled-shadow:     0 1px 24px rgba(0,0,0,.08);
+  --ps-header-brand-scrolled:      #1a1a3e;
+  --ps-header-brand-em-scrolled:   #667eea;
+  --ps-header-link-scrolled:       #374151;
+  --ps-header-link-hover-scrolled: #667eea;
+  --ps-header-link-hover-bg:       #f5f3ff;
+  --ps-header-hamburger-scrolled:  #374151;
+  --ps-header-user-btn-bg:         rgba(102,126,234,.08);
+  --ps-header-user-btn-border:     rgba(102,126,234,.25);
+  --ps-header-user-name-scrolled:  #1a1a3e;
+  --ps-header-chevron-scrolled:    #667eea;
+  --ps-header-mobile-bg:           #ffffff;
+  --ps-header-mobile-border:       #e5e7eb;
+  --ps-header-mobile-link:         #374151;
+
+  /* Dropdown panel */
+  --ps-drop-bg:               #ffffff;
+  --ps-drop-item-color:       #374151;
+  --ps-drop-item-hover-bg:    #f5f3ff;
+  --ps-drop-item-hover-color: #667eea;
+  --ps-drop-danger-hover-bg:  #fef2f2;
+
+  /* Who We Are floating stat cards */
+  --ps-stat-card-bg-1:    rgba(255,255,255,.92);
+  --ps-stat-card-bg-2:    rgba(255,255,255,.92);
+  --ps-stat-card-border:  rgba(99,102,241,.2);
+  --ps-stat-card-num:     #1e1b4b;
+  --ps-stat-card-label-1: #6366f1;
+  --ps-stat-card-label-2: #0891b2;
+  --ps-stat-card-icon:    #0891b2;
+
+  /* Section badge / pill */
+  --ps-badge-color:     #4338ca;
+  --ps-badge-bg:        rgba(99,102,241,.1);
+  --ps-badge-border:    rgba(99,102,241,.3);
+
+  /* Feature tags inside cards */
+  --ps-feat-tag-color:  #4338ca;
+  --ps-feat-tag-bg:     rgba(99,102,241,.1);
+  --ps-feat-tag-border: rgba(99,102,241,.2);
+
+  /* Stat label */
+  --ps-stat-label: #6b7280;
 
   /* Theme toggle button */
   --ps-toggle-bg:    rgba(99,102,241,.08);
   --ps-toggle-color: #4f46e5;
   --ps-toggle-hover: rgba(99,102,241,.14);
+
+  /* ── Footer (light = truly light) ──────────────── */
+  --ps-footer-bg-from:         #f8fafc;
+  --ps-footer-bg-to:           #ffffff;
+  --ps-footer-border:          rgba(0,0,0,.08);
+  --ps-footer-text:            #6b7280;
+  --ps-footer-desc:            #6b7280;
+  --ps-footer-link:            #6b7280;
+  --ps-footer-heading:         #0f172a;
+  --ps-footer-hr:              rgba(0,0,0,.08);
+  --ps-footer-copy:            #9ca3af;
+  --ps-footer-copy-strong:     #374151;
+  --ps-footer-social-bg:       rgba(99,102,241,.08);
+  --ps-footer-social-border:   rgba(99,102,241,.2);
+  --ps-footer-social-color:    #6366f1;
+  --ps-footer-contact-icon-bg: rgba(102,126,234,.12);
+  --ps-footer-bname-color:     #0f172a;
+  --ps-footer-bname-em:        #667eea;
+  --ps-footer-stack:           #9ca3af;
 }

@@ -65,7 +65,7 @@
 
 <script>
 const FALLBACK_STORY = {
-  title: 'Crafting Digital Excellence Since 2016',
+  title: 'Crafting Digital Excellence Since 2021',
   description: 'We are a passionate team of developers, designers, and strategists dedicated to building software that drives real business results. From startup MVPs to enterprise-scale platforms, we deliver with precision and care.',
 };
 const PILLAR_ICONS  = { story:'fas fa-book-open', mission:'fas fa-bullseye', vision:'fas fa-eye', value:'fas fa-gem' };

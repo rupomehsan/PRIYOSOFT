@@ -22,38 +22,24 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
+
+	
 	{
-		name: "slug",
-		label: "Enter Slug",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "description",
-		label: "Enter Description",
-		type: "textarea",
-		rows: 4,
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "status",
-		label: "Select Status",
+		name: "project_status",
+		label: "Project Status",
 		type: "select",
 		multiple: false,
 		data_list: [
-			{ label: "Planning", value: "planning" },
+			{ label: "Planning",    value: "planning"    },
 			{ label: "Development", value: "development" },
-			{ label: "Active", value: "active" },
-			{ label: "Paused", value: "paused" },
+			{ label: "Active",      value: "active"      },
+			{ label: "Paused",      value: "paused"      },
 		],
 		value: "",
 		is_visible: true,
 		class: "col-md-6",
 	},
+	
 	{
 		name: "launch_date",
 		label: "Enter Launch Date",
@@ -91,15 +77,25 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
+	
+	
 	{
-		name: "features",
-		label: "Enter Features",
-		type: "textarea",
-		rows: 6,
-		placeholder: "Enter valid JSON",
+		name: "promo_link",
+		label: "Demo / Website Link",
+		type: "text",
+		placeholder: "https://demo.example.com/...",
 		value: "",
 		is_visible: true,
 		class: "col-md-6",
+	},
+	{
+		name: "video_url",
+		label: "YouTube Video URL",
+		type: "text",
+		placeholder: "https://www.youtube.com/watch?v=...",
+		value: "",
+		is_visible: true,
+		class: "col-md-12",
 	},
 	{
 		name: "screenshots",
@@ -121,13 +117,14 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
+	// features is handled via a custom add/remove UI in Form.vue (not via common-input)
 	{
-		name: "promo_link",
-		label: "Promo / Demo Link",
-		type: "text",
-		placeholder: "https://demo.example.com/...",
+		name: "description",
+		label: "Enter Description",
+		type: "textarea",
+		rows: 4,
 		value: "",
 		is_visible: true,
-		class: "col-md-6",
+		class: "col-md-12",
 	},
 ];

@@ -1,60 +1,58 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+
+const CACHE_KEY = "ps_site_settings";
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function readCache() {
+    try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        const { data, ts } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) return null;
+        return Array.isArray(data) ? data : null;
+    } catch { return null; }
+}
+
+function writeCache(data) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() })); }
+    catch { /* storage full — ignore */ }
+}
+
 export const site_settings_store = defineStore("site_settings_store", {
-  state: () => ({
-    website_settings_data: [],
-    isCheckingAuth: false,
-  }),
+    state: () => ({
+        website_settings_data: readCache() ?? [],
+        _fetching: false,
+    }),
 
-  actions: {
-    async get_all_website_settings() {
-      // Prevent multiple simultaneous auth checks
-      if (this.isCheckingAuth) {
-        // console.log('Auth check already in progress, skipping...');
-        return;
-      }
-      this.isCheckingAuth = true;
-      try {
-        const response = await axios.get(
-          "/website-settings?get_all=1&limit=100"
-        );
-        this.website_settings_data = Array.isArray(response.data?.data)
-          ? response.data.data
-          : Object.values(response.data.data); // Ensure it's an array
-      } catch (error) {
-        console.error("Error fetching website settings:", error);
-        this.website_settings_data = [];
-      }
+    actions: {
+        async get_all_website_settings() {
+            if (this._fetching) return;
+            this._fetching = true;
+            try {
+                const response = await axios.get("/website-settings?get_all=1&limit=100");
+                const data = Array.isArray(response.data?.data)
+                    ? response.data.data
+                    : Object.values(response.data?.data ?? {});
+                this.website_settings_data = data;
+                writeCache(data);
+            } catch (error) {
+                console.error("Error fetching website settings:", error);
+            } finally {
+                this._fetching = false;
+            }
+        },
+
+        get_setting_value(key, multiple = false) {
+            if (!Array.isArray(this.website_settings_data)) return multiple ? [] : "";
+            try {
+                if (multiple) {
+                    const item = this.website_settings_data.find(i => i.title === key);
+                    return item?.setting_values ?? [];
+                }
+                const item = this.website_settings_data.find(i => i.title === key);
+                return item?.setting_values?.[0]?.value || "";
+            } catch { return multiple ? [] : ""; }
+        },
     },
-
-    /**
-     * Get a setting value by key from website_settings_data.
-     * @param {string} key - The key to search for in the settings.
-     * @param {boolean} multiple - Whether to return multiple values or a single value.
-     * @returns {Array|string} - Returns an array of values if `multiple` is true; otherwise, returns a single value or an empty string.
-     */
-    get_setting_value(key, multiple = false) {
-      if (!Array.isArray(this.website_settings_data)) {
-        console.warn("Website settings data is not an array.");
-        return multiple ? [] : "";
-      }
-
-      try {
-        if (multiple) {
-          const values = this.website_settings_data.filter(
-            (item) => item.title === key
-          );
-          return values.length > 0 ? values[0].setting_values : [];
-        } else {
-          const value = this.website_settings_data.find(
-            (item) => item.title === key
-          );
-          return value?.setting_values?.[0]?.value || "";
-        }
-      } catch (error) {
-        console.error("Error fetching setting value:", error);
-        return multiple ? [] : "";
-      }
-    },
-  },
 });

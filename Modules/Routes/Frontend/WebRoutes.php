@@ -17,3 +17,5 @@ Route::get('/todo', [FrontendController::class, 'TodoPage'])->name('TodoPage');
 Route::get('/products', [FrontendController::class, 'ProductsPage'])->name('ProductsPage');
 Route::get('/products/{slug}', [FrontendController::class, 'ProductDetailsPage'])->name('ProductDetailsPage');
 Route::get('/products/{slug}/payment', [FrontendController::class, 'ProductPaymentPage'])->name('ProductPaymentPage');
+Route::get('/blog',        [FrontendController::class, 'BlogsPage'])->name('BlogsPage');
+Route::get('/blog/{slug}', [FrontendController::class, 'BlogDetailsPage'])->name('BlogDetailsPage');

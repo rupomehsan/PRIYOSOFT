@@ -9,34 +9,35 @@
       </div>
 
       <div class="products-grid">
-        <div v-for="product in items" :key="product.id" class="product-card">
-          <div class="product-card__accent" :style="{ background: accentColor(product.status) }"></div>
-          <div class="product-card__head">
-            <div class="product-card__icon-wrap">
-              <img v-if="product.thumbnail || product.image"
-                   :src="product.thumbnail || product.image"
-                   :alt="product.name" class="product-card__img" />
-              <i v-else class="fas fa-cubes product-card__icon-fallback"></i>
-            </div>
-            <span class="product-card__status" :class="'status--' + (product.status || 'active')">
-              <span class="status-dot"></span>{{ statusLabel(product.status) }}
+        <a v-for="product in items" :key="product.id"
+           :href="'/products/' + product.slug"
+           class="product-card">
+
+          <!-- Thumbnail banner -->
+          <div class="product-card__banner" :style="{ background: accentColor(product.project_status) }">
+            <img v-if="imgSrc(product)" :src="imgSrc(product)" :alt="product.name" class="product-card__banner-img" />
+            <div class="product-card__banner-overlay"></div>
+            <span class="product-card__status" :class="'status--' + (product.project_status || 'active')">
+              <span class="status-dot"></span>{{ statusLabel(product.project_status) }}
             </span>
           </div>
+
           <div class="product-card__body">
             <h4 class="product-card__name">{{ product.name }}</h4>
-            <p class="product-card__desc">{{ truncate(product.description, 110) }}</p>
+            <p class="product-card__desc">{{ truncate(product.description, 100) }}</p>
             <div v-if="product.features" class="product-card__features">
               <span v-for="(f, i) in parseFeatures(product.features)" :key="i" class="feature-tag">
                 <i class="fas fa-check me-1"></i>{{ f }}
               </span>
             </div>
           </div>
+
           <div class="product-card__footer">
-            <a :href="'/products/' + product.slug" class="product-card__more">
+            <span class="product-card__more">
               Learn more <i class="fas fa-arrow-right ms-1"></i>
-            </a>
+            </span>
           </div>
-        </div>
+        </a>
       </div>
 
       <div class="products-footer">
@@ -51,19 +52,19 @@
 
 <script>
 const FALLBACK = [
-  { id:1, name:'PriyoERP',       description:'Full-featured ERP for SMEs — inventory, HR, accounting, and CRM unified in one powerful platform.',      status:'active',       features:'["Multi-branch","Real-time reports","Role-based access"]' },
-  { id:2, name:'PriyoPOS',       description:'Modern point-of-sale with cloud sync, offline mode, and integrated payment gateways for retail.',          status:'active',       features:'["Offline mode","Cloud sync","Barcode scanner"]' },
-  { id:3, name:'PriyoHRM',       description:'Human resource management — payroll, leave, attendance, and employee self-service in one system.',          status:'active',       features:'["Payroll","Leave management","Attendance"]' },
-  { id:4, name:'PriyoShop',      description:'Headless e-commerce platform built for speed — PWA storefront, multi-vendor, and smart inventory.',        status:'development',  features:'["Multi-vendor","PWA","Smart inventory"]' },
-  { id:5, name:'PriyoCMS',       description:'Developer-first CMS with visual editor, REST & GraphQL APIs, and multi-site publishing workflows.',         status:'development',  features:'["Visual editor","REST API","GraphQL"]' },
-  { id:6, name:'PriyoAnalytics', description:'Business intelligence dashboard — real-time KPIs, custom reports, and data visualisation for leaders.',     status:'planning',     features:'["Real-time KPIs","Custom reports","Data viz"]' },
+  { id:1, name:'PriyoERP',       slug:'priyoerp',       description:'Full-featured ERP for SMEs — inventory, HR, accounting, and CRM unified in one powerful platform.',      project_status:'active',       features:'["Multi-branch","Real-time reports","Role-based access"]' },
+  { id:2, name:'PriyoPOS',       slug:'priyopos',       description:'Modern point-of-sale with cloud sync, offline mode, and integrated payment gateways for retail.',          project_status:'active',       features:'["Offline mode","Cloud sync","Barcode scanner"]' },
+  { id:3, name:'PriyoHRM',       slug:'priyohrm',       description:'Human resource management — payroll, leave, attendance, and employee self-service in one system.',          project_status:'active',       features:'["Payroll","Leave management","Attendance"]' },
+  { id:4, name:'PriyoShop',      slug:'priyoshop',      description:'Headless e-commerce platform built for speed — PWA storefront, multi-vendor, and smart inventory.',        project_status:'development',  features:'["Multi-vendor","PWA","Smart inventory"]' },
+  { id:5, name:'PriyoCMS',       slug:'priyocms',       description:'Developer-first CMS with visual editor, REST & GraphQL APIs, and multi-site publishing workflows.',         project_status:'development',  features:'["Visual editor","REST API","GraphQL"]' },
+  { id:6, name:'PriyoAnalytics', slug:'priyoanalytics', description:'Business intelligence dashboard — real-time KPIs, custom reports, and data visualisation for leaders.',     project_status:'planning',     features:'["Real-time KPIs","Custom reports","Data viz"]' },
 ];
 
 const ACCENT = {
-  active:      'linear-gradient(90deg, #10b981, #06b6d4)',
-  development: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-  planning:    'linear-gradient(90deg, #f59e0b, #f97316)',
-  paused:      'linear-gradient(90deg, #6b7280, #9ca3af)',
+  active:      'linear-gradient(135deg, #0f766e, #0891b2)',
+  development: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+  planning:    'linear-gradient(135deg, #d97706, #ea580c)',
+  paused:      'linear-gradient(135deg, #475569, #64748b)',
 };
 
 export default {
@@ -78,9 +79,20 @@ export default {
       return str.length > n ? str.slice(0, n) + '…' : str;
     },
     statusLabel(s) {
-      return { active:'Live', development:'In Dev', planning:'Planned', paused:'Paused' }[s] || s || 'Active';
+      return { active:'Live', development:'In Dev', planning:'Planned', paused:'Paused' }[s] || 'Active';
     },
     accentColor(s) { return ACCENT[s] || ACCENT.active; },
+    imgSrc(p) {
+      const img = p.thumbnail || p.screenshots;
+      if (!img) return '/default.png';
+      let src = img;
+      if (typeof img === 'string' && img.startsWith('[')) {
+        try { const arr = JSON.parse(img); src = Array.isArray(arr) ? arr[0] : img; }
+        catch { src = img; }
+      }
+      if (!src || src === 'default.png') return '/default.png';
+      return src.startsWith('http') ? src : '/' + src;
+    },
     parseFeatures(f) {
       if (!f) return [];
       try {
@@ -108,8 +120,8 @@ export default {
   border: 1px solid var(--ps-card-border);
   display: flex;
   flex-direction: column;
-  position: relative;
   overflow: hidden;
+  text-decoration: none;
   transition: transform .3s, box-shadow .3s, border-color .3s;
 }
 .product-card:hover {
@@ -118,88 +130,77 @@ export default {
   border-color: var(--ps-card-hover-border);
 }
 
-/* Top accent bar */
-.product-card__accent {
-  height: 4px;
+/* Banner */
+.product-card__banner {
   width: 100%;
-}
-
-/* Head */
-.product-card__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 1.5rem .75rem;
-}
-.product-card__icon-wrap {
-  width: 56px; height: 56px;
-  border-radius: 14px;
-  background: rgba(99,102,241,.15);
-  border: 1px solid rgba(99,102,241,.2);
-  display: flex; align-items: center; justify-content: center;
+  height: 190px;
+  position: relative;
   overflow: hidden;
   flex-shrink: 0;
 }
-.product-card__img { width: 100%; height: 100%; object-fit: cover; }
-.product-card__icon-fallback { font-size: 1.6rem; color: #a5b4fc; }
+.product-card__banner-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s;
+}
+.product-card:hover .product-card__banner-img { transform: scale(1.05); }
+.product-card__banner-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.45));
+  pointer-events: none;
+}
 
 /* Status pill */
 .product-card__status {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  font-size: .7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  padding: .3rem .85rem;
-  border-radius: 50px;
+  position: absolute;
+  top: .75rem; right: .75rem;
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .7px;
+  padding: .28rem .8rem; border-radius: 50px;
+  backdrop-filter: blur(6px);
 }
-.status-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.status--active      { background: rgba(16,185,129,.15);  color: #6ee7b7; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.status--active      { background: rgba(16,185,129,.2);  color: #6ee7b7; }
 .status--active .status-dot { background: #10b981; }
-.status--development { background: rgba(139,92,246,.15);  color: #c4b5fd; }
+.status--development { background: rgba(139,92,246,.2);  color: #c4b5fd; }
 .status--development .status-dot { background: #8b5cf6; }
-.status--planning    { background: rgba(245,158,11,.12);  color: #fcd34d; }
+.status--planning    { background: rgba(245,158,11,.2);  color: #fcd34d; }
 .status--planning .status-dot { background: #f59e0b; }
-.status--paused      { background: rgba(148,163,184,.1);  color: #94a3b8; }
+.status--paused      { background: rgba(148,163,184,.15); color: #94a3b8; }
 .status--paused .status-dot { background: #64748b; }
 
 /* Body */
-.product-card__body { padding: .5rem 1.5rem 1rem; flex: 1; }
+.product-card__body { padding: 1.1rem 1.5rem .75rem; flex: 1; }
 .product-card__name {
-  font-weight: 800; font-size: 1.15rem;
-  color: var(--ps-text-h); margin-bottom: .5rem;
+  font-weight: 800; font-size: 1.1rem;
+  color: var(--ps-text-h); margin-bottom: .4rem;
 }
 .product-card__desc {
-  font-size: .875rem; color: var(--ps-text-faint);
-  line-height: 1.65; margin-bottom: 1rem;
+  font-size: .855rem; color: var(--ps-text-faint);
+  line-height: 1.65; margin-bottom: .85rem;
 }
 .product-card__features { display: flex; flex-wrap: wrap; gap: .4rem; }
 .feature-tag {
   font-size: .72rem; font-weight: 600;
-  background: rgba(99,102,241,.15); color: #a5b4fc;
-  padding: .25rem .75rem; border-radius: 50px;
-  border: 1px solid rgba(99,102,241,.2);
+  background: var(--ps-feat-tag-bg); color: var(--ps-feat-tag-color);
+  padding: .22rem .7rem; border-radius: 50px;
+  border: 1px solid var(--ps-feat-tag-border);
 }
 
 /* Footer */
 .product-card__footer {
-  padding: 1rem 1.5rem 1.5rem;
+  padding: .9rem 1.5rem 1.3rem;
   border-top: 1px solid var(--ps-card-border);
 }
 .product-card__more {
   font-size: .85rem; font-weight: 700;
-  color: #818cf8; cursor: pointer;
-  transition: gap .2s, color .2s;
+  color: #818cf8;
   display: inline-flex; align-items: center; gap: .35rem;
-  text-decoration: none;
+  transition: gap .2s, color .2s;
 }
-.product-card:hover .product-card__more { gap: .65rem; color: #a5b4fc; }
+.product-card:hover .product-card__more { gap: .65rem; color: var(--ps-feat-tag-color); }
 
 /* See more */
 .products-footer { text-align: center; margin-top: 3rem; }

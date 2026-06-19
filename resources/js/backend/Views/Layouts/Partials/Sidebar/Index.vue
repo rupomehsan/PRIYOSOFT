@@ -1,4 +1,5 @@
 <template>
+  
   <!--Start sidebar-wrapper-->
   <div id="sidebar-wrapper">
     <div class="brand-logo">
@@ -130,9 +131,19 @@
             icon: 'zmdi zmdi-check-circle',
           },
           {
+            route: { name: 'AllOrder', query: { status: 'in_progress' } },
+            title: 'In Progress',
+            icon: 'zmdi zmdi-settings',
+          },
+          {
             route: { name: 'AllOrder', query: { status: 'access_sent' } },
             title: 'Access Sent',
             icon: 'zmdi zmdi-mail-send',
+          },
+          {
+            route: { name: 'AllOrder', query: { status: 'completed' } },
+            title: 'Completed',
+            icon: 'zmdi zmdi-check-all',
           },
           {
             route: { name: 'AllOrder', query: { status: 'cancelled' } },
@@ -244,9 +255,12 @@
           },
         ]"
       />
+
       <!-- Management end -->
     </ul>
   </div>
+  <!-- End sidebar -->
+  
 </template>
 
 <script>
@@ -260,9 +274,11 @@ import SideBarSingleMenu from "./SideBarSingleMenu.vue";
 export default {
   components: { SideBarDropDownMenus, SideBarSingleMenu },
   methods: {
+
     ...mapActions(site_settings_store, {
       get_setting_value: "get_setting_value",
     }),
+
 
     logout_submit: function () {
       let confirm = window.confirm("logout");
@@ -270,12 +286,15 @@ export default {
         this.log_out();
       }
     },
+
     toggle_menu: function () {
       document.getElementById("wrapper").classList.toggle("toggled");
     },
+
     hide_menu: function () {
       document.getElementById("wrapper").classList.add("toggled");
     },
+
     onDashboardClick() {
       // Close all dropdown menus when dashboard is clicked
       window.dispatchEvent(
@@ -284,6 +303,7 @@ export default {
         }),
       );
     },
+
   },
   watch: {
     $route(to, from) {
@@ -311,6 +331,9 @@ export default {
   margin: 2px;
 }
 </style>
+
+
+
 <!-- <side-bar-drop-down-menus :icon="`fa fa-plus`" :icon_image="`https://files.etek.com.bd/images/icon_sales.png`"
     :menu_title="`title Management`" :menus="[
                 {
