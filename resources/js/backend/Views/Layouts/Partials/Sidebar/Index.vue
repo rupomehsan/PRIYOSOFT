@@ -227,11 +227,7 @@
             title: `AccountTransfer`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
-          {
-            route_name: `AllProfitDistribution`,
-            title: `ProfitDistribution`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
+        
           {
             route_name: `AllTransactionLog`,
             title: `TransactionLog`,

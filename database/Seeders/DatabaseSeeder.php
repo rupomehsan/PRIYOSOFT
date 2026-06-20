@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
             // User Management (no dependencies)
             RoleSeeder::class,
             UserSeeder::class,
-            UserNotificationSeeder::class,
+            // UserNotificationSeeder::class,
             WebsiteSettingsSeeder::class,
 
             // Product Management
@@ -73,33 +73,33 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             IncomeCategorySeeder::class,
             ExpenseCategorySeeder::class,
-            InvestorSeeder::class,
+            // InvestorSeeder::class,
 
             // Finance — Transactions (depend on accounts/categories above)
-            IncomeSeeder::class,           // depends on: IncomeCategory, Product, Account
-            ExpenseSeeder::class,          // depends on: ExpenseCategory, Product, Account
-            InvestmentSeeder::class,       // depends on: Investor, Account
-            WithdrawalSeeder::class,       // depends on: Investor, Account
-            AccountTransferSeeder::class,  // depends on: Account
+            // IncomeSeeder::class,           // depends on: IncomeCategory, Product, Account
+            // ExpenseSeeder::class,          // depends on: ExpenseCategory, Product, Account
+            // InvestmentSeeder::class,       // depends on: Investor, Account
+            // WithdrawalSeeder::class,       // depends on: Investor, Account
+            // AccountTransferSeeder::class,  // depends on: Account
 
             // Finance — Profit Sharing & Logs
-            ProfitDistributionSeeder::class,
-            TransactionLogSeeder::class,   // depends on: Account, Product, Investor
+            // ProfitDistributionSeeder::class,
+            // TransactionLogSeeder::class,   // depends on: Account, Product, Investor
 
             // Website Management (most depend on Product)
             HeroSectionSeeder::class,
-            SiteSectionSeeder::class,
-            TeamMemberSeeder::class,
+            // SiteSectionSeeder::class,
+            // TeamMemberSeeder::class,
             TestimonialSeeder::class,      // depends on: Product
             BlogPostSeeder::class,         // depends on: User, Product
             AboutUsSeeder::class,
             FaqSeeder::class,              // depends on: Product
-            ContactLeadSeeder::class,      // depends on: Product
-            SubscriberSeeder::class,
+            // ContactLeadSeeder::class,      // depends on: Product
+            // SubscriberSeeder::class,
             WhoWeAreSeeder::class,         // depends on: Product
 
             // Order Management
-            OrderSeeder::class,            // depends on: Product, User
+            // OrderSeeder::class,            // depends on: Product, User
 
             // Todo Management
             TodoMilestoneSeeder::class,

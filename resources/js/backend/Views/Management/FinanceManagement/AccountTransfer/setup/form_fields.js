@@ -50,22 +50,24 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "note",
-		label: "Enter Note",
-		type: "textarea",
-		rows: 4,
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+
 	{
 		name: "created_by",
 		label: "Enter Created By",
 		type: "number",
 		step: "1",
 		value: "",
-		is_visible: true,
+		is_visible: false,
 		class: "col-md-6",
+	},
+
+		{
+		name: "note",
+		label: "Enter Note",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-12",
 	},
 ];

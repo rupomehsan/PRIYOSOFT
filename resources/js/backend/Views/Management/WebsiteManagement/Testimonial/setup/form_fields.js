@@ -34,23 +34,14 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "client_photo",
-		label: "Upload Client Photo",
-		type: "file",
-		multiple: false,
-		accept: "image/*",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+
 	{
 		name: "video_url",
 		label: "Enter Video Url",
 		type: "url",
 		placeholder: "https://example.com",
 		value: "",
-		is_visible: true,
+		is_visible: false,
 		class: "col-md-6",
 	},
 	{
@@ -72,15 +63,7 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "message",
-		label: "Enter Message",
-		type: "textarea",
-		rows: 4,
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "is_featured",
 		label: "Select Is Featured",
@@ -95,16 +78,24 @@ export default [
 		class: "col-md-6",
 	},
 	{
-		name: "is_visible",
-		label: "Select Is Visible",
-		type: "select",
+		name: "client_photo",
+		label: "Upload Client Photo",
+		type: "file",
 		multiple: false,
-		data_list: [
-			{ label: "Yes", value: "1" },
-			{ label: "No", value: "0" },
-		],
+		accept: "image/*",
 		value: "",
 		is_visible: true,
 		class: "col-md-6",
 	},
+	{
+		name: "message",
+		label: "Enter Message",
+		type: "textarea",
+		rows: 4,
+		value: "",
+		is_visible: true,
+		class: "col-md-12",
+	},
+	
+
 ];

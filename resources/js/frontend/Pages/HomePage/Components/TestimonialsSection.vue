@@ -61,7 +61,7 @@
           </div>
 
           <div class="t-card__quote-icon"><i class="fas fa-quote-left"></i></div>
-          <p class="t-card__message">{{ t.message }}</p>
+          <p class="t-card__message" v-html="t.message"></p>
 
           <div v-if="t.media_type === 'video' && t.video_url" class="t-card__video-link">
             <a :href="t.video_url" target="_blank" class="t-play">

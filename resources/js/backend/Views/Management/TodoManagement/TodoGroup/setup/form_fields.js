@@ -21,6 +21,14 @@ export default [
     class: "col-md-6",
   },
   {
+    name: "cost",
+    label: "Enter cost",
+    type: "text",
+    value: "",
+    is_visible: true,
+    class: "col-md-6",
+  },
+  {
     name: "sort_order",
     label: "Enter Sort Order",
     type: "number",

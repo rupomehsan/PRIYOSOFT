@@ -51,8 +51,7 @@ class DataStoreValidation extends FormRequest
             'equity_percentage' => 'required | sometimes',
             'note' => 'required | sometimes',
             'joined_at' => 'required | sometimes',
-            'status' => 'required | sometimes',
-            'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+            'status' => ['sometimes', Rule::in(['active', 'inactive', 'exited'])],
         ];
     }
 }

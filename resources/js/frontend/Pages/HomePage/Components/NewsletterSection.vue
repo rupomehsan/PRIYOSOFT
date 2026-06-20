@@ -19,12 +19,26 @@
           <p class="nl-sub">
             Have a project in mind? Fill out the form and we'll get back to you within 24 hours.
           </p>
-          <ul class="nl-perks">
-            <li v-for="perk in perks" :key="perk">
-              <span class="nl-perk-icon"><i class="fas fa-check"></i></span>
-              {{ perk }}
-            </li>
-          </ul>
+          <div class="nl-subscribe-box">
+            <p class="nl-subscribe-label">Get updates on new features &amp; releases</p>
+            <div v-if="subDone" class="nl-sub-done">
+              <i class="fas fa-check-circle"></i> You're subscribed!
+            </div>
+            <form v-else class="nl-subscribe-form" @submit.prevent="submitSub">
+              <input
+                v-model="subEmail"
+                type="email"
+                placeholder="your@email.com"
+                :disabled="subLoading"
+                required
+              />
+              <button type="submit" :disabled="subLoading">
+                <i v-if="subLoading" class="fas fa-spinner fa-spin"></i>
+                <span v-else>Subscribe</span>
+              </button>
+            </form>
+            <p v-if="subError" class="nl-sub-error">{{ subError }}</p>
+          </div>
         </div>
 
         <!-- Right: form -->
@@ -113,9 +127,24 @@ export default {
     serverError: null,
     loading: false,
     submitted: false,
-    perks: ['Fast 24-hour response', 'Free project consultation', 'No obligation quote'],
+    subEmail: '',
+    subLoading: false,
+    subDone: false,
+    subError: null,
   }),
   methods: {
+    async submitSub() {
+      this.subError = null;
+      this.subLoading = true;
+      try {
+        await window.axios.post('public/subscribe', { email: this.subEmail });
+        this.subDone = true;
+      } catch (err) {
+        this.subError = err?.response?.data?.message ?? 'Subscription failed. Try again.';
+      } finally {
+        this.subLoading = false;
+      }
+    },
     validate() {
       const e = {};
       if (!this.form.name.trim())    e.name    = 'Name is required.';
@@ -191,15 +220,34 @@ export default {
   line-height: 1.2; letter-spacing: -.025em;
   margin-bottom: 1.25rem;
 }
-.nl-sub { font-size: 1rem; color: var(--ps-text-faint); line-height: 1.8; margin-bottom: 2rem; }
-.nl-perks { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .65rem; }
-.nl-perks li { display: flex; align-items: center; gap: .75rem; color: var(--ps-text-body); font-size: .9rem; }
-.nl-perk-icon {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.25);
-  display: flex; align-items: center; justify-content: center;
-  color: #10b981; font-size: .65rem; flex-shrink: 0;
+.nl-sub { font-size: 1rem; color: var(--ps-text-faint); line-height: 1.8; margin-bottom: 1.5rem; }
+
+/* Subscription mini-form */
+.nl-subscribe-box { margin-top: .25rem; }
+.nl-subscribe-label { font-size: .82rem; color: var(--ps-text-faint); margin-bottom: .75rem; }
+.nl-subscribe-form {
+  display: flex; gap: .5rem;
 }
+.nl-subscribe-form input {
+  flex: 1; padding: .75rem 1rem;
+  background: var(--ps-card-bg); border: 1px solid var(--ps-card-border);
+  border-radius: 10px; color: var(--ps-text-h); font-size: .88rem; outline: none;
+  transition: border-color .25s;
+}
+.nl-subscribe-form input:focus { border-color: rgba(99,102,241,.5); }
+.nl-subscribe-form input::placeholder { color: #475569; }
+.nl-subscribe-form button {
+  padding: .75rem 1.4rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; border: none; border-radius: 10px;
+  font-weight: 700; font-size: .88rem; cursor: pointer; white-space: nowrap;
+  transition: opacity .25s, transform .25s;
+}
+.nl-subscribe-form button:hover:not(:disabled) { transform: translateY(-1px); opacity: .9; }
+.nl-subscribe-form button:disabled { opacity: .6; cursor: not-allowed; }
+.nl-sub-done { color: #10b981; font-size: .9rem; font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+.nl-sub-done i { font-size: 1.1rem; }
+.nl-sub-error { font-size: .78rem; color: #f87171; margin-top: .4rem; }
 
 /* Card */
 .nl-card {

@@ -38,7 +38,7 @@ class Model extends EloquentModel
 
     public function scopeInactive($q)
     {
-        return $q->where('status', 'inactive');
+        return $q->whereIn('status', ['inactive', 'exited']);
     }
 
 }

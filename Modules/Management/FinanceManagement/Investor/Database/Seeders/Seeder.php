@@ -30,10 +30,7 @@ class Seeder extends SeederClass
                 'equity_percentage' => $faker->randomFloat(2, 0, 1000),
                 'note' => $faker->paragraph,
                 'joined_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
-                'status' => $faker->randomElement(array (
-  0 => 'active',
-  1 => 'exited',
-)),
+
             ]);
         }
     }

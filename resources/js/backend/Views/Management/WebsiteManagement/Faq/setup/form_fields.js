@@ -4,16 +4,7 @@
  */
 
 export default [
-	{
-		name: "product_id",
-		label: "Select Product",
-		type: "select",
-		multiple: false,
-		data_list: [],
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "question",
 		label: "Enter Question",

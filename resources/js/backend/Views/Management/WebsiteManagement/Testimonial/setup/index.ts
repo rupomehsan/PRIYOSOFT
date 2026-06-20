@@ -50,6 +50,7 @@ const setup: setup_type = {
             "product_id",
             "rating",
             "message",
+          
             "is_featured",
             "is_visible",
         "status",

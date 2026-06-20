@@ -102,7 +102,7 @@ export default {
       return this.data
         .filter(s => ['mission', 'vision', 'value'].includes(s.section))
         .map(s => ({
-          icon:        PILLAR_ICONS[s.section]  || 'fas fa-star',
+          icon:        s.icon || PILLAR_ICONS[s.section] || 'fas fa-star',
           title:       s.title || PILLAR_LABELS[s.section] || s.section,
           description: s.description,
         }));

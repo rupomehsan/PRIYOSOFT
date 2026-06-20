@@ -52,7 +52,7 @@ export const actions = {
 
     async fetchTestimonials(this: any) {
         try {
-            const res = await api('public/testimonials?get_all=1&status=active&limit=12');
+            const res = await api('public/testimonials?get_all=1&status=active&is_featured=1&limit=12');
             this.testimonials = res?.data?.data ?? res?.data ?? [];
         } catch { } finally { this.loadingTestimonials = false; }
     },

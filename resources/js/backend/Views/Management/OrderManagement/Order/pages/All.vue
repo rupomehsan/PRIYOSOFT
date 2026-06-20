@@ -9,49 +9,13 @@
               <div class="col-12 col-md-3 mb-md-0">
                 <h5 class="text-capitalize mb-0">
                   <span
-                    style="
-                      display: inline-block;
-                      padding: 4px 12px;
-                      border-radius: 20px;
-                      font-size: 0.85rem;
-                      font-weight: 600;
-                    "
-                    :style="{
-                      backgroundColor:
-                        status === 'active'
-                          ? '#d4edda'
-                          : status === 'inactive'
-                            ? '#fff3cd'
-                            : '#f8d7da',
-                      color:
-                        status === 'active'
-                          ? '#155724'
-                          : status === 'inactive'
-                            ? '#856404'
-                            : '#721c24',
-                    }"
+                    style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;"
+                    :style="{ backgroundColor: statusBadgeStyle.bg, color: statusBadgeStyle.color }"
                   >
-                    <i
-                      :class="
-                        status === 'active'
-                          ? 'fa fa-check-circle'
-                          : status === 'inactive'
-                            ? 'fa fa-circle-o'
-                            : 'fa fa-trash'
-                      "
-                      style="margin-right: 5px"
-                    ></i>
-                    {{ setup.all_page_title }} -
-                    {{
-                      status === "active"
-                        ? "Active"
-                        : status === "inactive"
-                          ? "Inactive"
-                          : "Trash"
-                    }}
+                    <i :class="'fa ' + statusBadgeStyle.icon" style="margin-right: 5px"></i>
+                    {{ setup.all_page_title }} - {{ statusLabel }}
                   </span>
                 </h5>
-                <!-- Status Filter Badges -->
               </div>
 
               <!-- Search Input -->
@@ -418,6 +382,43 @@ export default {
           this.selected.some((s) => s.id === item.id),
         )
       );
+    },
+    statusLabel() {
+      const labels = {
+        all:               'All',
+        pending_payment:   'Pending Payment',
+        payment_submitted: 'Payment Submitted',
+        payment_verified:  'Payment Verified',
+        in_progress:       'In Progress',
+        access_sent:       'Access Sent',
+        completed:         'Completed',
+        cancelled:         'Cancelled',
+        refunded:          'Refunded',
+        active:            'Active',
+        inactive:          'Inactive',
+        trashed:           'Trash',
+      };
+      return labels[this.status]
+        ?? (this.status
+          ? this.status.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+          : 'All');
+    },
+    statusBadgeStyle() {
+      const styles = {
+        all:               { bg: '#e2e8f0', color: '#475569', icon: 'fa-list' },
+        pending_payment:   { bg: '#fff3cd', color: '#856404', icon: 'fa-clock-o' },
+        payment_submitted: { bg: '#cff4fc', color: '#055160', icon: 'fa-upload' },
+        payment_verified:  { bg: '#d1ecf1', color: '#0c5460', icon: 'fa-check-circle' },
+        in_progress:       { bg: '#cce5ff', color: '#004085', icon: 'fa-spinner' },
+        access_sent:       { bg: '#e2d9f3', color: '#5a2d8a', icon: 'fa-send' },
+        completed:         { bg: '#d4edda', color: '#155724', icon: 'fa-check-circle' },
+        cancelled:         { bg: '#f8d7da', color: '#721c24', icon: 'fa-times-circle' },
+        refunded:          { bg: '#e2e8f0', color: '#475569', icon: 'fa-undo' },
+        active:            { bg: '#d4edda', color: '#155724', icon: 'fa-check-circle' },
+        inactive:          { bg: '#fff3cd', color: '#856404', icon: 'fa-circle-o' },
+        trashed:           { bg: '#f8d7da', color: '#721c24', icon: 'fa-trash' },
+      };
+      return styles[this.status] ?? { bg: '#e2e8f0', color: '#475569', icon: 'fa-tag' };
     },
   },
 

@@ -106,6 +106,6 @@ export default [
 		rows: 4,
 		value: "",
 		is_visible: true,
-		class: "col-md-6",
+		class: "col-md-12",
 	},
 ];

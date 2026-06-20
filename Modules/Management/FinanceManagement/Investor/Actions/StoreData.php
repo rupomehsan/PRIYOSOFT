@@ -10,6 +10,7 @@ class StoreData
     {
         try {
             $requestData = $request->validated();
+            $requestData['status'] = $requestData['status'] ?? 'active';
 
             if ($data = self::$model::query()->create($requestData)) {
                 return messageResponse('Item added successfully', $data, 201);

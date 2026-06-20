@@ -16,7 +16,7 @@
     <TestimonialsSection :data="testimonials" :loading="loadingTestimonials" />
     <BlogSection :data="blogPosts" :loading="loadingBlog" />
     <FaqSection :data="faqs" :loading="loadingFaq" />
-    <NewsletterSection :loading="newsletterLoading" :success="newsletterSuccess" :error="newsletterError" @subscribe="onSubscribe" />
+    <NewsletterSection :products="products" />
   </div>
 </template>
 
@@ -64,9 +64,6 @@ export default {
       "faqs",
       "aboutSections",
       "whoWeAre",
-      "newsletterLoading",
-      "newsletterSuccess",
-      "newsletterError",
       "loadingProducts",
       "loadingAbout",
       "loadingWhoWeAre",
@@ -98,8 +95,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useHomeStore, ["fetchAllPortfolioData", "subscribeNewsletter"]),
-    onSubscribe(payload) { this.subscribeNewsletter(payload); },
+    ...mapActions(useHomeStore, ["fetchAllPortfolioData"]),
 
     // Mark all .animate elements that are ALREADY in the viewport right now
     // without waiting for the async IntersectionObserver callback.

@@ -27,7 +27,7 @@ class Seeder extends SeederClass
                 'secondary_button_url'   => '#newsletter',
                 'media_type'             => 'image',
                 'background_image'       => 'default.png',
-                'hero_image'             => 'uploads/WebsiteManagement/HeroSection/2026-06-16-16065020061.jpg',
+                'hero_image'             => 'default.png',
                 'video_url'              => null,
                 'is_active'              => 1,
                 'status'                 => 'active',

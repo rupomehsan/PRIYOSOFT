@@ -20,12 +20,12 @@ export default [
 	},
 	{
 		name: "user_id",
-		label: "Select User",
+		label: "Select User (Owner)",
 		type: "select",
 		multiple: false,
 		data_list: [],
 		value: "",
-		is_visible: true,
+		is_visible: false,
 		class: "col-md-6",
 	},
 	{
@@ -35,7 +35,7 @@ export default [
 		multiple: false,
 		data_list: [],
 		value: "",
-		is_visible: true,
+		is_visible: false,
 		class: "col-md-6",
 	},
 	{
@@ -57,14 +57,14 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "currency",
-		label: "Enter Currency",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	// {
+	// 	name: "currency",
+	// 	label: "Enter Currency",
+	// 	type: "text",
+	// 	value: "",
+	// 	is_visible: true,
+	// 	class: "col-md-6",
+	// },
 	{
 		name: "reason",
 		label: "Enter Reason",
@@ -91,6 +91,16 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
+	
+	{
+		name: "created_by",
+		label: "Enter Created By",
+		type: "number",
+		step: "1",
+		value: "",
+		is_visible: false,
+		class: "col-md-6",
+	},
 	{
 		name: "note",
 		label: "Enter Note",
@@ -98,15 +108,6 @@ export default [
 		rows: 4,
 		value: "",
 		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "created_by",
-		label: "Enter Created By",
-		type: "number",
-		step: "1",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
+		class: "col-md-12",
 	},
 ];

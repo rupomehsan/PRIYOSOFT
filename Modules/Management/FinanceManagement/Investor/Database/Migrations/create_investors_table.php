@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('equity_percentage')->nullable();
             $table->text('note')->nullable();
             $table->date('joined_at')->nullable();
-            $table->enum('status', ['active','exited'])->nullable();
+            $table->enum('status', ['active','inactive'])->nullable();
                     $table->bigInteger('creator')->unsigned()->nullable();
                     $table->string('slug', 50)->nullable();
             $table->timestamps();
