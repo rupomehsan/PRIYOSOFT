@@ -66,6 +66,15 @@ class FrontendController extends Controller
         ]);
     }
 
+    public function TransactionPage()
+    {
+        return Inertia::render('Transaction/Index', [
+            'event' => [
+                'title' => 'All Transactions',
+            ]
+        ]);
+    }
+
     public function ProductsPage()
     {
         return Inertia::render('Products/Index');

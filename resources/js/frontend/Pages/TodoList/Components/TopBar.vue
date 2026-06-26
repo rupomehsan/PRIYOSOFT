@@ -63,6 +63,11 @@
         </div>
       </div>
 
+      <a href="/transactions" class="tb-tx-link" title="View all transactions">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Transactions</span>
+      </a>
+
       <div class="tb-ring-wrap" :title="overallPct + '% complete'">
         <svg class="tb-ring" viewBox="0 0 36 36">
           <circle class="tb-ring__track" cx="18" cy="18" r="15.9"/>
@@ -202,6 +207,29 @@ export default {
 }
 .tb-cost-chip__sep {
   width: 1px; height: 28px; background: rgba(255,255,255,.07); flex-shrink: 0;
+}
+
+/* Transactions link */
+.tb-tx-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .75rem;
+  font-weight: 700;
+  color: #818cf8;
+  background: rgba(99, 102, 241, .1);
+  border: 1px solid rgba(99, 102, 241, .22);
+  border-radius: 10px;
+  padding: .4rem .9rem;
+  text-decoration: none;
+  transition: all .2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tb-tx-link:hover {
+  background: rgba(99, 102, 241, .2);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, .35);
 }
 
 /* Progress ring */
