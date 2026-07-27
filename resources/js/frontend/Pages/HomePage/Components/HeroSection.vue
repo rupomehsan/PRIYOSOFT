@@ -11,16 +11,16 @@
       >
         <div class="hero-overlay"></div>
         <div class="container hero-content position-relative" style="z-index:2;">
-          <div class="row align-items-center g-5 hero-row">
+          <div class="row align-items-center hero-row">
 
             <!-- Left: text -->
-            <div class="col-lg-6">
+            <div class="col-lg-6 hero-text-col">
               <span class="hero-badge">{{ slide.badge_text || 'Welcome to PriyoSoft' }}</span>
               <h1 class="hero-title">{{ slide.headline || 'Building Software That Matters' }}</h1>
               <p class="hero-sub">{{ slide.subheadline || 'We craft modern web & mobile solutions tailored for your business growth.' }}</p>
               <p v-if="slide.description" class="hero-desc">{{ slide.description }}</p>
 
-              <div class="d-flex flex-wrap gap-3 mb-4">
+              <div class="d-flex flex-wrap gap-3 mb-4 hero-cta-row">
                 <a :href="slide.primary_button_url || '#products'" class="hero-btn-primary">
                   {{ slide.primary_button_text || 'Explore Our Work' }}
                   <i class="fas fa-arrow-right ms-2"></i>
@@ -31,7 +31,7 @@
                 </a>
               </div>
 
-              <div class="d-flex flex-wrap gap-4">
+              <div class="d-flex flex-wrap gap-4 hero-trust-row">
                 <span class="hero-trust"><i class="fas fa-check-circle text-success me-1"></i> 100% Trusted</span>
                 <span class="hero-trust"><i class="fas fa-shield-alt text-info me-1"></i> Secure & Reliable</span>
                 <span class="hero-trust"><i class="fas fa-headset text-warning me-1"></i> 24/7 Support</span>
@@ -58,6 +58,7 @@
                   class="hero-img"
                   :class="{ 'hero-img--loaded': imageLoadedMap[i] }"
                   @load="onImageLoad(i)"
+                  @click="openLightbox(slide.hero_image)"
                 />
               </div>
               <div v-else class="hero-placeholder">
@@ -90,7 +91,17 @@
       ></button>
     </div>
 
-   
+
+
+    <!-- Image lightbox -->
+    <Teleport to="body">
+      <div v-if="lightboxImage" class="hero-lightbox" @click="closeLightbox">
+        <button class="hero-lightbox-close" @click="closeLightbox" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+        <img :src="lightboxImage" class="hero-lightbox-img" @click.stop />
+      </div>
+    </Teleport>
 
   </section>
 </template>
@@ -143,6 +154,7 @@ export default {
       timer: null,
       autoplay: 5000,
       imageLoadedMap: {},
+      lightboxImage: null,
     };
   },
   computed: {
@@ -189,13 +201,29 @@ export default {
     onImageLoad(i) {
       this.imageLoadedMap = { ...this.imageLoadedMap, [i]: true };
     },
+    openLightbox(src) {
+      if (!src) return;
+      this.lightboxImage = src;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) document.body.style.paddingRight = scrollbarWidth + 'px';
+    },
+    closeLightbox() {
+      this.lightboxImage = null;
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    },
     scrollDown() {
       const next = document.querySelector('.stats-wrap, section:not(.hero-slider)');
       if (next) next.scrollIntoView({ behavior: 'smooth' });
     },
   },
   mounted()  { this.startTimer(); },
-  beforeUnmount() { clearInterval(this.timer); },
+  beforeUnmount() {
+    clearInterval(this.timer);
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  },
 };
 </script>
 
@@ -329,9 +357,11 @@ export default {
   border-radius: 18px;
   display: block;
   opacity: 0;
-  transition: opacity .5s ease;
+  transition: opacity .5s ease, transform .3s ease;
+  cursor: zoom-in;
 }
 .hero-img--loaded { opacity: 1; }
+.hero-img:hover { transform: scale(1.015); }
 .hero-video-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 .hero-video { width: 100%; aspect-ratio: 16/9; }
 .hero-placeholder {
@@ -473,15 +503,84 @@ export default {
   50%       { transform: translateX(-50%) translateY(8px); }
 }
 
+/* ── Lightbox ───────────────────────────── */
+.hero-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(10,10,20,.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: zoom-out;
+  animation: lightbox-fade .2s ease;
+}
+.hero-lightbox-img {
+  max-width: min(92vw, 1100px);
+  max-height: 88vh;
+  border-radius: 12px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.6);
+  cursor: default;
+}
+.hero-lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .25s, border-color .25s;
+}
+.hero-lightbox-close:hover {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
+}
+@keyframes lightbox-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ── Responsive ─────────────────────────── */
 @media (max-width: 991px) {
-  .hero-row { min-height: auto; padding: 5rem 0 6rem; }
+  .hero-row { min-height: auto; padding: 6.5rem 0 3.5rem; }
   .hero-arrow { width: 42px; height: 42px; font-size: .9rem; }
   .hero-arrow--prev { left: .75rem; }
   .hero-arrow--next { right: .75rem; }
+  .hero-img-wrap { min-height: 260px; }
 }
 @media (max-width: 767px) {
-  .hero-row { padding: 4rem 0 5rem; }
-  .hero-title { font-size: 2rem; }
+  /* Give the fixed header real breathing room and stop the content
+     from reading as "stuck" to the top edge. */
+  .hero-row { padding: 6rem 0 3rem; text-align: center; }
+  .hero-text-col { margin-bottom: 2rem; }
+  .hero-title { font-size: 1.85rem; margin-bottom: 1rem; }
+  .hero-sub { font-size: 1rem; margin-bottom: .85rem; }
+  .hero-desc { font-size: .88rem; margin-bottom: 1.4rem; }
+  .hero-badge { font-size: .66rem; padding: .35rem 1rem; margin-bottom: 1.1rem; }
+  .hero-btn-primary,
+  .hero-btn-secondary { padding: .7rem 1.5rem; font-size: .9rem; }
+  .hero-cta-row,
+  .hero-trust-row { justify-content: center; }
+  .hero-trust { font-size: .78rem; }
+
+  /* Let the image size to its own aspect ratio instead of a fixed
+     min-height that left empty space around it. */
+  .hero-img-wrap { min-height: 0; padding: .5rem; max-width: 340px; margin: 0 auto; }
+  .hero-dots { bottom: 1.1rem; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.55rem; }
+  .hero-sub { font-size: .92rem; }
+  .hero-arrow { display: none; }
 }
 </style>

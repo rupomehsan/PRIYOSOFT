@@ -675,20 +675,33 @@ export default {
   display: grid; grid-template-columns: 1fr 1fr; gap: .85rem;
 }
 .pd-feat-card {
-  display: flex; align-items: flex-start; gap: .85rem;
-  background: #fff; border: 1px solid #e9ecf3; border-radius: 12px;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,.04);
-  transition: box-shadow .2s, transform .2s;
+  display: flex; align-items: center; gap: .9rem;
+  background: linear-gradient(180deg, #ffffff, #fafbff);
+  border: 1px solid #e9ecf3; border-radius: 14px;
+  padding: 1.1rem 1.35rem;
+  box-shadow: 0 2px 10px rgba(17,24,39,.05);
+  transition: box-shadow .25s, transform .25s, border-color .25s;
+  position: relative; overflow: hidden;
 }
-.pd-feat-card:hover { box-shadow: 0 4px 16px rgba(79,70,229,.1); transform: translateY(-2px); }
+.pd-feat-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, #4f46e5, #7c3aed);
+  opacity: 0; transition: opacity .25s;
+}
+.pd-feat-card:hover {
+  box-shadow: 0 12px 28px rgba(79,70,229,.14);
+  transform: translateY(-3px);
+  border-color: #c7d2fe;
+}
+.pd-feat-card:hover::before { opacity: 1; }
 .pd-feat-card__icon {
-  width: 28px; height: 28px; border-radius: 8px;
-  background: #eef2ff; color: #4f46e5;
+  width: 32px; height: 32px; border-radius: 9px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: .7rem; flex-shrink: 0; margin-top: .1rem;
+  font-size: .75rem; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(79,70,229,.35);
 }
-.pd-feat-card__text { font-size: .9rem; color: #374151; line-height: 1.5; }
+.pd-feat-card__text { font-size: .92rem; font-weight: 700; color: #1e293b; line-height: 1.5; }
 
 /* ─── Prose ─────────────────────────────────────── */
 .pd-prose {

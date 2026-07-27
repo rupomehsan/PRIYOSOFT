@@ -71,6 +71,7 @@ export default {
       { id: 'testimonials', href: '#testimonials',   label: 'Testimonials' },
       { id: 'blog',         href: '#blog',           label: 'Blog' },
       { id: 'faq',          href: '#faq',            label: 'FAQ' },
+      { id: 'contact',      href: '#newsletter',      label: 'Contact' },
     ],
   }),
   computed: {
@@ -95,6 +96,10 @@ export default {
 
     goto(href) {
       this.menuOpen = false;
+      // Defensively clear any scroll-lock left behind by a modal/lightbox
+      // (e.g. the hero image popup) — if it's stuck, nothing below scrolls.
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
       if (href === '#') {
         if (window.location.pathname !== '/') { window.location.href = '/'; return; }
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -137,7 +142,34 @@ export default {
 
 <style scoped>
 /* ── Shell ─────────────────────────────────────── */
+/* Header stays on its own fixed dark palette — it must not react to the
+   site-wide light/dark toggle, only the page body does. */
 .ps-header {
+  --ps-header-scrolled-bg:         rgba(10,10,30,.96);
+  --ps-header-scrolled-shadow:     0 1px 28px rgba(0,0,0,.35);
+  --ps-header-brand-scrolled:      #e2e8f0;
+  --ps-header-brand-em-scrolled:   #a78bfa;
+  --ps-header-link-scrolled:       #94a3b8;
+  --ps-header-link-hover-scrolled: #c4b5fd;
+  --ps-header-link-hover-bg:       rgba(255,255,255,.07);
+  --ps-header-hamburger-scrolled:  #e2e8f0;
+  --ps-header-user-btn-bg:         rgba(255,255,255,.09);
+  --ps-header-user-btn-border:     rgba(255,255,255,.14);
+  --ps-header-user-name-scrolled:  #e2e8f0;
+  --ps-header-chevron-scrolled:    #818cf8;
+  --ps-header-mobile-bg:           #0d0d26;
+  --ps-header-mobile-border:       rgba(255,255,255,.07);
+  --ps-header-mobile-link:         #94a3b8;
+  --ps-drop-bg:               #12122e;
+  --ps-drop-item-color:       #cbd5e1;
+  --ps-drop-item-hover-bg:    rgba(99,102,241,.15);
+  --ps-drop-item-hover-color: #c4b5fd;
+  --ps-drop-danger-hover-bg:  rgba(239,68,68,.12);
+  --ps-card-border: rgba(255,255,255,.07);
+  --ps-toggle-bg:    rgba(255,255,255,.1);
+  --ps-toggle-color: #e2e8f0;
+  --ps-toggle-hover: rgba(255,255,255,.18);
+
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
@@ -165,12 +197,13 @@ export default {
   align-items: center;
   gap: .55rem;
   text-decoration: none;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
 }
 .ps-brand-logo-img {
-  height: 42px;
+  height: 60px;
   width: auto;
-  max-width: 180px;
+  max-width: 220px;
   object-fit: contain;
   display: block;
 }
@@ -227,6 +260,7 @@ export default {
   display: flex;
   align-items: center;
   gap: .85rem;
+  flex-shrink: 0;
 }
 
 /* CTA button */
@@ -281,6 +315,7 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .ps-hamburger span {
   display: block;
@@ -437,8 +472,31 @@ export default {
   .ps-links     { display: none; }
   .ps-hamburger { display: flex; }
   .ps-mobile    { display: flex; }
+
+  /* With the nav links gone, brand and actions are the only two items —
+     pin them to opposite edges instead of relying on incidental widths. */
+  .ps-nav {
+    justify-content: space-between;
+    gap: .75rem;
+  }
+  .ps-brand-logo-img { height: 50px; max-width: 190px; }
+}
+@media (max-width: 767px) {
+  .ps-nav { height: 64px; }
+  .ps-brand-logo-img { height: 52px; max-width: 190px; }
+  .ps-actions { gap: .6rem; }
 }
 @media (max-width: 575px) {
   .ps-user-name { display: none; }
+  .ps-nav { height: 62px; gap: .5rem; }
+  .ps-brand-logo-img { height: 46px; max-width: 155px; }
+  .ps-brand-icon { width: 32px; height: 32px; font-size: 1rem; }
+  .ps-brand-name { font-size: 1.05rem; }
+  .ps-theme-toggle { width: 32px; height: 32px; font-size: .8rem; }
+  .ps-hamburger { width: 26px; height: 26px; }
+}
+@media (max-width: 380px) {
+  .ps-brand-logo-img { height: 42px; max-width: 130px; }
+  .ps-actions { gap: .45rem; }
 }
 </style>

@@ -3,10 +3,10 @@
     <div class="container">
 
       <!-- ── Top grid ── -->
-      <div class="row g-5 ps-footer-top">
+      <div class="row gy-5 ps-footer-top">
 
         <!-- Brand column -->
-        <div class="col-lg-4 col-md-12">
+        <div class="col-12 col-lg-4">
           <div class="ps-footer-brand">
             <template v-if="footerLogoUrl">
               <img :src="footerLogoUrl" :alt="siteName" class="ps-footer-logo-img" />
@@ -46,7 +46,7 @@
           <h6 class="ps-footer-heading">Company</h6>
           <ul class="ps-footer-links">
             <li><a href="#about">About Us</a></li>
-            <li><a href="#team">Our Team</a></li>
+            <!-- <li><a href="#team">Our Team</a></li> -->
             <li><a href="#blog">Blog</a></li>
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#testimonials">Testimonials</a></li>
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Contact column -->
-        <div class="col-lg-4 col-md-12">
+        <div class="col-12 col-lg-4">
           <h6 class="ps-footer-heading">Get In Touch</h6>
           <ul class="ps-footer-contact">
             <li v-if="contactEmail">
@@ -65,18 +65,16 @@
               <span class="ps-contact-icon"><i class="fas fa-phone"></i></span>
               <a :href="'tel:' + contactPhone">{{ contactPhone }}</a>
             </li>
-            <li v-if="whatsapp">
+            <!-- <li v-if="whatsapp">
               <span class="ps-contact-icon"><i class="fab fa-whatsapp"></i></span>
               <a :href="'https://wa.me/' + whatsapp" target="_blank" rel="noopener">+{{ whatsapp }}</a>
-            </li>
+            </li> -->
             <li v-if="address">
               <span class="ps-contact-icon"><i class="fas fa-map-marker-alt"></i></span>
               <span>{{ address }}</span>
             </li>
           </ul>
-          <a href="#newsletter" class="ps-footer-cta">
-            Send a Message <i class="fas fa-arrow-right ms-2"></i>
-          </a>
+         
         </div>
       </div>
 
@@ -85,13 +83,8 @@
 
       <!-- ── Bottom bar ── -->
       <div class="ps-footer-bottom">
-        <p class="ps-copy">
-          &copy; {{ year }} <strong>{{ siteName }}</strong>. {{ copyRight || 'All rights reserved.' }}
-        </p>
-        <p class="ps-stack">
-          Built with <i class="fas fa-heart ps-heart"></i> using
-          <span>Laravel</span> &amp; <span>Vue.js</span>
-        </p>
+        <p class="ps-copy">&copy; {{ year }} <strong>{{ siteName }}</strong>. All rights reserved.</p>
+        <p class="ps-tagline">Building reliable software for growing businesses.</p>
       </div>
 
     </div>
@@ -107,10 +100,13 @@ export default {
   computed: {
     ...mapState(site_settings_store, { _settings: 'website_settings_data' }),
 
-    year() { return new Date().getFullYear(); },
+    year() {
+      const startYear = 2019;
+      const currentYear = new Date().getFullYear();
+      return `${String(currentYear)}`;
+    },
 
     siteName()      { return this._val('site_name')      || 'PriyoSoft'; },
-    copyRight()     { return this._val('copy_right')     || ''; },
     contactEmail()  { return this._val('email') || ''; },
     contactPhone()  { return this._val('phone_numbers')  || ''; },
     whatsapp()      { return this._val('whatsapp')       || ''; },
@@ -148,7 +144,27 @@ export default {
 
 <style scoped>
 /* ── Shell ──────────────────────────────────────── */
+/* Footer stays on its own fixed dark palette — it must not react to the
+   site-wide light/dark toggle, only the page body does. */
 .ps-footer {
+  --ps-footer-bg-from:         #050512;
+  --ps-footer-bg-to:           #07071a;
+  --ps-footer-border:          rgba(255,255,255,.06);
+  --ps-footer-text:            #9ca3af;
+  --ps-footer-desc:            #6b7280;
+  --ps-footer-link:            #6b7280;
+  --ps-footer-heading:         #e5e7eb;
+  --ps-footer-hr:              rgba(255,255,255,.07);
+  --ps-footer-copy:            #4b5563;
+  --ps-footer-copy-strong:     #9ca3af;
+  --ps-footer-social-bg:       rgba(255,255,255,.06);
+  --ps-footer-social-border:   rgba(255,255,255,.1);
+  --ps-footer-social-color:    #9ca3af;
+  --ps-footer-contact-icon-bg: rgba(102,126,234,.15);
+  --ps-footer-bname-color:     #ffffff;
+  --ps-footer-bname-em:        #a78bfa;
+  --ps-footer-stack:           #4b5563;
+
   background: linear-gradient(180deg, var(--ps-footer-bg-from) 0%, var(--ps-footer-bg-to) 100%);
   color: var(--ps-footer-text);
   padding-top: 4.5rem;
@@ -166,8 +182,9 @@ export default {
   margin-bottom: 1.1rem;
 }
 .ps-footer-logo-img {
-  height: 38px;
+  height: 54px;
   width: auto;
+  max-width: 220px;
   object-fit: contain;
 }
 .ps-footer-icon {
@@ -339,23 +356,11 @@ export default {
   color: var(--ps-footer-copy);
 }
 .ps-copy strong { color: var(--ps-footer-copy-strong); }
-.ps-stack {
+.ps-tagline {
   margin: 0;
-  font-size: .82rem;
+  font-size: .85rem;
   color: var(--ps-footer-stack);
-  display: flex;
-  align-items: center;
-  gap: .3rem;
-}
-.ps-stack span { color: #818cf8; font-weight: 600; }
-.ps-heart {
-  color: #f43f5e;
-  font-size: .8rem;
-  animation: heartbeat 1.4s infinite;
-}
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.25); }
+  font-style: italic;
 }
 
 /* ── Responsive ─────────────────────────────────── */

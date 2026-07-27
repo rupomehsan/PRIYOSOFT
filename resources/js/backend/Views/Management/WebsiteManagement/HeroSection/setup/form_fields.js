@@ -40,7 +40,7 @@ export default [
 	{
 		name: "primary_button_url",
 		label: "Enter Primary Button Url",
-		type: "url",
+		type: "text",
 		placeholder: "https://example.com",
 		value: "",
 		is_visible: true,
@@ -57,7 +57,7 @@ export default [
 	{
 		name: "secondary_button_url",
 		label: "Enter Secondary Button Url",
-		type: "url",
+		type: "text",
 		placeholder: "https://example.com",
 		value: "",
 		is_visible: true,
