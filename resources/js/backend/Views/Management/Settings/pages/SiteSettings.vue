@@ -131,7 +131,7 @@
                                     class="tab-pane active"
                                     id="bassic_settings"
                                 >
-                                    <form @submit.prevent="SiteSettingsHandler"
+                                    <form @submit.prevent="SiteSettingsHandler($event)"
                                         enctype="multipart/form-data"
                                     >
                                         <div class="form-group row">
@@ -374,7 +374,7 @@
                                     class="tab-pane"
                                     id="seo_settings"
                                 >
-                                    <form @submit.prevent="SiteSettingsHandler">
+                                    <form @submit.prevent="SiteSettingsHandler($event)">
                                         <!-- Meta Title -->
                                         <div class="form-group row">
                                             <label
@@ -539,7 +539,7 @@
                                     class="tab-pane"
                                     id="social_link"
                                 >
-                                    <form @submit.prevent="SiteSettingsHandler">
+                                    <form @submit.prevent="SiteSettingsHandler($event)">
                                         <!-- Facebook -->
                                         <div class="form-group row">
                                             <label
@@ -723,7 +723,7 @@
                                     class="tab-pane"
                                     id="smtp"
                                 >
-                                    <form @submit.prevent="SiteSettingsHandler">
+                                    <form @submit.prevent="SiteSettingsHandler($event)">
                                         <div class="form-group row">
                                             <label
                                                 class="col-lg-3 col-form-label form-control-label"
@@ -839,7 +839,7 @@
                                     class="tab-pane"
                                     id="payment_settings"
                                 >
-                                    <form @submit.prevent="SiteSettingsHandler">
+                                    <form @submit.prevent="SiteSettingsHandler($event)">
 
                                         <!-- bKash -->
                                         <h6 class="mb-3 text-muted font-weight-bold">bKash</h6>
@@ -1003,7 +1003,7 @@
                                     class="tab-pane"
                                     id="card_payment"
                                 >
-                                    <form @submit.prevent="SiteSettingsHandler">
+                                    <form @submit.prevent="SiteSettingsHandler($event)">
 
                                         <!-- Payment Gateway -->
                                         <h6 class="mb-3 text-muted font-weight-bold">Payment Gateway</h6>
@@ -1123,12 +1123,18 @@ export default {
             get_all_website_settings: "get_all_website_settings",
             get_setting_value: "get_setting_value",
         }),
-        SiteSettingsHandler: async function () {
+        SiteSettingsHandler: async function (event) {
             let formData = new FormData(event.target);
-            let response = await axios.post("website-settings/store", formData);
-            if (response.data.status == "success") {
-                window.s_alert(response.data.message);
-                this.get_all_website_settings();
+            try {
+                let response = await axios.post("website-settings/store", formData);
+                if (response.data.status == "success") {
+                    window.s_alert(response.data.message);
+                    this.get_all_website_settings();
+                } else {
+                    window.s_alert(response.data.message || "Failed to save settings.", "error");
+                }
+            } catch (error) {
+                window.s_alert(error?.response?.data?.message || "Failed to save settings. Please try again.", "error");
             }
         },
 

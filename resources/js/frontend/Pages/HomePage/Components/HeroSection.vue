@@ -18,7 +18,7 @@
               <span class="hero-badge">{{ slide.badge_text || 'Welcome to PriyoSoft' }}</span>
               <h1 class="hero-title">{{ slide.headline || 'Building Software That Matters' }}</h1>
               <p class="hero-sub">{{ slide.subheadline || 'We craft modern web & mobile solutions tailored for your business growth.' }}</p>
-              <p v-if="slide.description" class="hero-desc">{{ slide.description }}</p>
+              <p v-if="slide.description" class="hero-desc" v-html="slide.description"></p>
 
               <div class="d-flex flex-wrap gap-3 mb-4 hero-cta-row">
                 <a :href="slide.primary_button_url || '#products'" class="hero-btn-primary">
@@ -152,7 +152,7 @@ export default {
     return {
       current: 0,
       timer: null,
-      autoplay: 5000,
+      autoplay: 8500,
       imageLoadedMap: {},
       lightboxImage: null,
     };
@@ -277,9 +277,14 @@ export default {
 .hero-title {
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 800;
-  line-height: 1.12;
+  /* Bangla glyphs (matras/conjuncts) sit taller than Latin ascenders and
+     can get clipped by .hero-slider's overflow:hidden when line-height
+     is this tight — the extra top padding plus looser line-height gives
+     them room without visually shifting the Latin-text case. */
+  line-height: 1.35;
+  padding-top: .15em;
   margin-bottom: 1.25rem;
-  background: linear-gradient(135deg, #ffffff 0%, #c9d6ff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #fdba74 30%, #fb923c 65%, #ea580c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -297,6 +302,7 @@ export default {
   line-height: 1.7;
   margin-bottom: 1.75rem;
 }
+.hero-desc :deep(strong) { color: rgba(255,255,255,.92); font-weight: 700; }
 
 /* ── Buttons ────────────────────────────── */
 .hero-btn-primary {
@@ -354,6 +360,8 @@ export default {
 }
 .hero-img {
   width: 100%;
+  height: 460px;
+  object-fit: cover;
   border-radius: 18px;
   display: block;
   opacity: 0;
@@ -365,7 +373,7 @@ export default {
 .hero-video-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 .hero-video { width: 100%; aspect-ratio: 16/9; }
 .hero-placeholder {
-  height: 360px;
+  height: 460px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -557,6 +565,7 @@ export default {
   .hero-arrow--prev { left: .75rem; }
   .hero-arrow--next { right: .75rem; }
   .hero-img-wrap { min-height: 260px; }
+  .hero-img { height: 380px; }
 }
 @media (max-width: 767px) {
   /* Give the fixed header real breathing room and stop the content
@@ -573,9 +582,11 @@ export default {
   .hero-trust-row { justify-content: center; }
   .hero-trust { font-size: .78rem; }
 
-  /* Let the image size to its own aspect ratio instead of a fixed
-     min-height that left empty space around it. */
+  /* .hero-img uses object-fit: cover, so a fixed height here no longer
+     leaves empty space around it (that was only an issue back when the
+     image sized to its natural aspect ratio instead of cropping to fill). */
   .hero-img-wrap { min-height: 0; padding: .5rem; max-width: 340px; margin: 0 auto; }
+  .hero-img { height: 320px; }
   .hero-dots { bottom: 1.1rem; }
 }
 @media (max-width: 480px) {

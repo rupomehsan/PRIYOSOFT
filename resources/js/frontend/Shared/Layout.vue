@@ -90,8 +90,14 @@ body {
      (it collapses to the viewport height), which silently kills ALL page
      scrolling — that was the cause of "Home" (and everything else) not
      scrolling. Body-only relies on the standard html/body overflow
-     propagation to the viewport and doesn't have that problem. */
-  overflow-x: hidden;
+     propagation to the viewport and doesn't have that problem.
+     Use `clip`, not `hidden`: any non-visible overflow value (hidden/
+     auto/scroll) turns body into a scroll container, which breaks
+     `position: sticky` for every descendant on the site (e.g. the
+     product page's sticky sidebar) since sticky then resolves against
+     body instead of the viewport. `clip` visually clips the same way
+     without creating that scroll container. */
+  overflow-x: clip;
   max-width: 100%;
 }
 html {

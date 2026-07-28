@@ -1,4 +1,5 @@
 <template>
+  <access-gate>
   <div class="tx-app">
 
     <!-- ── Top bar ─────────────────────────────────────────────── -->
@@ -116,6 +117,7 @@
     </main>
 
   </div>
+  </access-gate>
 </template>
 
 <script>
@@ -124,6 +126,7 @@ import { store as txStore }    from './Store';
 
 import TopBar         from './Components/TopBar.vue';
 import DashboardPanel from './Components/Dashboard.vue';
+import AccessGate      from '../../Shared/AccessGate.vue';
 
 import './Css/Style.css';
 
@@ -219,7 +222,7 @@ export default {
   name: 'TransactionPage',
   layout: false,
 
-  components: { TopBar, DashboardPanel },
+  components: { TopBar, DashboardPanel, AccessGate },
 
   data() {
     return { tabs: TAB_DEFS };

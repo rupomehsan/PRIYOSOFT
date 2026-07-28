@@ -16,12 +16,12 @@ class StoreData
             $responseData = [];
 
             foreach ($requestData as $title => $value) {
-                if (is_null($value) && !request()->hasFile($title)) {
-                    continue; // Skip if no value or file exists
+                if (is_array($value) && !request()->hasFile($title)) {
+                    continue; // Skip malformed/array values that aren't file uploads
                 }
 
                 DB::transaction(function () use ($title, $value, &$responseData) {
-                    $finalValue = $value; // Default to the provided value
+                    $finalValue = $value; // Default to the provided value (may be null/empty to clear it)
 
                     // Handle file upload for any file field
                     if (request()->hasFile($title)) {

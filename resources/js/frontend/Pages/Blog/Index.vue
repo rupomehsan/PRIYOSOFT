@@ -1,6 +1,10 @@
 <template>
   <div class="bl-page">
 
+    <Head title="Blog">
+      <meta head-key="description" name="description" content="Thoughts on software, technology, and building great products." />
+    </Head>
+
     <!-- Hero -->
     <section class="bl-hero">
       <div class="container bl-hero__inner">

@@ -22,11 +22,14 @@ return new class extends Migration
             $table->string('promo_link', 500)->nullable();
             $table->enum('project_status', ['planning','development','active','paused'])->nullable();
               $table->string('version', 50)->nullable()->default('v1.0.0');$table->string('video_url', 500)->nullable();
+              $table->string('promo_video_url', 500)->nullable();
             $table->date('launch_date')->nullable();
             $table->decimal('monthly_target_revenue', 12, 2)->nullable();
             $table->decimal('regular_price', 12, 2)->nullable();
             $table->decimal('sales_price', 12, 2)->nullable();
             $table->json('features')->nullable();
+            $table->json('niche_products')->nullable();
+            $table->json('clients_projects')->nullable();
             $table->text('screenshots')->nullable();
              $table->enum('status', ['active', 'inactive'])->default('active');
                     $table->bigInteger('creator')->unsigned()->nullable();

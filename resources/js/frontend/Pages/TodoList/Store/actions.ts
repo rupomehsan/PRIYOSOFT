@@ -56,4 +56,19 @@ export const actions = {
     selectMilestone(this: any, id: number) {
         this.selectedMilestoneId = id;
     },
+
+    async updateTask(this: any, slug: string, payload: Record<string, any>) {
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+            throw { response: { status: 401 } };
+        }
+        (window as any).axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const res = await (window as any).axios.post(`todo-lists/update/${slug}`, payload);
+        const updated = res?.data?.data;
+        if (updated) {
+            const idx = this.tasks.findIndex((t: any) => t.id === updated.id);
+            if (idx !== -1) this.tasks[idx] = { ...this.tasks[idx], ...updated };
+        }
+        return updated;
+    },
 };

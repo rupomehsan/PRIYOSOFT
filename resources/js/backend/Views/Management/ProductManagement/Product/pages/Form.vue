@@ -76,6 +76,132 @@
               </div>
             </div>
 
+            <!-- ── Niche products add/remove list ── -->
+            <div class="col-md-12">
+              <!-- Hidden input carries the JSON value that FormData picks up -->
+              <input type="hidden" name="niche_products" :value="nicheProductsJson" />
+
+              <div class="form-group">
+                <label class="form-label fw-semibold">Niche Products</label>
+                <div
+                  v-for="(np, i) in niche_products_list"
+                  :key="i"
+                  class="repeater-row mb-2"
+                >
+                  <div class="row align-items-center gx-2">
+                    <div class="col-md-5">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Title"
+                        :value="np.title"
+                        @input="niche_products_list[i].title = $event.target.value"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="https://..."
+                        :value="np.url"
+                        @input="niche_products_list[i].url = $event.target.value"
+                      />
+                    </div>
+                    <div class="col-md-1">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger px-2"
+                        :disabled="niche_products_list.length === 1"
+                        @click="removeNicheProduct(i)"
+                        title="Remove"
+                      >
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        placeholder="Description"
+                        :value="np.description"
+                        @input="niche_products_list[i].description = $event.target.value"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-success mt-1"
+                  @click="addNicheProduct"
+                >
+                  <i class="fas fa-plus me-1"></i> Add Niche Product
+                </button>
+              </div>
+            </div>
+
+            <!-- ── Clients / projects add/remove list ── -->
+            <div class="col-md-12">
+              <!-- Hidden input carries the JSON value that FormData picks up -->
+              <input type="hidden" name="clients_projects" :value="clientsProjectsJson" />
+
+              <div class="form-group">
+                <label class="form-label fw-semibold">Clients / Projects</label>
+                <div
+                  v-for="(cp, i) in clients_projects_list"
+                  :key="i"
+                  class="repeater-row mb-2"
+                >
+                  <div class="row align-items-center gx-2">
+                    <div class="col-md-5">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Name"
+                        :value="cp.name"
+                        @input="clients_projects_list[i].name = $event.target.value"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="https://..."
+                        :value="cp.url"
+                        @input="clients_projects_list[i].url = $event.target.value"
+                      />
+                    </div>
+                    <div class="col-md-1">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger px-2"
+                        :disabled="clients_projects_list.length === 1"
+                        @click="removeClientProject(i)"
+                        title="Remove"
+                      >
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        placeholder="Description"
+                        :value="cp.description"
+                        @input="clients_projects_list[i].description = $event.target.value"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-success mt-1"
+                  @click="addClientProject"
+                >
+                  <i class="fas fa-plus me-1"></i> Add Client / Project
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -101,12 +227,34 @@ export default {
     form_fields,
     param_id: null,
     features_list: [""],
+    niche_products_list: [{ title: "", description: "", url: "" }],
+    clients_projects_list: [{ name: "", description: "", url: "" }],
   }),
 
   computed: {
     ...mapState(store, { item: "item" }),
     featuresJson() {
       const trimmed = this.features_list.map((f) => f.trim()).filter(Boolean);
+      return JSON.stringify(trimmed);
+    },
+    nicheProductsJson() {
+      const trimmed = this.niche_products_list
+        .map((np) => ({
+          title: (np.title || "").trim(),
+          description: (np.description || "").trim(),
+          url: (np.url || "").trim(),
+        }))
+        .filter((np) => np.title || np.description || np.url);
+      return JSON.stringify(trimmed);
+    },
+    clientsProjectsJson() {
+      const trimmed = this.clients_projects_list
+        .map((cp) => ({
+          name: (cp.name || "").trim(),
+          description: (cp.description || "").trim(),
+          url: (cp.url || "").trim(),
+        }))
+        .filter((cp) => cp.name || cp.description || cp.url);
       return JSON.stringify(trimmed);
     },
   },
@@ -149,6 +297,8 @@ export default {
     reset_fields() {
       this.form_fields.forEach((item) => { item.value = ""; });
       this.features_list = [""];
+      this.niche_products_list = [{ title: "", description: "", url: "" }];
+      this.clients_projects_list = [{ name: "", description: "", url: "" }];
     },
 
     async set_fields(id) {
@@ -180,6 +330,32 @@ export default {
             this.features_list = [""];
           }
         }
+
+        // Parse niche_products JSON into the list UI
+        const rawNiche = this.item.niche_products;
+        if (rawNiche) {
+          try {
+            const arr = typeof rawNiche === "string" ? JSON.parse(rawNiche) : rawNiche;
+            this.niche_products_list = Array.isArray(arr) && arr.length
+              ? arr.map((np) => ({ title: np?.title || "", description: np?.description || "", url: np?.url || "" }))
+              : [{ title: "", description: "", url: "" }];
+          } catch {
+            this.niche_products_list = [{ title: "", description: "", url: "" }];
+          }
+        }
+
+        // Parse clients_projects JSON into the list UI
+        const rawClients = this.item.clients_projects;
+        if (rawClients) {
+          try {
+            const arr = typeof rawClients === "string" ? JSON.parse(rawClients) : rawClients;
+            this.clients_projects_list = Array.isArray(arr) && arr.length
+              ? arr.map((cp) => ({ name: cp?.name || "", description: cp?.description || "", url: cp?.url || "" }))
+              : [{ name: "", description: "", url: "" }];
+          } catch {
+            this.clients_projects_list = [{ name: "", description: "", url: "" }];
+          }
+        }
       }
     },
 
@@ -190,6 +366,26 @@ export default {
     removeFeature(i) {
       if (this.features_list.length > 1) {
         this.features_list.splice(i, 1);
+      }
+    },
+
+    addNicheProduct() {
+      this.niche_products_list.push({ title: "", description: "", url: "" });
+    },
+
+    removeNicheProduct(i) {
+      if (this.niche_products_list.length > 1) {
+        this.niche_products_list.splice(i, 1);
+      }
+    },
+
+    addClientProject() {
+      this.clients_projects_list.push({ name: "", description: "", url: "" });
+    },
+
+    removeClientProject(i) {
+      if (this.clients_projects_list.length > 1) {
+        this.clients_projects_list.splice(i, 1);
       }
     },
 
@@ -231,4 +427,10 @@ export default {
 
 <style scoped>
 .gap-2 { gap: .5rem; }
+.repeater-row {
+  padding: .6rem .6rem .2rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
 </style>

@@ -95,7 +95,16 @@ export default [
 		placeholder: "https://www.youtube.com/watch?v=...",
 		value: "",
 		is_visible: true,
-		class: "col-md-12",
+		class: "col-md-6",
+	},
+	{
+		name: "promo_video_url",
+		label: "Promo Video URL",
+		type: "text",
+		placeholder: "https://www.youtube.com/watch?v=...",
+		value: "",
+		is_visible: true,
+		class: "col-md-6",
 	},
 	{
 		name: "screenshots",
@@ -117,7 +126,7 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	// features is handled via a custom add/remove UI in Form.vue (not via common-input)
+	// features, niche_products and clients_projects are handled via custom add/remove UI in Form.vue (not via common-input)
 	{
 		name: "description",
 		label: "Enter Description",

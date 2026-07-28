@@ -5,6 +5,8 @@ namespace Modules\Management\SettingManagement\WebsiteSettings\Database\Models;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
+use App\Services\SeoService;
 
 class Model extends EloquentModel
 {
@@ -17,6 +19,9 @@ class Model extends EloquentModel
 
     protected static function booted()
     {
+        static::saved(fn () => Cache::forget(SeoService::CACHE_KEY));
+        static::deleted(fn () => Cache::forget(SeoService::CACHE_KEY));
+
         static::created(function ($data) {
             $random_no = random_int(100, 999) . $data->id . random_int(100, 999);
             $slug = $data->title . " " . $random_no;

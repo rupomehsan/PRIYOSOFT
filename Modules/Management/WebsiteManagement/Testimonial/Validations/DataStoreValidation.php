@@ -43,15 +43,15 @@ class DataStoreValidation extends FormRequest
     {
         return [
             'client_name' => 'required | sometimes',
-            'client_company' => 'required | sometimes',
-            'media_type' => 'required | sometimes',
-            'client_photo' => 'required | sometimes',
-            'video_url' => 'required | sometimes',
-            'product_id' => 'required | sometimes',
-            'rating' => 'required | sometimes',
+            'client_company' => 'nullable | sometimes',
+            'media_type' => 'nullable | sometimes',
+            'client_photo' => 'nullable | sometimes',
+            'video_url' => 'nullable | sometimes',
+            'product_id' => 'nullable | sometimes',
+            'rating' => 'nullable | sometimes',
             'message' => 'required | sometimes',
-            'is_featured' => 'required | sometimes',
-            'is_visible' => 'required | sometimes',
+            'is_featured' => 'nullable | sometimes',
+            'is_visible' => 'nullable | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

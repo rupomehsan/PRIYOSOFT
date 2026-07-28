@@ -78,6 +78,19 @@ export default [
 		class: "col-md-6",
 	},
 	{
+		name: "is_visible",
+		label: "Show on Website",
+		type: "select",
+		multiple: false,
+		data_list: [
+			{ label: "Yes", value: "1" },
+			{ label: "No", value: "0" },
+		],
+		value: "1",
+		is_visible: true,
+		class: "col-md-6",
+	},
+	{
 		name: "client_photo",
 		label: "Upload Client Photo",
 		type: "file",

@@ -1,6 +1,19 @@
 <template>
   <div class="bd-page">
 
+    <Head v-if="post">
+      <title>{{ post.title }} | {{ siteName }}</title>
+      <meta head-key="description" name="description" :content="metaDescription" />
+      <meta head-key="og:type" property="og:type" content="article" />
+      <meta head-key="og:title" property="og:title" :content="post.title" />
+      <meta head-key="og:description" property="og:description" :content="metaDescription" />
+      <meta head-key="og:image" property="og:image" :content="absoluteThumb" />
+      <meta head-key="twitter:title" name="twitter:title" :content="post.title" />
+      <meta head-key="twitter:description" name="twitter:description" :content="metaDescription" />
+      <meta head-key="twitter:image" name="twitter:image" :content="absoluteThumb" />
+      <link head-key="canonical" rel="canonical" :href="pageUrl" />
+    </Head>
+
     <!-- Loading -->
     <div v-if="loading" class="bd-loading">
       <div class="bd-spinner"></div>
@@ -160,6 +173,18 @@ export default {
       return words > 0 ? Math.max(1, Math.round(words / 200)) : null;
     },
     pageUrl() { return typeof window !== 'undefined' ? window.location.href : ''; },
+    siteName() { return this.$page?.props?.seo?.site_name || 'PriyoSoft'; },
+    metaDescription() {
+      const excerpt = this.post?.excerpt;
+      if (excerpt) return excerpt.length > 220 ? excerpt.slice(0, 217) + '…' : excerpt;
+      const plain = (this.post?.body || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      return plain.length > 220 ? plain.slice(0, 217) + '…' : plain;
+    },
+    absoluteThumb() {
+      const src = this.thumbSrc(this.post?.thumbnail);
+      if (typeof window === 'undefined') return src;
+      return src.startsWith('http') ? src : window.location.origin + src;
+    },
     fbShare() { return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(this.pageUrl)}`; },
     twShare() { return `https://twitter.com/intent/tweet?url=${encodeURIComponent(this.pageUrl)}&text=${encodeURIComponent(this.post?.title || '')}`; },
     waShare() { return `https://wa.me/?text=${encodeURIComponent((this.post?.title || '') + ' ' + this.pageUrl)}`; },

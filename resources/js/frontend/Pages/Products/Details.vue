@@ -1,6 +1,18 @@
 <template>
   <div class="pd-page">
 
+    <Head v-if="product">
+      <title>{{ product.name }} | {{ siteName }}</title>
+      <meta head-key="description" name="description" :content="shortDesc" />
+      <meta head-key="og:title" property="og:title" :content="product.name" />
+      <meta head-key="og:description" property="og:description" :content="shortDesc" />
+      <meta head-key="og:image" property="og:image" :content="absoluteProductImage" />
+      <meta head-key="twitter:title" name="twitter:title" :content="product.name" />
+      <meta head-key="twitter:description" name="twitter:description" :content="shortDesc" />
+      <meta head-key="twitter:image" name="twitter:image" :content="absoluteProductImage" />
+      <link head-key="canonical" rel="canonical" :href="pageUrl" />
+    </Head>
+
     <!-- Loading -->
     <div v-if="loading" class="pd-loading">
       <div class="pd-spinner"></div>
@@ -62,16 +74,6 @@
 
             <!-- Hero right: promo embed or price card -->
             <div v-if="promoEmbed" class="pd-hero__video-wrap">
-
-              <!-- Badge -->
-              <div class="pd-hero__video-badge">
-                <template v-if="promoEmbed.type === 'youtube'">
-                  <i class="fab fa-youtube me-1"></i> Product Demo
-                </template>
-                <template v-else>
-                  <i class="fas fa-desktop me-1"></i> Live Preview
-                </template>
-              </div>
 
               <!-- YouTube embed -->
               <iframe
@@ -164,6 +166,52 @@
                   <h2 class="pd-section__title">Product Overview</h2>
                 </div>
                 <div class="pd-prose" v-html="product.description"></div>
+              </div>
+
+              <!-- Niche Products -->
+              <div v-if="nicheProducts.length" class="pd-section">
+                <div class="pd-section__header">
+                  <span class="pd-section__eyebrow">Related</span>
+                  <h2 class="pd-section__title">Niche Products</h2>
+                </div>
+                <div class="pd-card-grid">
+                  <component
+                    :is="np.url ? 'a' : 'div'"
+                    v-for="(np, i) in nicheProducts"
+                    :key="i"
+                    :href="np.url || undefined"
+                    :target="np.url ? '_blank' : undefined"
+                    rel="noopener"
+                    class="pd-info-card"
+                  >
+                    <h3 class="pd-info-card__title">{{ np.title }}</h3>
+                    <p v-if="np.description" class="pd-info-card__desc">{{ np.description }}</p>
+                    <span v-if="np.url" class="pd-info-card__link">Visit <i class="fas fa-arrow-right ms-1"></i></span>
+                  </component>
+                </div>
+              </div>
+
+              <!-- Clients / Projects -->
+              <div v-if="clientsProjects.length" class="pd-section">
+                <div class="pd-section__header">
+                  <span class="pd-section__eyebrow">Portfolio</span>
+                  <h2 class="pd-section__title">Client Projects</h2>
+                </div>
+                <div class="pd-card-grid">
+                  <component
+                    :is="cp.url ? 'a' : 'div'"
+                    v-for="(cp, i) in clientsProjects"
+                    :key="i"
+                    :href="cp.url || undefined"
+                    :target="cp.url ? '_blank' : undefined"
+                    rel="noopener"
+                    class="pd-info-card"
+                  >
+                    <h3 class="pd-info-card__title">{{ cp.name }}</h3>
+                    <p v-if="cp.description" class="pd-info-card__desc">{{ cp.description }}</p>
+                    <span v-if="cp.url" class="pd-info-card__link">Visit <i class="fas fa-arrow-right ms-1"></i></span>
+                  </component>
+                </div>
               </div>
 
             </main>
@@ -289,6 +337,40 @@
         </div>
       </section>
 
+      <!-- ── Testimonials ── -->
+      <section v-if="productTestimonials.length" class="pd-testi">
+        <div class="container">
+          <div class="pd-section__header pd-section__header--center">
+            <span class="pd-section__eyebrow">Feedback</span>
+            <h2 class="pd-section__title">What Clients Say</h2>
+          </div>
+          <div class="pd-testi-grid">
+            <div v-for="t in productTestimonials" :key="t.id" class="pd-testi-card">
+              <div class="pd-testi-card__stars">
+                <i
+                  v-for="n in 5" :key="n"
+                  class="fas fa-star"
+                  :class="n <= (t.rating || 5) ? 'is-filled' : 'is-empty'"
+                ></i>
+              </div>
+              <p class="pd-testi-card__msg" v-html="t.message"></p>
+              <div class="pd-testi-card__client">
+                <img
+                  :src="t.client_photo || '/default.png'"
+                  :alt="t.client_name"
+                  class="pd-testi-card__avatar"
+                  @error="$event.target.src = '/default.png'"
+                />
+                <div>
+                  <p class="pd-testi-card__name">{{ t.client_name }}</p>
+                  <p v-if="t.client_company" class="pd-testi-card__company">{{ t.client_company }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </template>
 
     <!-- ── Lightbox ── -->
@@ -333,6 +415,7 @@ export default {
   data: () => ({
     product: null, loading: true,
     lightboxIndex: null,
+    testimonials: [],
   }),
 
   computed: {
@@ -355,10 +438,35 @@ export default {
       const plain = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
       return plain.length > 220 ? plain.slice(0, 217) + '…' : plain;
     },
+    siteName() { return this.$page?.props?.seo?.site_name || 'PriyoSoft'; },
+    pageUrl() { return typeof window !== 'undefined' ? window.location.href : ''; },
+    absoluteProductImage() {
+      if (typeof window === 'undefined') return this.productImage;
+      return this.productImage.startsWith('http') ? this.productImage : window.location.origin + this.productImage;
+    },
     features() {
       const f = this.product?.features;
       if (!f) return [];
       try { return Array.isArray(f) ? f : JSON.parse(f); } catch { return []; }
+    },
+    nicheProducts() {
+      const np = this.product?.niche_products;
+      if (!np) return [];
+      try { const arr = Array.isArray(np) ? np : JSON.parse(np); return Array.isArray(arr) ? arr : []; }
+      catch { return []; }
+    },
+    clientsProjects() {
+      const cp = this.product?.clients_projects;
+      if (!cp) return [];
+      try { const arr = Array.isArray(cp) ? cp : JSON.parse(cp); return Array.isArray(arr) ? arr : []; }
+      catch { return []; }
+    },
+    productTestimonials() {
+      if (!this.product) return [];
+      return this.testimonials.filter((t) => {
+        const pid = t.product_id && typeof t.product_id === 'object' ? t.product_id.id : t.product_id;
+        return pid === this.product.id;
+      });
     },
     heroBg() {
       return { background: HERO_BG[this.product?.status] || HERO_BG.active };
@@ -386,7 +494,7 @@ export default {
       } catch { return typeof s === 'string' && s.trim() ? [s] : []; }
     },
     promoEmbed() {
-      const vidUrl  = this.product?.video_url;
+      const vidUrl  = this.product?.promo_video_url || this.product?.video_url;
       const demoUrl = this.product?.promo_link;
       if (vidUrl) {
         const yt = vidUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\s]{11})/);
@@ -423,10 +531,18 @@ export default {
       } catch { this.product = null; }
       finally { this.loading = false; }
     },
+
+    async fetchTestimonials() {
+      try {
+        const res = await window.axios.get('public/testimonials?get_all=1&status=active&limit=200');
+        this.testimonials = res?.data?.data ?? res?.data ?? [];
+      } catch { this.testimonials = []; }
+    },
   },
 
   mounted() {
     this.fetchProduct();
+    this.fetchTestimonials();
     this.get_all_website_settings();
     window.addEventListener('keydown', this.onKeyDown);
   },
@@ -549,22 +665,16 @@ export default {
 /* Hero video embed */
 .pd-hero__video-wrap {
   flex-shrink: 0;
-  width: 440px;
+  width: 640px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: .55rem;
 }
-.pd-hero__video-badge {
-  display: inline-flex; align-items: center;
-  font-size: .7rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
-  color: #fff; background: rgba(220,38,38,.85);
-  padding: .25rem .8rem; border-radius: 50px;
-  align-self: flex-start; flex-shrink: 0;
-}
 .pd-hero__video {
   width: 100%;
   flex: 1;
-  min-height: 220px;
+  min-height: 360px;
   border: none;
   border-radius: 14px;
   box-shadow: 0 12px 40px rgba(0,0,0,.45);
@@ -602,7 +712,7 @@ export default {
 }
 .pd-browser__open:hover { color: #fff; }
 .pd-hero__site-frame {
-  width: 100%; height: 300px; display: block; border: none;
+  width: 100%; height: 400px; display: block; border: none;
   background: #fff;
   pointer-events: none;
 }
@@ -654,7 +764,13 @@ export default {
 .pd-layout {
   display: grid;
   grid-template-columns: 1fr 360px;
-  gap: 2rem; align-items: start;
+  gap: 2rem;
+  /* Must stay "stretch" (the grid default) — this makes the <aside>
+     grid cell as tall as .pd-main, giving .pd-sidebar__sticky room to
+     travel while pinned. With "start" the aside shrinks to match its
+     own (short) content, so the sticky child has nowhere to roam and
+     immediately scrolls away instead of sticking. */
+  align-items: stretch;
 }
 
 /* ─── Section ───────────────────────────────────── */
@@ -861,6 +977,58 @@ export default {
 }
 .pd-gallery__thumb:hover .pd-gallery__zoom { background: rgba(79,70,229,.55); opacity: 1; }
 
+/* ─── Niche products / Clients & projects cards ─── */
+.pd-card-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .85rem;
+}
+.pd-info-card {
+  display: block;
+  background: linear-gradient(180deg, #ffffff, #fafbff);
+  border: 1px solid #e9ecf3; border-radius: 14px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 2px 10px rgba(17,24,39,.05);
+  transition: box-shadow .25s, transform .25s, border-color .25s;
+  text-decoration: none;
+}
+a.pd-info-card:hover {
+  box-shadow: 0 12px 28px rgba(79,70,229,.14);
+  transform: translateY(-3px);
+  border-color: #c7d2fe;
+}
+.pd-info-card__title { font-size: 1rem; font-weight: 800; color: #111827; margin: 0 0 .4rem; }
+.pd-info-card__desc  { font-size: .88rem; color: #6b7280; line-height: 1.6; margin: 0 0 .6rem; }
+.pd-info-card__link  {
+  display: inline-flex; align-items: center;
+  font-size: .8rem; font-weight: 700; color: #4f46e5;
+}
+
+/* ─── Testimonials ───────────────────────────────── */
+.pd-testi { padding: 1rem 0 5rem; }
+.pd-section__header--center { text-align: center; margin-bottom: 2.25rem; }
+.pd-testi-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+}
+.pd-testi-card {
+  background: #fff; border: 1px solid #e9ecf3; border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 1px 8px rgba(0,0,0,.04);
+  display: flex; flex-direction: column;
+}
+.pd-testi-card__stars { display: flex; gap: 2px; margin-bottom: .85rem; }
+.pd-testi-card__stars .is-filled { color: #f59e0b; font-size: .8rem; }
+.pd-testi-card__stars .is-empty  { color: #e5e7eb; font-size: .8rem; }
+.pd-testi-card__msg {
+  font-size: .92rem; color: #4b5563; line-height: 1.75;
+  flex: 1; margin: 0 0 1.25rem;
+}
+.pd-testi-card__client { display: flex; align-items: center; gap: .8rem; }
+.pd-testi-card__avatar {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  object-fit: cover; border: 2px solid #eef2ff;
+}
+.pd-testi-card__name    { font-size: .88rem; font-weight: 700; color: #111827; margin: 0; }
+.pd-testi-card__company { font-size: .76rem; color: #9ca3af; margin: .1rem 0 0; }
+
 /* ─── Lightbox ───────────────────────────────────── */
 .pd-lightbox {
   position: fixed; inset: 0; z-index: 9999;
@@ -901,6 +1069,8 @@ export default {
   .pd-layout { grid-template-columns: 1fr; }
   .pd-sidebar__sticky { position: static; }
   .pd-feat-grid { grid-template-columns: 1fr 1fr; }
+  .pd-card-grid { grid-template-columns: 1fr 1fr; }
+  .pd-testi-grid { grid-template-columns: repeat(2, 1fr); }
   .pd-hero__body { align-items: flex-start; }
   .pd-hero__video-wrap { width: 100%; }
   .pd-hero__video { aspect-ratio: 16/9; flex: none; min-height: unset; }
@@ -909,6 +1079,8 @@ export default {
   .pd-hero { padding: 4rem 0 3.5rem; }
   .pd-hero__body { gap: 2rem; align-items: flex-start; }
   .pd-feat-grid { grid-template-columns: 1fr; }
+  .pd-card-grid { grid-template-columns: 1fr; }
+  .pd-testi-grid { grid-template-columns: 1fr; }
   .pd-hero__price-card { width: 100%; }
   .pd-hero__video-wrap { width: 100%; }
   .pd-hero__video { aspect-ratio: 16/9; flex: none; min-height: unset; }

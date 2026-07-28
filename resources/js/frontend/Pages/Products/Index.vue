@@ -1,6 +1,10 @@
 <template>
   <div class="pl-page">
 
+    <Head title="Products">
+      <meta head-key="description" name="description" content="Browse production-ready software products and solutions built with Laravel & Vue.js." />
+    </Head>
+
     <!-- Hero -->
     <section class="pl-hero">
       <div class="container pl-hero__inner">

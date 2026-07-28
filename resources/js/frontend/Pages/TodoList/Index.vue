@@ -1,4 +1,5 @@
 <template>
+  <access-gate>
   <div class="tb-app">
     <top-bar
       :stats="overallStats"
@@ -178,6 +179,7 @@
       </main>
     </div>
   </div>
+  </access-gate>
 </template>
 
 <script>
@@ -187,6 +189,7 @@ import { mapState, mapActions } from "pinia";
 import TopBar from "./Components/TopBar.vue";
 import Sidebar from "./Components/Sidebar.vue";
 import GroupCard from "./Components/GroupCard.vue";
+import AccessGate from "../../Shared/AccessGate.vue";
 
 import "./Css/Style.css";
 
@@ -194,7 +197,7 @@ export default {
   name: "TodoBoardPage",
   layout: false,
 
-  components: { TopBar, Sidebar, GroupCard },
+  components: { TopBar, Sidebar, GroupCard, AccessGate },
 
   data() {
     return {

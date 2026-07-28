@@ -1,5 +1,5 @@
 <template>
-  <div class="tb-task" :class="'tb-task--' + (task.priority || 'low')">
+  <div class="tb-task" :class="'tb-task--' + (task.priority || 'low')" @dblclick="startEdit">
 
     <!-- Priority side bar rendered via ::before in CSS -->
 
@@ -9,47 +9,112 @@
     </div>
 
     <div class="tb-task__body">
-      <div class="tb-task__row">
-        <span class="tb-task__title"
-              :class="{ 'tb-task__title--done': task.current_status === 'completed' }">
-          {{ task.title }}
-        </span>
-        <div class="tb-task__badges">
-          <span v-if="task.priority" class="pr-badge" :class="'pr-badge--' + task.priority">
-            {{ task.priority }}
+
+      <!-- View mode -->
+      <template v-if="!editing">
+        <span class="tb-task__edit-hint" title="Double-click to edit"><i class="fas fa-pen"></i></span>
+
+        <div class="tb-task__row">
+          <span class="tb-task__title"
+                :class="{ 'tb-task__title--done': task.current_status === 'completed' }">
+            {{ task.title }}
           </span>
-          <span class="st-badge" :class="'st-badge--' + (task.current_status || 'pending')">
-            {{ statusLabel(task.current_status) }}
+          <div class="tb-task__badges">
+            <span v-if="task.priority" class="pr-badge" :class="'pr-badge--' + task.priority">
+              {{ task.priority }}
+            </span>
+            <span class="st-badge" :class="'st-badge--' + (task.current_status || 'pending')">
+              {{ statusLabel(task.current_status) }}
+            </span>
+          </div>
+        </div>
+
+        <p v-if="task.note" class="tb-task__note">{{ truncate(task.note, 110) }}</p>
+
+        <div class="tb-task__meta">
+          <span v-if="task.assigned_to" class="tb-task__assignee">
+            <span class="tb-avatar">{{ (task.assigned_to[0] || '?').toUpperCase() }}</span>
+            {{ task.assigned_to }}
           </span>
+          <span v-if="task.estimated_days" class="tb-task__days">
+            <i class="fas fa-clock"></i> {{ task.estimated_days }}d
+          </span>
+          <span v-if="task.is_recurring" class="tb-task__recur" title="Recurring task">
+            <i class="fas fa-redo"></i>
+          </span>
+          <span v-if="task.completed_at" class="tb-task__done-at">
+            <i class="fas fa-check-circle"></i> {{ formatDate(task.completed_at) }}
+          </span>
+          <span v-if="Number(task.fixed_cost) > 0" class="tb-task__cost">
+            <i class="fas fa-dollar-sign"></i> {{ task.fixed_cost }}
+          </span>
+        </div>
+      </template>
+
+      <!-- Edit mode -->
+      <div v-else class="tb-task__edit">
+        <input
+          v-model="draft.title"
+          class="tb-edit-input"
+          placeholder="Task title"
+          @keydown.esc="cancelEdit"
+        />
+
+        <div class="tb-edit-row">
+          <select v-model="draft.current_status" class="tb-edit-select">
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Done</option>
+            <option value="skipped">Skipped</option>
+          </select>
+          <select v-model="draft.priority" class="tb-edit-select">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+          <input
+            v-model="draft.assigned_to"
+            class="tb-edit-input tb-edit-input--sm"
+            placeholder="Assignee"
+          />
+          <input
+            v-model.number="draft.estimated_days"
+            type="number"
+            min="0"
+            step="0.5"
+            class="tb-edit-input tb-edit-input--xs"
+            placeholder="Days"
+          />
+        </div>
+
+        <textarea
+          v-model="draft.note"
+          class="tb-edit-textarea"
+          rows="2"
+          placeholder="Note"
+          @keydown.esc="cancelEdit"
+        ></textarea>
+
+        <div class="tb-edit-actions">
+          <button type="button" class="tb-edit-btn tb-edit-btn--save" :disabled="saving" @click="saveEdit">
+            <i class="fas fa-check"></i> {{ saving ? 'Saving…' : 'Save' }}
+          </button>
+          <button type="button" class="tb-edit-btn tb-edit-btn--cancel" :disabled="saving" @click="cancelEdit">
+            <i class="fas fa-times"></i> Cancel
+          </button>
         </div>
       </div>
 
-      <p v-if="task.note" class="tb-task__note">{{ truncate(task.note, 110) }}</p>
-
-      <div class="tb-task__meta">
-        <span v-if="task.assigned_to" class="tb-task__assignee">
-          <span class="tb-avatar">{{ (task.assigned_to[0] || '?').toUpperCase() }}</span>
-          {{ task.assigned_to }}
-        </span>
-        <span v-if="task.estimated_days" class="tb-task__days">
-          <i class="fas fa-clock"></i> {{ task.estimated_days }}d
-        </span>
-        <span v-if="task.is_recurring" class="tb-task__recur" title="Recurring task">
-          <i class="fas fa-redo"></i>
-        </span>
-        <span v-if="task.completed_at" class="tb-task__done-at">
-          <i class="fas fa-check-circle"></i> {{ formatDate(task.completed_at) }}
-        </span>
-        <span v-if="task.fixed_cost" class="tb-task__cost">
-          <i class="fas fa-dollar-sign"></i> {{ task.fixed_cost }}
-        </span>
-      </div>
     </div>
 
   </div>
 </template>
 
 <script>
+import { store as useTodoStore } from '../Store';
+import { mapActions } from 'pinia';
+
 const STATUS_LABELS = {
   pending:     'Pending',
   in_progress: 'In Progress',
@@ -62,13 +127,58 @@ export default {
   props: {
     task: { type: Object, required: true },
   },
+  data() {
+    return {
+      editing: false,
+      saving: false,
+      draft: {},
+    };
+  },
   methods: {
+    ...mapActions(useTodoStore, ['updateTask']),
+
     statusLabel(s) { return STATUS_LABELS[s] ?? (s || 'Pending'); },
     truncate(str, n) { return str && str.length > n ? str.slice(0, n) + '…' : (str || ''); },
     formatDate(d) {
       if (!d) return '';
       try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
       catch { return d; }
+    },
+
+    startEdit() {
+      if (this.editing) return;
+      this.draft = {
+        title: this.task.title || '',
+        current_status: this.task.current_status || 'pending',
+        priority: this.task.priority || 'low',
+        assigned_to: this.task.assigned_to || '',
+        estimated_days: this.task.estimated_days ?? '',
+        note: this.task.note || '',
+      };
+      this.editing = true;
+    },
+
+    cancelEdit() {
+      this.editing = false;
+    },
+
+    async saveEdit() {
+      if (this.saving) return;
+      this.saving = true;
+      try {
+        await this.updateTask(this.task.slug, this.draft);
+        this.editing = false;
+      } catch (err) {
+        const status = err?.response?.status;
+        window.s_alert(
+          status === 401 || status === 403
+            ? 'Please log in as admin to edit tasks.'
+            : (err?.response?.data?.message || 'Failed to save task.'),
+          'error'
+        );
+      } finally {
+        this.saving = false;
+      }
     },
   },
 };
@@ -116,7 +226,7 @@ export default {
 .dot--skipped     { background: #475569; }
 
 /* Body */
-.tb-task__body { flex: 1; min-width: 0; }
+.tb-task__body { flex: 1; min-width: 0; position: relative; }
 
 .tb-task__row {
   display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem;
@@ -154,4 +264,69 @@ export default {
 .tb-task__recur  { color: #818cf8; }
 .tb-task__done-at { display: flex; align-items: center; gap: .3rem; color: #10b981; }
 .tb-task__cost   { display: flex; align-items: center; gap: .2rem; color: #fbbf24; }
+
+/* Edit hint */
+.tb-task__edit-hint {
+  position: absolute; top: -.2rem; right: 0;
+  color: #475569; font-size: .68rem;
+  opacity: 0; transition: opacity .2s;
+  pointer-events: none;
+}
+.tb-task:hover .tb-task__edit-hint { opacity: .6; }
+
+/* ── Edit mode ──────────────────────────────────────────────── */
+.tb-task__edit {
+  display: flex; flex-direction: column; gap: .5rem;
+}
+
+.tb-edit-input, .tb-edit-select, .tb-edit-textarea {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(99,102,241,.35);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: .82rem;
+  padding: .45rem .65rem;
+  font-family: inherit;
+  width: 100%;
+  outline: none;
+  transition: border-color .2s, background .2s;
+}
+.tb-edit-input:focus, .tb-edit-select:focus, .tb-edit-textarea:focus {
+  border-color: #818cf8;
+  background: rgba(255,255,255,.06);
+}
+
+.tb-edit-textarea { resize: vertical; min-height: 44px; }
+
+.tb-edit-row {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.tb-edit-row .tb-edit-select { flex: 1 1 130px; min-width: 110px; }
+.tb-edit-input--sm { flex: 1 1 130px; min-width: 110px; }
+.tb-edit-input--xs { flex: 0 1 80px; min-width: 70px; }
+
+.tb-edit-actions {
+  display: flex; gap: .5rem; margin-top: .15rem;
+}
+.tb-edit-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .76rem; font-weight: 700;
+  padding: .4rem .9rem;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: opacity .2s, background .2s;
+}
+.tb-edit-btn:disabled { opacity: .6; cursor: not-allowed; }
+.tb-edit-btn--save {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+}
+.tb-edit-btn--save:hover:not(:disabled) { opacity: .9; }
+.tb-edit-btn--cancel {
+  background: rgba(255,255,255,.04);
+  border-color: rgba(255,255,255,.1);
+  color: #94a3b8;
+}
+.tb-edit-btn--cancel:hover:not(:disabled) { background: rgba(255,255,255,.08); }
 </style>

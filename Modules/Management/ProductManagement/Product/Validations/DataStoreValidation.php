@@ -57,6 +57,9 @@ class DataStoreValidation extends FormRequest
             'thumbnail'              => 'sometimes|nullable|image|max:2048',
             'promo_link'             => 'sometimes|nullable|url|max:500',
             'video_url'              => 'sometimes|nullable|url|max:500',
+            'promo_video_url'        => 'sometimes|nullable|url|max:500',
+            'niche_products'         => 'sometimes|nullable',
+            'clients_projects'       => 'sometimes|nullable',
         ];
     }
 }

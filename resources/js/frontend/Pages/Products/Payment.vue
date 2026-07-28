@@ -127,12 +127,13 @@
                   </div>
                 </div>
                 <div class="pp-row">
-                  <div class="pp-field">
+                  <div class="pp-field" :class="{ 'pp-field--error': err.email }">
                     <label class="pp-label">Email Address <span class="pp-opt">optional</span></label>
                     <div class="pp-input-wrap">
                       <i class="fas fa-envelope pp-input-icon"></i>
-                      <input v-model="form.email" type="email" placeholder="you@email.com" class="pp-input pp-input--icon" />
+                      <input v-model="form.email" type="email" placeholder="you@email.com" class="pp-input pp-input--icon" @input="clearErr('email')" />
                     </div>
+                    <span v-if="err.email" class="pp-err">{{ err.email }}</span>
                   </div>
                   <div class="pp-field">
                     <label class="pp-label">Special Requirements <span class="pp-opt">optional</span></label>
@@ -536,13 +537,8 @@
                 </ul>
               </div>
 
-              <div class="pp-summary__hr"></div>
-              <div class="pp-trust-list">
-                <div class="pp-trust-item"><i class="fas fa-shield-alt"></i><span>Secure payment process</span></div>
-                <div class="pp-trust-item"><i class="fas fa-headset"></i><span>Dedicated post-launch support</span></div>
-                <div class="pp-trust-item"><i class="fas fa-clock"></i><span>Verified within 24 hours</span></div>
-                <div class="pp-trust-item"><i class="fab fa-whatsapp"></i><span>WhatsApp confirmation sent</span></div>
-              </div>
+             
+              
             </div>
           </div>
 
@@ -669,6 +665,8 @@ export default {
       const e = {};
       if (!this.form.name.trim())  e.name  = 'Full name is required.';
       if (!this.form.phone.trim()) e.phone = 'Phone number is required.';
+      if (this.form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email.trim()))
+                                   e.email = 'Enter a valid email address.';
       if (this.payNow && !this.form.txn_id.trim() && !this.form.screenshot)
                                    e.payment = 'Enter a Transaction ID or upload a payment screenshot.';
       this.err = e;
@@ -707,6 +705,7 @@ export default {
         this.err = {
           ...(v.name    ? { name:    v.name[0]    } : {}),
           ...(v.phone   ? { phone:   v.phone[0]   } : {}),
+          ...(v.email   ? { email:   v.email[0]   } : {}),
           ...(v.domain  ? { domain:  v.domain[0]  } : {}),
           ...((v.txn_id || v.screenshot) ? { payment: (v.txn_id || v.screenshot)[0] } : {}),
           ...(!Object.keys(v).length ? { name: msg } : {}),
