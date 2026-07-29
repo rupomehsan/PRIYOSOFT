@@ -88,6 +88,17 @@
                       {{ fmtAmt(row[col.key]) }}
                     </span>
 
+                    <span v-else-if="col.type === 'image'">
+                      <img
+                        v-if="row[col.key]"
+                        :src="imgSrc(row[col.key])"
+                        alt="Agreement Doc"
+                        class="tx-thumb"
+                        @click="openLightbox(row[col.key])"
+                      />
+                      <span v-else class="tx-thumb-empty">—</span>
+                    </span>
+
                     <span v-else>{{ disp(row, col) }}</span>
 
                   </td>
@@ -97,10 +108,17 @@
           </div>
 
           <div class="tx-table-footer">
-            <span class="tx-table-footer-info">
-              Showing <strong>{{ currentRows.length }}</strong> of
-              <strong>{{ tabTotal(activeTab) }}</strong> records
-            </span>
+            <div class="tx-table-footer-left">
+              <span class="tx-table-footer-info">
+                Showing <strong>{{ currentRows.length }}</strong> of
+                <strong>{{ tabTotal(activeTab) }}</strong> records
+              </span>
+              <span v-if="currentAmountTotal !== null" class="tx-table-footer-total">
+                <i class="fas fa-calculator"></i>
+                Total{{ currentRows.length < tabTotal(activeTab) ? ' (loaded)' : '' }}:
+                <strong>{{ fmtAmt(currentAmountTotal) }}</strong>
+              </span>
+            </div>
             <button
               v-if="currentRows.length < tabTotal(activeTab)"
               class="tx-load-more"
@@ -115,6 +133,14 @@
 
       </template>
     </main>
+
+    <!-- ── Image lightbox (Agreement Doc, etc.) ─────────────────── -->
+    <div v-if="lightboxImage" class="tx-lightbox" @click.self="closeLightbox">
+      <button class="tx-lightbox__close" @click="closeLightbox" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+      <img :src="imgSrc(lightboxImage)" alt="Agreement Doc" class="tx-lightbox__img" />
+    </div>
 
   </div>
   </access-gate>
@@ -183,10 +209,11 @@ const TAB_DEFS = [
       { key: 'investor_id', label: 'Investor'  },
       { key: 'account_id',  label: 'Account'   },
       { key: 'round',       label: 'Round'     },
-      { key: 'amount',      label: 'Amount',   type: 'amount' },
-      { key: 'type',        label: 'Type'      },
-      { key: 'received_at', label: 'Received', type: 'date'   },
-      { key: 'status',      label: 'Status',   type: 'status' },
+      { key: 'amount',        label: 'Amount',        type: 'amount' },
+      { key: 'type',          label: 'Type'           },
+      { key: 'received_at',   label: 'Received',      type: 'date'   },
+      { key: 'agreement_doc', label: 'Agreement Doc', type: 'image'  },
+      { key: 'status',        label: 'Status',        type: 'status' },
     ],
   },
   {
@@ -225,7 +252,7 @@ export default {
   components: { TopBar, DashboardPanel, AccessGate },
 
   data() {
-    return { tabs: TAB_DEFS };
+    return { tabs: TAB_DEFS, lightboxImage: null };
   },
 
   computed: {
@@ -236,6 +263,11 @@ export default {
     },
     currentRows() {
       return this.tabRows(this.activeTab);
+    },
+    currentAmountTotal() {
+      const hasAmountCol = this.currentTab.cols.some((c) => c.key === 'amount' && c.type === 'amount');
+      if (!hasAmountCol) return null;
+      return this.currentRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
     },
     topBarChips() {
       return this.tabs
@@ -288,10 +320,20 @@ export default {
       try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
       catch { return d; }
     },
+    imgSrc(src) { return src?.startsWith('http') ? src : '/' + src; },
+    openLightbox(src) { this.lightboxImage = src; document.body.style.overflow = 'hidden'; },
+    closeLightbox()   { this.lightboxImage = null; document.body.style.overflow = ''; },
+    onKeyDown(e) {
+      if (this.lightboxImage && e.key === 'Escape') this.closeLightbox();
+    },
   },
 
   mounted() {
     this.fetchDashboard();
+    window.addEventListener('keydown', this.onKeyDown);
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown);
   },
 };
 </script>

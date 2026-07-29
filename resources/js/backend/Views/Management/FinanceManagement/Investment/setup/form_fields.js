@@ -24,14 +24,7 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "round",
-		label: "Enter Round",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "amount",
 		label: "Enter Amount",
@@ -41,14 +34,7 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "currency",
-		label: "Enter Currency",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "type",
 		label: "Select Type",
@@ -64,15 +50,7 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "interest_rate",
-		label: "Enter Interest Rate",
-		type: "number",
-		step: "0.01",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "agreement_date",
 		label: "Enter Agreement Date",
@@ -81,24 +59,18 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "received_at",
-		label: "Enter Received At",
-		type: "date",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
 	{
 		name: "agreement_doc",
 		label: "Upload Agreement Doc",
 		type: "file",
 		multiple: false,
-		accept: "image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+		accept: "image/*",
 		value: "",
 		is_visible: true,
 		class: "col-md-6",
 	},
+	
 	{
 		name: "note",
 		label: "Enter Note",

@@ -22,26 +22,8 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "product_id",
-		label: "Select Product",
-		type: "select",
-		multiple: false,
-		data_list: [],
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "account_id",
-		label: "Select Account",
-		type: "select",
-		multiple: false,
-		data_list: [],
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+	
+
 	{
 		name: "amount",
 		label: "Enter Amount",
@@ -51,47 +33,9 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "currency",
-		label: "Enter Currency",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "vendor",
-		label: "Enter Vendor",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "paid_at",
-		label: "Enter Paid At",
-		type: "date",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "invoice_no",
-		label: "Enter Invoice No",
-		type: "text",
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
-	{
-		name: "note",
-		label: "Enter Note",
-		type: "textarea",
-		rows: 4,
-		value: "",
-		is_visible: true,
-		class: "col-md-6",
-	},
+
+	
+
 	{
 		name: "attachment",
 		label: "Upload Attachment",
@@ -102,13 +46,14 @@ export default [
 		is_visible: true,
 		class: "col-md-6",
 	},
-	{
-		name: "created_by",
-		label: "Enter Created By",
-		type: "number",
-		step: "1",
+		{
+		name: "note",
+		label: "Enter Note",
+		type: "textarea",
+		rows: 4,
 		value: "",
 		is_visible: true,
-		class: "col-md-6",
+		class: "col-md-12",
 	},
+
 ];

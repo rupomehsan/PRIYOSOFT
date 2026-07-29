@@ -30,10 +30,10 @@
           </div>
         </div>
         <div class="card-body card_body_fixed_height">
-          <div class="row">
+          <div class="row" v-if="form_ready">
             <template
-              v-for="(form_field, index) in form_fields"
-              v-bind:key="index"
+              v-for="form_field in form_fields"
+              :key="form_field.name"
             >
               <common-input
                 :label="form_field.label"
@@ -48,9 +48,12 @@
               />
             </template>
           </div>
+          <div v-else class="d-flex align-items-center justify-content-center py-5">
+            <span class="text-muted">Loading...</span>
+          </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5">
+          <button type="submit" class="btn btn-light btn-square px-5" :disabled="!form_ready">
             <i class="icon-lock"></i>
             Submit
           </button>
@@ -71,12 +74,24 @@ export default {
     setup,
     form_fields,
     param_id: null,
+    form_ready: false,
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
     this.reset_fields();
+    await Promise.all([
+      this.load_expense_categories(),
+      this.load_products(),
+      this.load_accounts(),
+    ]);
     if (id) {
-      this.set_fields(id);
+      await this.set_fields(id);
+    }
+    this.form_ready = true;
+    if (id) {
+      this.$nextTick(() => {
+        setTimeout(() => this.set_editor_content(), 1200);
+      });
     }
   },
   methods: {
@@ -92,21 +107,77 @@ export default {
         item.value = "";
       });
     },
+    load_expense_categories: async function () {
+      try {
+        const res = await window.axios.get(
+          "expense-categories?get_all=1&limit=1000&sort_by_col=name&sort_type=asc"
+        );
+        const raw = res?.data?.data ?? [];
+        const list = Array.isArray(raw) ? raw : [];
+        const field = this.form_fields.find((f) => f.name === "expense_category_id");
+        if (field) {
+          field.data_list = list.map((r) => ({ label: r.name, value: r.id }));
+        }
+      } catch (e) {
+        console.warn("Could not load expense categories:", e);
+      }
+    },
+    load_products: async function () {
+      try {
+        const res = await window.axios.get(
+          "products?get_all=1&limit=1000&sort_by_col=name&sort_type=asc"
+        );
+        const raw = res?.data?.data ?? [];
+        const list = Array.isArray(raw) ? raw : [];
+        const field = this.form_fields.find((f) => f.name === "product_id");
+        if (field) {
+          field.data_list = list.map((r) => ({ label: r.name, value: r.id }));
+        }
+      } catch (e) {
+        console.warn("Could not load products:", e);
+      }
+    },
+    load_accounts: async function () {
+      try {
+        const res = await window.axios.get(
+          "accounts?get_all=1&limit=1000&sort_by_col=name&sort_type=asc"
+        );
+        const raw = res?.data?.data ?? [];
+        const list = Array.isArray(raw) ? raw : [];
+        const field = this.form_fields.find((f) => f.name === "account_id");
+        if (field) {
+          field.data_list = list.map((r) => ({ label: r.name, value: r.id }));
+        }
+      } catch (e) {
+        console.warn("Could not load accounts:", e);
+      }
+    },
     set_fields: async function (id) {
       this.param_id = id;
       await this.details(id);
       if (this.item) {
         this.form_fields.forEach((field, index) => {
-          Object.entries(this.item).forEach((value) => {
-            if (field.name == value[0]) {
-              this.form_fields[index].value = value[1];
+          Object.entries(this.item).forEach(([key, val]) => {
+            if (field.name === key) {
+              const resolved =
+                val && typeof val === "object" && !Array.isArray(val) && "id" in val
+                  ? val.id
+                  : val;
+              this.form_fields[index].value = resolved;
             }
 
-            if (field.name == "description" && value[0] == "description") {
-              $("#description").summernote("code", value[1]);
-            }
           });
         });
+      }
+    },
+    set_editor_content: function () {
+      const field = this.form_fields.find((f) => f.name === "note");
+      if (field?.value) {
+        try {
+          $("#note").summernote("code", field.value);
+        } catch (e) {
+          console.warn("Could not set note editor content:", e);
+        }
       }
     },
 
@@ -131,17 +202,17 @@ export default {
       }
     },
     setSummerEditor() {
-      // Set property_detail summernote content if description field exists
-      const descriptionElement = document.getElementById("description");
-      if (descriptionElement) {
+      // Set property_detail summernote content if note field exists
+      const noteElement = document.getElementById("note");
+      if (noteElement) {
         try {
-          var markupStr = $("#description").summernote("code");
+          var markupStr = $("#note").summernote("code");
           var target = document.createElement("input");
-          target.setAttribute("name", "description");
+          target.setAttribute("name", "note");
           target.value = markupStr;
-          descriptionElement.appendChild(target);
+          noteElement.appendChild(target);
         } catch (e) {
-          console.warn("Description editor not available:", e);
+          console.warn("note editor not available:", e);
         }
       }
     },

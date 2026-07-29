@@ -41,6 +41,7 @@
                 :name="form_field.name"
                 :placeholder="form_field.placeholder"
                 :multiple="form_field.multiple"
+                :accept="form_field.accept"
                 :value="form_field.value"
                 :data_list="form_field.data_list"
                 :is_visible="form_field.is_visible"

@@ -50,6 +50,23 @@ class GetAllDashboardData
             $currentMonthIncome  = $monthlyIncome[$currentMonth - 1]  ?? 0;
             $currentMonthExpense = $monthlyExpense[$currentMonth - 1] ?? 0;
 
+            // ── Investment totals ──
+            $monthlyInvestment = array_fill(0, 12, 0);
+            try {
+                $investmentRows = DB::table('investments')
+                    ->selectRaw('MONTH(created_at) as m, SUM(amount) as total')
+                    ->whereYear('created_at', $currentYear)
+                    ->groupByRaw('MONTH(created_at)')
+                    ->get();
+                foreach ($investmentRows as $row) {
+                    $monthlyInvestment[$row->m - 1] = (float) $row->total;
+                }
+            } catch (\Exception $e) {
+                // table doesn't exist yet — leave zeros
+            }
+            $totalInvestment = array_sum($monthlyInvestment);
+            $currentMonthInvestment = $monthlyInvestment[$currentMonth - 1] ?? 0;
+
             // ── Monthly due ──
             $monthlyDue = 0;
             try {
@@ -78,13 +95,16 @@ class GetAllDashboardData
             $data = [
                 'total_income'           => $totalIncome,
                 'total_expense'          => $totalExpense,
+                'total_investment'       => $totalInvestment,
                 'monthly_due'            => $monthlyDue,
                 'current_month_income'   => $currentMonthIncome,
                 'current_month_expense'  => $currentMonthExpense,
+                'current_month_investment' => $currentMonthInvestment,
                 'total_users'            => $totalUsers,
                 'total_applications'     => $totalApplications,
                 'pending_vouchers'       => $pendingVouchers,
                 'monthly_income'         => array_values($monthlyIncome),
+                'monthly_investment'     => array_values($monthlyInvestment),
                 'monthly_expense'        => array_values($monthlyExpense),
             ];
 

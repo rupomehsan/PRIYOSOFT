@@ -5,14 +5,17 @@ export const initialState = {
     dashData: {
         total_income:          0,
         total_expense:         0,
+        total_investment:      0,
         monthly_due:           0,
-        current_month_income:  0,
-        current_month_expense: 0,
+        current_month_income:      0,
+        current_month_expense:     0,
+        current_month_investment:  0,
         total_users:           0,
         total_applications:    0,
         pending_vouchers:      0,
-        monthly_income:  [0,0,0,0,0,0,0,0,0,0,0,0] as number[],
-        monthly_expense: [0,0,0,0,0,0,0,0,0,0,0,0] as number[],
+        monthly_income:     [0,0,0,0,0,0,0,0,0,0,0,0] as number[],
+        monthly_expense:    [0,0,0,0,0,0,0,0,0,0,0,0] as number[],
+        monthly_investment: [0,0,0,0,0,0,0,0,0,0,0,0] as number[],
     },
 
     // Transaction tab cache

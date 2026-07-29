@@ -96,6 +96,16 @@
           <div class="dash-kpi__bar" style="--kc:#f87171"></div>
         </div>
 
+        <div class="dash-kpi dash-kpi--indigo">
+          <div class="dash-kpi__icon"><i class="fas fa-chart-line"></i></div>
+          <div class="dash-kpi__body">
+            <p class="dash-kpi__lbl">Total Investment</p>
+            <h3 class="dash-kpi__val">{{ fmtAmt(dashData.total_investment) }}</h3>
+            <span class="dash-kpi__sub">All time</span>
+          </div>
+          <div class="dash-kpi__bar" style="--kc:#a5b4fc"></div>
+        </div>
+
         <div class="dash-kpi" :class="netBalance >= 0 ? 'dash-kpi--indigo' : 'dash-kpi--red'">
           <div class="dash-kpi__icon">
             <i :class="netBalance >= 0 ? 'fas fa-sack-dollar' : 'fas fa-triangle-exclamation'"></i>
@@ -334,6 +344,12 @@ export default {
           value: this.fmtAmt(d.total_expense),
           amtClass: 'red', badgeClass: 'warn',  status: 'Monitor',
           indClass: 'neg', indIcon: 'fas fa-arrow-down', indLabel: 'All time',
+        },
+        {
+          label: 'Total Investment',   color: '#a5b4fc',
+          value: this.fmtAmt(d.total_investment),
+          amtClass: 'indigo', badgeClass: 'good', status: 'Active',
+          indClass: 'pos', indIcon: 'fas fa-chart-line', indLabel: 'All time',
         },
         {
           label: 'Net Balance',        color: this.netBalance >= 0 ? '#a5b4fc' : '#f87171',
@@ -717,7 +733,8 @@ export default {
 
 /* ── Summary table ── */
 .dash-sum-table-wrap { overflow-x: auto; }
-.dash-sum-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.dash-sum-table { width: 100%; border-collapse: collapse; font-size: .82rem; background-color: transparent; }
+.dash-sum-table thead { background-color: transparent; }
 .dash-sum-table thead tr {
   background: rgba(255,255,255,.03);
   border-bottom: 1px solid rgba(255,255,255,.06);
